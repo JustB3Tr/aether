@@ -234,6 +234,8 @@ The auditor read the final artifacts, separately from the earlier candidate:
 
 Root reports NAS Aether 5.0.0 and public HTTPS health confirmed, `aether-data` preserved, and a retained 4.1.1 rollback backup. Root also loaded actual Example Domain through deployed UV without console errors; deployed Scramjet and the release-triggered watcher check were still in progress at this report cutoff. These deployment statements are attributed to the deployment owner, not presented as this subagent's own NAS/browser session.
 
+*Screenshot retained in the local audit evidence.*
+
 ## Limits and completion
 
 - No blanket verification of 186 remote games, external accounts/plans, third-party cookies, every browser, fullscreen/popup permissions, or every game gesture.
