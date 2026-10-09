@@ -1,0 +1,4911 @@
+{
+  "games": [
+    {
+      "id": "aether-snake",
+      "name": "Neon Serpent",
+      "url": "/arcade/index.html?game=snake",
+      "logo": "/arcade/covers/snake.svg",
+      "category": "Arcade",
+      "description": "One more bite. One less place to turn.",
+      "tags": [
+        "snake",
+        "keyboard",
+        "touch",
+        "quick",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": true,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-merge",
+      "name": "Signal Merge",
+      "url": "/arcade/index.html?game=merge",
+      "logo": "/arcade/covers/merge.svg",
+      "category": "Puzzle",
+      "description": "Slide the signal. Find your way to 2048.",
+      "tags": [
+        "2048",
+        "numbers",
+        "keyboard",
+        "touch",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": true,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-breakout",
+      "name": "Prism Break",
+      "url": "/arcade/index.html?game=breakout",
+      "logo": "/arcade/covers/breakout.svg",
+      "category": "Arcade",
+      "description": "A clean angle. A chain reaction.",
+      "tags": [
+        "breakout",
+        "keyboard",
+        "touch",
+        "quick",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": true,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-mines",
+      "name": "Quiet Minefield",
+      "url": "/arcade/index.html?game=mines",
+      "logo": "/arcade/covers/mines.svg",
+      "category": "Puzzle",
+      "description": "Read the grid. Trust the numbers.",
+      "tags": [
+        "minesweeper",
+        "logic",
+        "keyboard",
+        "touch",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-memory",
+      "name": "Echo Pairs",
+      "url": "/arcade/index.html?game=memory",
+      "logo": "/arcade/covers/memory.svg",
+      "category": "Puzzle",
+      "description": "Sixteen cards. Eight little echoes.",
+      "tags": [
+        "memory",
+        "matching",
+        "touch",
+        "quick",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-tictactoe",
+      "name": "Threefold",
+      "url": "/arcade/index.html?game=tictactoe",
+      "logo": "/arcade/covers/tictactoe.svg",
+      "category": "Strategy",
+      "description": "Three in a row. Think a move ahead.",
+      "tags": [
+        "tic-tac-toe",
+        "ai",
+        "keyboard",
+        "touch",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-connect4",
+      "name": "Gravity Four",
+      "url": "/arcade/index.html?game=connect4",
+      "logo": "/arcade/covers/connect4.svg",
+      "category": "Strategy",
+      "description": "Let it drop. Make it count.",
+      "tags": [
+        "connect-four",
+        "ai",
+        "keyboard",
+        "touch",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-reaction",
+      "name": "Pulse Check",
+      "url": "/arcade/index.html?game=reaction",
+      "logo": "/arcade/covers/reaction.svg",
+      "category": "Skill",
+      "description": "Wait for the signal. Catch the moment.",
+      "tags": [
+        "reaction",
+        "keyboard",
+        "touch",
+        "quick",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-scramble",
+      "name": "Cipher Scramble",
+      "url": "/arcade/index.html?game=scramble",
+      "logo": "/arcade/covers/scramble.svg",
+      "category": "Word",
+      "description": "A familiar word hiding in plain sight.",
+      "tags": [
+        "word",
+        "keyboard",
+        "touch",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-slide",
+      "name": "Tile Shift",
+      "url": "/arcade/index.html?game=slide",
+      "logo": "/arcade/covers/slide.svg",
+      "category": "Puzzle",
+      "description": "Fifteen pieces. One space to breathe.",
+      "tags": [
+        "sliding-puzzle",
+        "logic",
+        "keyboard",
+        "touch",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-simon",
+      "name": "Afterglow",
+      "url": "/arcade/index.html?game=simon",
+      "logo": "/arcade/covers/simon.svg",
+      "category": "Memory",
+      "description": "Listen with your eyes. Follow the glow.",
+      "tags": [
+        "simon",
+        "memory",
+        "keyboard",
+        "touch",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-dodge",
+      "name": "Meteor Lane",
+      "url": "/arcade/index.html?game=dodge",
+      "logo": "/arcade/covers/dodge.svg",
+      "category": "Arcade",
+      "description": "A quiet ship in an increasingly busy sky.",
+      "tags": [
+        "survival",
+        "keyboard",
+        "touch",
+        "quick",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": true,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-lights",
+      "name": "Night Switch",
+      "url": "/arcade/index.html?game=lights",
+      "logo": "/arcade/covers/lights.svg",
+      "category": "Puzzle",
+      "description": "A constellation waiting to go dark.",
+      "tags": [
+        "lights-out",
+        "logic",
+        "keyboard",
+        "touch",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-sudoku",
+      "name": "Still Sudoku",
+      "url": "/arcade/index.html?game=sudoku",
+      "logo": "/arcade/covers/sudoku.svg",
+      "category": "Puzzle",
+      "description": "Nine quiet lines. One complete pattern.",
+      "tags": [
+        "sudoku",
+        "logic",
+        "keyboard",
+        "touch",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-color",
+      "name": "Hue Hunt",
+      "url": "/arcade/index.html?game=color",
+      "logo": "/arcade/covers/color.svg",
+      "category": "Skill",
+      "description": "Find the signal hiding in the shades.",
+      "tags": [
+        "color",
+        "reaction",
+        "keyboard",
+        "touch",
+        "quick",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "id": "aether-orbit",
+      "name": "Orbit Lock",
+      "url": "/arcade/index.html?game=orbit",
+      "logo": "/arcade/covers/orbit.svg",
+      "category": "Skill",
+      "description": "A moving needle. A shrinking window.",
+      "tags": [
+        "timing",
+        "keyboard",
+        "touch",
+        "quick",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": false,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-08",
+      "launchNotes": "Same-origin Aether original; no proxy, remote assets, or external game account required.",
+      "logoSource": "Original Aether artwork"
+    },
+    {
+      "name": "Slope",
+      "url": "https://www.y8.com/games/slope",
+      "logo": "/logos/logo-d93975e058b46e13.png",
+      "category": "Arcade",
+      "featured": true,
+      "previousUrl": "https://slopeunblocked.org/play/",
+      "sourceUrl": "https://www.y8.com/games/slope",
+      "launch": "proxy",
+      "id": "slope",
+      "description": "Keep a rolling ball on a narrow track as the speed builds.",
+      "source": "Y8",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "1v1.LOL",
+      "url": "https://www.crazygames.com/game/1v1-lol",
+      "logo": "https://imgs.crazygames.com/games/1v1-lol/cover-1585728351086.png?metadata=none&quality=100&width=1200&height=630&fit=crop",
+      "category": "FPS",
+      "featured": true,
+      "previousUrl": "https://1v1lol.org/",
+      "sourceUrl": "https://www.crazygames.com/game/1v1-lol",
+      "launch": "proxy",
+      "id": "1v1-lol",
+      "description": "Build cover and duel opponents in a compact competitive shooter.",
+      "source": "CrazyGames",
+      "tags": [
+        "fps"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.crazygames.com/game/1v1-lol",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Veck.io",
+      "url": "https://veck.io/",
+      "logo": "/logos/logo-5f3f59eb8e549e31.png",
+      "category": "FPS",
+      "featured": true,
+      "sourceUrl": "https://veck.io/",
+      "launch": "proxy",
+      "id": "veck-io",
+      "description": "Join a fast browser shooter and challenge other players.",
+      "source": "Veck.io official site",
+      "developer": "Legion Platforms",
+      "tags": [
+        "fps"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Shell Shockers",
+      "url": "https://shellshock.io/",
+      "logo": "/logos/logo-001ad93909c5d5d0.png",
+      "category": "FPS",
+      "featured": true,
+      "sourceUrl": "https://shellshock.io/",
+      "launch": "proxy",
+      "id": "shell-shockers",
+      "description": "Take an armed egg into multiplayer matches and avoid getting cracked.",
+      "source": "Shell Shockers official site",
+      "tags": [
+        "fps"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Krunker",
+      "url": "https://krunker.io/",
+      "logo": "/logos/logo-4e3bb734caec1b2c.jpg",
+      "category": "FPS",
+      "sourceUrl": "https://krunker.io/",
+      "launch": "proxy",
+      "id": "krunker",
+      "description": "Compete in quick, movement-focused browser shooter matches.",
+      "source": "Krunker official site",
+      "tags": [
+        "fps"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Smash Karts",
+      "url": "https://smashkarts.io/",
+      "logo": "/logos/logo-44d65a5322a2a34b.png",
+      "category": "Racing",
+      "featured": true,
+      "sourceUrl": "https://smashkarts.io/",
+      "launch": "proxy",
+      "id": "smash-karts",
+      "description": "Race around an arena and use pickups to outlast rival karts.",
+      "source": "Smash Karts official site",
+      "tags": [
+        "racing"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Zombs Royale",
+      "url": "https://zombsroyale.io/",
+      "logo": "/logos/logo-a5cbbbbbe3b3a7ef.png",
+      "category": "Battle Royale",
+      "sourceUrl": "https://zombsroyale.io/",
+      "launch": "proxy",
+      "id": "zombs-royale",
+      "description": "Search for equipment and survive a shrinking battle royale arena.",
+      "source": "Zombs Royale official site",
+      "tags": [
+        "battle royale"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Retro Bowl",
+      "url": "https://poki.com/en/g/retro-bowl",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/ee9ca3764ef4289a48a1ebf457ef605441ed1f35a0f2eb12707a70d609e53686/retro-bowl-logo.png",
+      "category": "Sports",
+      "featured": true,
+      "previousUrl": "https://retrobowl.me/",
+      "sourceUrl": "https://poki.com/en/g/retro-bowl",
+      "launch": "proxy",
+      "id": "retro-bowl",
+      "description": "Manage a football team and call the next winning play.",
+      "source": "Poki",
+      "developer": "New Star Games",
+      "tags": [
+        "sports"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/retro-bowl",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Run 3",
+      "url": "https://www.coolmathgames.com/0-run-3",
+      "logo": "",
+      "category": "Arcade",
+      "previousUrl": "https://run3.io/",
+      "sourceUrl": "https://www.coolmathgames.com/0-run-3",
+      "launch": "proxy",
+      "id": "run-3",
+      "description": "Leap through twisting tunnels and keep your footing in space.",
+      "source": "Coolmath Games",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services."
+    },
+    {
+      "name": "Tunnel Rush",
+      "url": "https://poki.com/en/g/tunnel-rush",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/2094926076b7aa8264cace220ce5decc/tunnel-rush-logo.png",
+      "category": "Arcade",
+      "previousUrl": "https://tunnelrush.io/",
+      "sourceUrl": "https://poki.com/en/g/tunnel-rush",
+      "launch": "proxy",
+      "id": "tunnel-rush",
+      "description": "Dodge rotating barriers while speeding through a colorful tunnel.",
+      "source": "Poki",
+      "developer": "Deer Cat Games",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/tunnel-rush",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Moto X3M",
+      "url": "https://poki.com/en/g/moto-x3m",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/2c6d5a46cdbceada277c870ce1c389ee/moto-x3m-logo.jpg",
+      "category": "Racing",
+      "previousUrl": "https://motox3m.io/",
+      "sourceUrl": "https://poki.com/en/g/moto-x3m",
+      "launch": "proxy",
+      "id": "moto-x3m",
+      "description": "Ride a stunt bike across obstacle courses and chase a faster finish.",
+      "source": "Poki",
+      "developer": "Madpuffers",
+      "tags": [
+        "racing"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/moto-x3m",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Diep.io",
+      "url": "https://diep.io/",
+      "logo": "/logos/logo-8a05ffe3fbe55d6d.png",
+      "category": "Arcade",
+      "sourceUrl": "https://diep.io/",
+      "launch": "proxy",
+      "id": "diep-io",
+      "description": "Upgrade a tank and survive a shared arena of opponents.",
+      "source": "Diep.io official site",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Agar.io",
+      "url": "https://agar.io/",
+      "logo": "/logos/logo-c894ec4b92b7fe15.png",
+      "category": "Arcade",
+      "sourceUrl": "https://agar.io/",
+      "launch": "proxy",
+      "id": "agar-io",
+      "description": "Grow a cell by collecting food and outmaneuvering other players.",
+      "source": "Agar.io official site",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 403,
+      "launchNotes": "Official site blocked the automated check with HTTP 403; gameplay was not verified.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Slither.io",
+      "url": "https://slither.io/",
+      "logo": "/logos/logo-eabf076c835145a7.png",
+      "category": "Arcade",
+      "sourceUrl": "https://slither.io/",
+      "launch": "proxy",
+      "id": "slither-io",
+      "description": "Grow a snake and trap opponents without crashing into their trails.",
+      "source": "Slither.io official site",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Paper.io",
+      "url": "https://www.crazygames.com/game/paper-io-2",
+      "logo": "https://imgs.crazygames.com/paper-io-2_16x9/20250214024143/paper-io-2_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop",
+      "category": "Arcade",
+      "previousUrl": "https://paper-io.com/",
+      "sourceUrl": "https://www.crazygames.com/game/paper-io-2",
+      "launch": "proxy",
+      "id": "paper-io",
+      "description": "Paint territory and return safely before another player cuts your trail.",
+      "source": "CrazyGames",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.crazygames.com/game/paper-io-2"
+    },
+    {
+      "name": "MooMoo.io",
+      "url": "https://moomoo.io/",
+      "logo": "/logos/logo-e671a170a978dfde.png",
+      "category": "Survival",
+      "sourceUrl": "https://moomoo.io/",
+      "launch": "proxy",
+      "id": "moomoo-io",
+      "description": "Gather resources, build defenses, and survive a multiplayer wilderness.",
+      "source": "MooMoo.io official site",
+      "developer": "FRVR",
+      "tags": [
+        "survival"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Little Alchemy 2",
+      "url": "https://littlealchemy2.com/",
+      "logo": "/logos/logo-398afadfcfe30678.png",
+      "category": "Puzzle",
+      "sourceUrl": "https://littlealchemy2.com/",
+      "launch": "proxy",
+      "id": "little-alchemy-2",
+      "description": "Mix familiar elements to discover a growing collection of surprising items.",
+      "source": "Little Alchemy",
+      "tags": [
+        "puzzle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "2048",
+      "url": "https://play2048.co/",
+      "logo": "/logos/logo-6e12ef6998dfb6fa.jpg",
+      "category": "Puzzle",
+      "sourceUrl": "https://play2048.co/",
+      "launch": "proxy",
+      "id": "2048",
+      "description": "Slide matching numbered tiles together and chase the next power of two.",
+      "source": "Gabriele Cirulli",
+      "tags": [
+        "puzzle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Chess",
+      "url": "https://www.chess.com/play/computer",
+      "logo": "/logos/logo-a5fca9cbf0431ddc.png",
+      "category": "Board",
+      "sourceUrl": "https://www.chess.com/play/computer",
+      "launch": "proxy",
+      "id": "chess",
+      "description": "Choose a computer opponent and play a complete game of chess.",
+      "source": "Chess official site",
+      "tags": [
+        "board"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Tetris",
+      "url": "https://tetris.com/play-tetris",
+      "logo": "/logos/logo-bbf1c52db619f0e5.png",
+      "category": "Puzzle",
+      "sourceUrl": "https://tetris.com/play-tetris",
+      "launch": "proxy",
+      "id": "tetris",
+      "description": "Rotate falling blocks into complete lines in the official browser game.",
+      "source": "Tetris official site",
+      "tags": [
+        "puzzle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Wordle",
+      "url": "https://www.nytimes.com/games/wordle/",
+      "logo": "/logos/logo-d4b5a4192f9f5db3.png",
+      "category": "Puzzle",
+      "sourceUrl": "https://www.nytimes.com/games/wordle/",
+      "launch": "proxy",
+      "id": "wordle",
+      "description": "Use a handful of guesses to solve the day's five-letter word.",
+      "source": "Wordle official site",
+      "tags": [
+        "puzzle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Bloons TD",
+      "url": "https://www.crazygames.com/game/bloons-tower-defense",
+      "logo": "",
+      "category": "Strategy",
+      "previousUrl": "https://bloons.io/",
+      "sourceUrl": "https://www.crazygames.com/game/bloons-tower-defense",
+      "launch": "proxy",
+      "id": "bloons-td",
+      "description": "Place towers along a path to stop advancing waves of balloons.",
+      "source": "CrazyGames",
+      "developer": "Ninja Kiwi",
+      "tags": [
+        "strategy"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "CrazyGames",
+      "url": "https://www.crazygames.com/",
+      "logo": "/logos/logo-c32beef223293ada.png",
+      "category": "Portal",
+      "featured": true,
+      "sourceUrl": "https://www.crazygames.com/",
+      "launch": "proxy",
+      "id": "crazygames",
+      "description": "Browse a publisher's wider library of free browser games.",
+      "source": "CrazyGames",
+      "tags": [
+        "portal",
+        "portal"
+      ],
+      "access": "Game portal",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Poki",
+      "url": "https://poki.com/",
+      "logo": "/logos/logo-7e1ad7cdb3f19470.png",
+      "category": "Portal",
+      "sourceUrl": "https://poki.com/",
+      "launch": "proxy",
+      "id": "poki",
+      "description": "Explore a publisher's collection of browser games and new releases.",
+      "source": "Poki",
+      "tags": [
+        "portal",
+        "portal"
+      ],
+      "access": "Game portal",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Pac-Man",
+      "url": "https://www.google.com/logos/2010/pacman10-i.html",
+      "logo": "/logos/logo-e5c8afae518cbf7c.png",
+      "category": "Retro",
+      "sourceUrl": "https://www.google.com/logos/2010/pacman10-i.html",
+      "launch": "proxy",
+      "id": "pac-man",
+      "description": "Clear a maze of dots while avoiding the ghosts in Google's tribute.",
+      "source": "Google Doodles",
+      "tags": [
+        "retro"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Minecraft Classic",
+      "url": "https://classic.minecraft.net/",
+      "logo": "/logos/logo-14a8787defc3cd04.png",
+      "category": "Sandbox",
+      "featured": true,
+      "sourceUrl": "https://classic.minecraft.net/",
+      "launch": "proxy",
+      "id": "minecraft-classic",
+      "description": "Build with blocks in the official classic browser sandbox.",
+      "source": "Mojang",
+      "tags": [
+        "sandbox"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Crossy Road",
+      "url": "https://poki.com/en/g/crossy-road",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/76fc1b000203faf71b77a75b10022142/crossy-road-logo.png",
+      "category": "Arcade",
+      "previousUrl": "https://crossyroad.com/",
+      "sourceUrl": "https://poki.com/en/g/crossy-road",
+      "launch": "proxy",
+      "id": "crossy-road",
+      "description": "Hop across roads, rail tracks, and rivers without getting caught.",
+      "source": "Poki",
+      "developer": "Hipster Whale",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/crossy-road",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Basketball Stars",
+      "url": "https://poki.com/en/g/basketball-stars",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/bc02c9cdfc5b424ddf343b01edf791ce/basketball-stars-logo.png",
+      "category": "Sports",
+      "previousUrl": "https://basketballstars.io/",
+      "sourceUrl": "https://poki.com/en/g/basketball-stars",
+      "launch": "proxy",
+      "id": "basketball-stars",
+      "description": "Challenge another player to quick basketball matches.",
+      "source": "Poki",
+      "developer": "Madpuffers",
+      "tags": [
+        "sports"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/basketball-stars",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Drift Hunters",
+      "url": "https://www.crazygames.com/game/drift-hunters",
+      "logo": "",
+      "category": "Racing",
+      "previousUrl": "https://drifthunters.io/",
+      "sourceUrl": "https://www.crazygames.com/game/drift-hunters",
+      "launch": "proxy",
+      "id": "drift-hunters",
+      "description": "Slide a car around tracks and earn upgrades through controlled drifts.",
+      "source": "CrazyGames",
+      "tags": [
+        "racing"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Cookie Clicker",
+      "url": "https://orteil.dashnet.org/cookieclicker/",
+      "logo": "/logos/logo-1e6caced05c80fa5.png",
+      "category": "Idle",
+      "sourceUrl": "https://orteil.dashnet.org/cookieclicker/",
+      "launch": "proxy",
+      "id": "cookie-clicker",
+      "description": "Bake cookies, buy upgrades, and grow an increasingly unusual bakery.",
+      "source": "Orteil",
+      "tags": [
+        "idle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Clicker Heroes",
+      "url": "https://clickerheroes.com/play",
+      "logo": "https://clickerheroes.com/og-image.jpg",
+      "category": "Idle",
+      "previousUrl": "https://www.clickerheroes.com/",
+      "sourceUrl": "https://clickerheroes.com/play",
+      "launch": "proxy",
+      "id": "clicker-heroes",
+      "description": "Recruit heroes and push through an endless stream of monsters.",
+      "source": "Playsaurus",
+      "tags": [
+        "idle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://clickerheroes.com/play"
+    },
+    {
+      "name": "Hole.io",
+      "url": "https://poki.com/en/g/hole-io",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/6a2eb719b17f667cda6680a8bb2f4e40/hole-io-logo.jfif",
+      "category": "Arcade",
+      "previousUrl": "https://hole-io.com/",
+      "sourceUrl": "https://poki.com/en/g/hole-io",
+      "launch": "proxy",
+      "id": "hole-io",
+      "description": "Swallow smaller objects and grow a roaming hole across the city.",
+      "source": "Poki",
+      "developer": "Voodoo",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/hole-io",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Skribbl.io",
+      "url": "https://skribbl.io/",
+      "logo": "/logos/logo-f80fb9703722b4e0.png",
+      "category": "Party",
+      "sourceUrl": "https://skribbl.io/",
+      "launch": "proxy",
+      "id": "skribbl-io",
+      "description": "Take turns drawing clues and guessing pictures with friends.",
+      "source": "Skribbl.io official site",
+      "tags": [
+        "party"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Gartic Phone",
+      "url": "https://garticphone.com/",
+      "logo": "/logos/logo-abf06781c0616518.png",
+      "category": "Party",
+      "sourceUrl": "https://garticphone.com/",
+      "launch": "proxy",
+      "id": "gartic-phone",
+      "description": "Watch a phrase transform as friends alternate drawings and guesses.",
+      "source": "Gartic Phone official site",
+      "tags": [
+        "party"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Codenames",
+      "url": "https://codenames.game/",
+      "logo": "/logos/logo-6438ab14885a3ce9.png",
+      "category": "Party",
+      "sourceUrl": "https://codenames.game/",
+      "launch": "proxy",
+      "id": "codenames",
+      "description": "Give carefully chosen clues and find your team's hidden words.",
+      "source": "Codenames official site",
+      "tags": [
+        "party"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Kahoot!",
+      "url": "https://kahoot.it/",
+      "logo": "/logos/logo-895078da7dc58516.svg",
+      "category": "Party",
+      "sourceUrl": "https://kahoot.it/",
+      "launch": "proxy",
+      "id": "kahoot",
+      "description": "Join a host's quiz with the game PIN they provide.",
+      "source": "Kahoot! official site",
+      "tags": [
+        "party",
+        "join-code",
+        "companion"
+      ],
+      "access": "Host and room code required",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Jackbox",
+      "url": "https://jackbox.tv/",
+      "logo": "/logos/logo-deece6c64845d56f.png",
+      "category": "Party",
+      "sourceUrl": "https://jackbox.tv/",
+      "launch": "proxy",
+      "id": "jackbox",
+      "description": "Enter a room code to join a host's purchased Jackbox game.",
+      "source": "Jackbox official site",
+      "tags": [
+        "party",
+        "join-code",
+        "companion"
+      ],
+      "access": "Host and room code required",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "GeoGuessr",
+      "url": "https://www.geoguessr.com/",
+      "logo": "/logos/logo-e9df761a8ebf60c5.png",
+      "category": "Trivia",
+      "sourceUrl": "https://www.geoguessr.com/",
+      "launch": "proxy",
+      "id": "geoguessr",
+      "description": "Use street-view clues to work out where in the world you are.",
+      "source": "GeoGuessr official site",
+      "tags": [
+        "trivia",
+        "account"
+      ],
+      "access": "Account or paid plan may be required",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Typing Club",
+      "url": "https://www.typingclub.com/",
+      "logo": "/logos/logo-1d66167222dce244.png",
+      "category": "Skill",
+      "sourceUrl": "https://www.typingclub.com/",
+      "launch": "proxy",
+      "id": "typing-club",
+      "description": "Practice typing through guided lessons and skill exercises.",
+      "source": "Typing Club official site",
+      "tags": [
+        "skill"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Monkeytype",
+      "url": "https://monkeytype.com/",
+      "logo": "/logos/logo-f8f510cc2d83c8fc.png",
+      "category": "Skill",
+      "sourceUrl": "https://monkeytype.com/",
+      "launch": "proxy",
+      "id": "monkeytype",
+      "description": "Measure typing speed and accuracy with flexible text challenges.",
+      "source": "Monkeytype official site",
+      "tags": [
+        "skill"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Sudoku",
+      "url": "https://sudoku.com/",
+      "logo": "/logos/logo-fcf1f2c972e8cddd.png",
+      "category": "Puzzle",
+      "sourceUrl": "https://sudoku.com/",
+      "launch": "proxy",
+      "id": "sudoku",
+      "description": "Complete a number grid without repeating digits in a row, column, or box.",
+      "source": "Sudoku official site",
+      "tags": [
+        "puzzle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Minesweeper",
+      "url": "https://minesweeper.online/",
+      "logo": "/logos/logo-8da999cebf318528.png",
+      "category": "Puzzle",
+      "sourceUrl": "https://minesweeper.online/",
+      "launch": "proxy",
+      "id": "minesweeper",
+      "description": "Use numbered clues to reveal safe squares without hitting a mine.",
+      "source": "Minesweeper official site",
+      "tags": [
+        "puzzle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Solitaire",
+      "url": "https://solitaired.com/",
+      "logo": "/logos/logo-1afc421f5e8b2106.png",
+      "category": "Cards",
+      "sourceUrl": "https://solitaired.com/",
+      "launch": "proxy",
+      "id": "solitaire",
+      "description": "Arrange cards into their foundations in a classic solitaire session.",
+      "source": "Solitaire official site",
+      "tags": [
+        "cards"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Lichess",
+      "url": "https://lichess.org/",
+      "logo": "/logos/logo-858b4a783e43d0de.svg",
+      "category": "Board",
+      "sourceUrl": "https://lichess.org/",
+      "launch": "proxy",
+      "id": "lichess",
+      "description": "Play online chess, practice tactics, or challenge the computer.",
+      "source": "Lichess official site",
+      "tags": [
+        "board"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Checkers",
+      "url": "https://www.247checkers.com/",
+      "logo": "/logos/logo-e66726c5e4c22a9b.png",
+      "category": "Board",
+      "sourceUrl": "https://www.247checkers.com/",
+      "launch": "proxy",
+      "id": "checkers",
+      "description": "Plan captures and promote your pieces in classic checkers.",
+      "source": "Checkers official site",
+      "tags": [
+        "board"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Tic Tac Toe",
+      "url": "https://playtictactoe.org/",
+      "logo": "/logos/logo-ab54bd82142f419d.png",
+      "category": "Board",
+      "sourceUrl": "https://playtictactoe.org/",
+      "launch": "proxy",
+      "id": "tic-tac-toe",
+      "description": "Place a line of three while preventing your opponent from doing the same.",
+      "source": "Tic Tac Toe official site",
+      "tags": [
+        "board"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Bubble Shooter",
+      "url": "https://www.bubbleshooter.net/",
+      "logo": "/logos/logo-2dccaf84440ea2bc.png",
+      "category": "Puzzle",
+      "sourceUrl": "https://www.bubbleshooter.net/",
+      "launch": "proxy",
+      "id": "bubble-shooter",
+      "description": "Match colored bubbles and clear the board with measured shots.",
+      "source": "Bubble Shooter official site",
+      "tags": [
+        "puzzle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Happy Wheels",
+      "url": "https://www.totaljerkface.com/happy_wheels.tjf",
+      "logo": "/logos/logo-a78a4eaf54de5e8e.jpg",
+      "category": "Arcade",
+      "sourceUrl": "https://www.totaljerkface.com/happy_wheels.tjf",
+      "launch": "proxy",
+      "id": "happy-wheels",
+      "description": "Get an unfortunate rider through a physics-filled obstacle course.",
+      "source": "Happy Wheels official site",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "Fireboy & Watergirl",
+      "url": "https://www.crazygames.com/game/fireboy-and-watergirl-the-forest-temple",
+      "logo": "https://imgs.crazygames.com/games/fireboy-and-watergirl-the-forest-temple/cover-1586285142530.jpg?metadata=none&quality=100&width=1200&height=630&fit=crop",
+      "category": "Puzzle",
+      "previousUrl": "https://www.fireboyandwatergirl.com/",
+      "sourceUrl": "https://www.crazygames.com/game/fireboy-and-watergirl-the-forest-temple",
+      "launch": "proxy",
+      "id": "fireboy-watergirl",
+      "description": "Coordinate two characters and solve their shared temple puzzles.",
+      "source": "CrazyGames",
+      "developer": "Oslo Albet",
+      "tags": [
+        "puzzle"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.crazygames.com/game/fireboy-and-watergirl-the-forest-temple",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Bloxd.io",
+      "url": "https://bloxd.io/",
+      "logo": "/logos/logo-7d3c459e26f822c2.png",
+      "category": "Sandbox",
+      "sourceUrl": "https://bloxd.io/",
+      "launch": "proxy",
+      "id": "bloxd-io",
+      "description": "Build, explore, and compete in multiplayer block worlds.",
+      "source": "Bloxd.io official site",
+      "tags": [
+        "sandbox"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded"
+    },
+    {
+      "name": "OvO",
+      "url": "https://www.crazygames.com/game/ovo",
+      "logo": "/logos/logo-37f3589cb6058348.png",
+      "category": "Platformer",
+      "sourceUrl": "https://www.crazygames.com/game/ovo",
+      "launch": "proxy",
+      "id": "ovo",
+      "description": "Chain precise jumps and slides through compact platform challenges.",
+      "source": "CrazyGames",
+      "developer": "Dedra Games",
+      "tags": [
+        "platformer"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "Legacy v4 local asset; original provenance not recorded",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Stickman Hook",
+      "url": "https://poki.com/en/g/stickman-hook",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/99e090d154caf30f3625df7e456d5984/stickman-hook-logo.png",
+      "category": "Arcade",
+      "previousUrl": "https://www.crazygames.com/game/stickman-hook",
+      "sourceUrl": "https://poki.com/en/g/stickman-hook",
+      "launch": "proxy",
+      "id": "stickman-hook",
+      "description": "Time your grappling swings to sail toward the finish.",
+      "source": "Poki",
+      "developer": "Madbox",
+      "tags": [
+        "arcade"
+      ],
+      "access": "Free browser play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/stickman-hook",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Subway Surfers",
+      "url": "https://poki.com/en/g/subway-surfers",
+      "category": "Arcade",
+      "tags": [
+        "runner",
+        "keyboard"
+      ],
+      "description": "Dodge trains, collect coins, and chase a longer run.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/subway-surfers",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/1c920b9279c2bedec567c1b58129ae8f/subway-surfers-logo.png",
+      "id": "subway-surfers",
+      "developer": "SYBO",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "featured": true,
+      "logoSource": "https://poki.com/en/g/subway-surfers",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Temple Run 2",
+      "url": "https://poki.com/en/g/temple-run-2",
+      "category": "Arcade",
+      "tags": [
+        "runner",
+        "keyboard"
+      ],
+      "description": "Leap and slide through ancient ruins while the chase speeds up.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/temple-run-2",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/b5c8b617f65be7cc4d56dd3657590ae7/temple-run-2-logo.png",
+      "id": "temple-run-2",
+      "developer": "Imangi Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/temple-run-2",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Retro Bowl College",
+      "url": "https://poki.com/en/g/retro-bowl-college",
+      "category": "Sports",
+      "tags": [
+        "football",
+        "management"
+      ],
+      "description": "Recruit a college football roster and call the winning plays.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/retro-bowl-college",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/d98547374c4129bf441b754d495e41aa/retro-bowl-college-logo.png",
+      "id": "retro-bowl-college",
+      "developer": "New Star Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "featured": true,
+      "logoSource": "https://poki.com/en/g/retro-bowl-college",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Tiny Fishing",
+      "url": "https://poki.com/en/g/tiny-fishing",
+      "category": "Idle",
+      "tags": [
+        "fishing",
+        "relaxing"
+      ],
+      "description": "Cast deeper, reel in fish, and upgrade your line.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/tiny-fishing",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/c8cb366d52fc2a67fb313c344efdbc9e/tiny-fishing-logo.png",
+      "id": "tiny-fishing",
+      "developer": "BuyHTML5",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "featured": true,
+      "logoSource": "https://poki.com/en/g/tiny-fishing",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Monkey Mart",
+      "url": "https://poki.com/en/g/monkey-mart",
+      "category": "Simulation",
+      "tags": [
+        "management",
+        "cozy"
+      ],
+      "description": "Grow produce and keep your expanding monkey market stocked.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/monkey-mart",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/93142510b4eb8a5b81fc264e31c00b88/monkey-mart-logo.png",
+      "id": "monkey-mart",
+      "developer": "TinyDobbins",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "featured": true,
+      "logoSource": "https://poki.com/en/g/monkey-mart",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Drive Mad",
+      "url": "https://poki.com/en/g/drive-mad",
+      "category": "Racing",
+      "tags": [
+        "physics",
+        "keyboard"
+      ],
+      "description": "Balance oversized wheels across increasingly awkward obstacle tracks.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/drive-mad",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/591d984dcac4fb694f3f8195bb8f6118/drive-mad-logo.png",
+      "id": "drive-mad",
+      "developer": "Fancade",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "featured": true,
+      "logoSource": "https://poki.com/en/g/drive-mad",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Level Devil",
+      "url": "https://poki.com/en/g/level-devil",
+      "category": "Platformer",
+      "tags": [
+        "precision",
+        "keyboard"
+      ],
+      "description": "Reach the exit while the level keeps changing the rules.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/level-devil",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/701e10b108ed7a0c68c738c46c9a705a/level-devil-logo.png",
+      "id": "level-devil",
+      "developer": "Unept",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "featured": true,
+      "logoSource": "https://poki.com/en/g/level-devil",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Poor Bunny",
+      "url": "https://poki.com/en/g/poor-bunny",
+      "category": "Arcade",
+      "tags": [
+        "survival",
+        "2-player"
+      ],
+      "description": "Collect carrots and avoid a rapidly growing barrage of traps.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/poor-bunny",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/b879100262e0821907e97a2eaf97a2bf/poor-bunny-logo.png",
+      "id": "poor-bunny",
+      "developer": "Adventure Islands",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/poor-bunny",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Dino Game",
+      "url": "https://poki.com/en/g/dinosaur-game",
+      "category": "Arcade",
+      "tags": [
+        "runner",
+        "quick-play"
+      ],
+      "description": "Time your jumps over cacti in a simple endless sprint.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/dinosaur-game",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/9afd3b92ab41ffca7f368a8fcbd6d39a75894efe0edbc14cf1f067cf625e6678/dinosaur-game-logo.png",
+      "id": "dino-game",
+      "developer": "Chrome UX",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/dinosaur-game",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Rodeo Stampede",
+      "url": "https://poki.com/en/g/rodeo-stampede-savannah",
+      "category": "Arcade",
+      "tags": [
+        "animals",
+        "runner"
+      ],
+      "description": "Ride wild animals and jump between them to extend the stampede.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/rodeo-stampede-savannah",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/fcf88a4f-9ec6-4a11-b83c-2df11d730590/rodeo-stampede-savannah-logo.png",
+      "id": "rodeo-stampede",
+      "developer": "Featherweight",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/rodeo-stampede-savannah",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Bad Ice-Cream",
+      "url": "https://poki.com/en/g/bad-ice-cream",
+      "category": "Arcade",
+      "tags": [
+        "2-player",
+        "maze"
+      ],
+      "description": "Collect fruit while creating ice barriers to escape enemies.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/bad-ice-cream",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/1cdb5c1a8c09ec5f8052a6c12bf6c79b/bad-ice-cream-logo.png",
+      "id": "bad-ice-cream",
+      "developer": "Nitrome",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/bad-ice-cream",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Blumgi Rocket",
+      "url": "https://poki.com/en/g/blumgi-rocket",
+      "category": "Racing",
+      "tags": [
+        "physics",
+        "keyboard"
+      ],
+      "description": "Use rocket boosts to guide a stunt car through inventive tracks.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/blumgi-rocket",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/672fb98802b00740e3c885cb2b31fc51/blumgi-rocket-logo.png",
+      "id": "blumgi-rocket",
+      "developer": "Blumgi",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/blumgi-rocket",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Blumgi Ball",
+      "url": "https://poki.com/en/g/blumgi-ball",
+      "category": "Sports",
+      "tags": [
+        "physics",
+        "basketball"
+      ],
+      "description": "Bounce, teleport, and line up creative basketball shots.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/blumgi-ball",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/5cc06f22e46c13e1c7917dad7c48e5dd/blumgi-ball-logo.png",
+      "id": "blumgi-ball",
+      "developer": "Blumgi",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/blumgi-ball",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Blumgi Slime",
+      "url": "https://poki.com/en/g/blumgi-slime",
+      "category": "Platformer",
+      "tags": [
+        "precision",
+        "2-player"
+      ],
+      "description": "Charge each jump and land on the next small platform.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/blumgi-slime",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/9aa6000ed201eba3c8f878c489a7c3ce/blumgi-slime-logo.png",
+      "id": "blumgi-slime",
+      "developer": "Blumgi",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "featured": true,
+      "logoSource": "https://poki.com/en/g/blumgi-slime",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Blumgi Bloom",
+      "url": "https://poki.com/en/g/blumgi-bloom",
+      "category": "Puzzle",
+      "tags": [
+        "physics",
+        "relaxing"
+      ],
+      "description": "Slice the ropes in the right order to grow every flower.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/blumgi-bloom",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/f9ea10a5c3cd14ac288a3fbd28b687d2/blumgi-bloom-logo.png",
+      "id": "blumgi-bloom",
+      "developer": "Blumgi",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/blumgi-bloom",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Blumgi Castle",
+      "url": "https://poki.com/en/g/blumgi-castle",
+      "category": "Arcade",
+      "tags": [
+        "aiming",
+        "physics"
+      ],
+      "description": "Aim explosive shots to knock opponents out of their fortresses.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/blumgi-castle",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/535793fb806824a12dfe0136c4208b51/blumgi-castle-logo.png",
+      "id": "blumgi-castle",
+      "developer": "Blumgi",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/blumgi-castle",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Blumgi Dragon",
+      "url": "https://poki.com/en/g/blumgi-dragon",
+      "category": "Arcade",
+      "tags": [
+        "aiming",
+        "action"
+      ],
+      "description": "Rescue fellow dragons with carefully aimed bursts of fire.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/blumgi-dragon",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/8f330ccd95d2be6425074df1d9d28e2a/blumgi-dragon-logo.png",
+      "id": "blumgi-dragon",
+      "developer": "Blumgi",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/blumgi-dragon",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Getaway Shootout",
+      "url": "https://poki.com/en/g/getaway-shootout",
+      "category": "Party",
+      "tags": [
+        "2-player",
+        "physics"
+      ],
+      "description": "Hop toward the escape vehicle and scramble for useful pickups.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/getaway-shootout",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/7e6806e76a4f8ad5b7a8ab8d1d42a74b/getaway-shootout-logo.png",
+      "id": "getaway-shootout",
+      "developer": "Neweichgames",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/getaway-shootout",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Rooftop Snipers",
+      "url": "https://poki.com/en/g/rooftop-snipers",
+      "category": "Party",
+      "tags": [
+        "2-player",
+        "physics"
+      ],
+      "description": "Jump and fire to send your opponent off the roof.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/rooftop-snipers",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/c127771edb0e821e4109b7058ae3f094/rooftop-snipers-logo.jpeg",
+      "id": "rooftop-snipers",
+      "developer": "Neweichgames",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/rooftop-snipers",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Ragdoll Hit",
+      "url": "https://poki.com/en/g/ragdoll-hit",
+      "category": "Arcade",
+      "tags": [
+        "physics",
+        "combat"
+      ],
+      "description": "Trade chaotic punches and kicks in ragdoll combat arenas.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/ragdoll-hit",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/3c892779be9dabb3589586c83ad3eeed/ragdoll-hit-logo.png",
+      "id": "ragdoll-hit",
+      "developer": "Ericetto",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/ragdoll-hit",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Boxing Random",
+      "url": "https://www.crazygames.com/game/boxing-random",
+      "category": "Sports",
+      "tags": [
+        "2-player",
+        "physics"
+      ],
+      "description": "Throw unpredictable punches in a changing boxing arena.",
+      "source": "CrazyGames",
+      "sourceUrl": "https://www.crazygames.com/game/boxing-random",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://imgs.crazygames.com/games/boxing-random/cover-1622139160089.jpeg?metadata=none&quality=100&width=1200&height=630&fit=crop",
+      "id": "boxing-random",
+      "developer": "RHM Interactive",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.crazygames.com/game/boxing-random",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Basket Random",
+      "url": "https://www.crazygames.com/game/basket-random",
+      "category": "Sports",
+      "tags": [
+        "2-player",
+        "basketball"
+      ],
+      "description": "Win rebounds and baskets with delightfully clumsy basketball teams.",
+      "source": "CrazyGames",
+      "sourceUrl": "https://www.crazygames.com/game/basket-random",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://imgs.crazygames.com/basket-random_16x9/20240617090207/basket-random_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop",
+      "id": "basket-random",
+      "developer": "RHM Interactive",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.crazygames.com/game/basket-random",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Soccer Random",
+      "url": "https://www.crazygames.com/game/soccer-random",
+      "category": "Sports",
+      "tags": [
+        "2-player",
+        "football"
+      ],
+      "description": "Land a clean kick while the pitch and players keep changing.",
+      "source": "CrazyGames",
+      "sourceUrl": "https://www.crazygames.com/game/soccer-random",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://imgs.crazygames.com/games/soccer-random/cover_16x9-1732744645362.png?metadata=none&quality=100&width=1200&height=630&fit=crop",
+      "id": "soccer-random",
+      "developer": "RHM Interactive",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.crazygames.com/game/soccer-random",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Volley Random",
+      "url": "https://www.crazygames.com/game/volley-random",
+      "category": "Sports",
+      "tags": [
+        "2-player",
+        "volleyball"
+      ],
+      "description": "Bounce into position and return the ball over the net.",
+      "source": "CrazyGames",
+      "sourceUrl": "https://www.crazygames.com/game/volley-random",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://imgs.crazygames.com/volley-random/20230131173658/volley-random-cover?metadata=none&quality=100&width=1200&height=630&fit=crop",
+      "id": "volley-random",
+      "developer": "RHM Interactive",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.crazygames.com/game/volley-random",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Soccer Skills World Cup",
+      "url": "https://poki.com/en/g/soccer-skills-world-cup",
+      "category": "Sports",
+      "tags": [
+        "football",
+        "mouse"
+      ],
+      "description": "Guide your national team through a fast tournament campaign.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/soccer-skills-world-cup",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/1a9642e779cab413962255ea953d1155/soccer-skills-world-cup-logo.png",
+      "id": "soccer-skills-world-cup",
+      "developer": "Radical Play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/soccer-skills-world-cup",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Soccer Skills Euro Cup",
+      "url": "https://poki.com/en/g/soccer-skills-euro-cup",
+      "category": "Sports",
+      "tags": [
+        "football",
+        "mouse"
+      ],
+      "description": "Drag to control your team and take a shot at the trophy.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/soccer-skills-euro-cup",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/d2eac3a621099d43faf5d47d2d7b488b/soccer-skills-euro-cup-logo.png",
+      "id": "soccer-skills-euro-cup",
+      "developer": "Radical Play",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/soccer-skills-euro-cup",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Penalty Shooters 2",
+      "url": "https://poki.com/en/g/penalty-shooters-2",
+      "category": "Sports",
+      "tags": [
+        "football",
+        "aiming"
+      ],
+      "description": "Switch between scoring penalties and saving the next shot.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/penalty-shooters-2",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/9f6353ca87481b7f34db483fcf480ae5/penalty-shooters-2-logo.jfif",
+      "id": "penalty-shooters-2",
+      "developer": "10x10games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/penalty-shooters-2",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "A Small World Cup",
+      "url": "https://poki.com/en/g/a-small-world-cup",
+      "category": "Sports",
+      "tags": [
+        "football",
+        "physics"
+      ],
+      "description": "Fling a single footballer into a tiny, chaotic tournament.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/a-small-world-cup",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/a1cf6b8e304d09cfb81aad6bc3fe1cd2/a-small-world-cup-logo.png",
+      "id": "a-small-world-cup",
+      "developer": "Rujo Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/a-small-world-cup",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Golf Champions",
+      "url": "https://poki.com/en/g/golf-champions",
+      "category": "Sports",
+      "tags": [
+        "golf",
+        "aiming"
+      ],
+      "description": "Judge each shot and work around hazards on compact golf holes.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/golf-champions",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/61d561d28320609cbfd0daf3fb98cb55/golf-champions-logo.png",
+      "id": "golf-champions",
+      "developer": "Bekho Team",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/golf-champions",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Rocket Soccer Derby",
+      "url": "https://poki.com/en/g/rocket-soccer-derby",
+      "category": "Sports",
+      "tags": [
+        "cars",
+        "football"
+      ],
+      "description": "Boost a car into the ball and battle for the next goal.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/rocket-soccer-derby",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/e521bbbf13a6480b60d75421e7edc8d8d0e1edadaccd7d43438864b62a74088a/rocket-soccer-derby-logo.png",
+      "id": "rocket-soccer-derby",
+      "developer": "No Pressure Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/rocket-soccer-derby",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Pool Club",
+      "url": "https://poki.com/en/g/pool-club",
+      "category": "Sports",
+      "tags": [
+        "pool",
+        "precision"
+      ],
+      "description": "Clear the table with measured shots before the clock runs out.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/pool-club",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/fe7b5c8267b63ee56134841474fe0aea/pool-club-logo.png",
+      "id": "pool-club",
+      "developer": "Ravalmatic",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/pool-club",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Table Tennis World Tour",
+      "url": "https://www.crazygames.com/game/table-tennis-world-tour",
+      "category": "Sports",
+      "tags": [
+        "table-tennis",
+        "mouse"
+      ],
+      "description": "Control your paddle and rally your way around the world.",
+      "source": "CrazyGames",
+      "sourceUrl": "https://www.crazygames.com/game/table-tennis-world-tour",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://imgs.crazygames.com/table-tennis-world-tour_16x9/20230908041108/table-tennis-world-tour_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop",
+      "id": "table-tennis-world-tour",
+      "developer": "Famobi",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.crazygames.com/game/table-tennis-world-tour",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Duck Life 4",
+      "url": "https://www.coolmathgames.com/0-duck-life-4",
+      "category": "Simulation",
+      "tags": [
+        "training",
+        "racing"
+      ],
+      "description": "Train a duck team and enter races with stronger skills.",
+      "source": "Coolmath Games",
+      "sourceUrl": "https://www.coolmathgames.com/0-duck-life-4",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "http://www.coolmathgames.com/sites/default/files/DuckLife4_OG-logo.jpg",
+      "id": "duck-life-4",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.coolmathgames.com/0-duck-life-4"
+    },
+    {
+      "name": "Papa's Freezeria",
+      "url": "https://poki.com/en/g/papas-freezeria",
+      "category": "Simulation",
+      "tags": [
+        "cooking",
+        "management"
+      ],
+      "description": "Build layered frozen treats and keep the customers happy.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/papas-freezeria",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/fe7c19da32800855dfb8f039adfe353b/papas-freezeria-logo.png",
+      "id": "papa-s-freezeria",
+      "developer": "Flipline Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/papas-freezeria",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Papa's Pizzeria",
+      "url": "https://poki.com/en/g/papas-pizzeria",
+      "category": "Simulation",
+      "tags": [
+        "cooking",
+        "management"
+      ],
+      "description": "Take orders, bake pizzas, and cut each one for waiting customers.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/papas-pizzeria",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/377fd7d97c2b2f4fe25618ccffcc601b/papas-pizzeria-logo.jfif",
+      "id": "papa-s-pizzeria",
+      "developer": "Flipline Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/papas-pizzeria",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Papa's Burgeria",
+      "url": "https://poki.com/en/g/papas-burgeria",
+      "category": "Simulation",
+      "tags": [
+        "cooking",
+        "management"
+      ],
+      "description": "Grill and stack burgers while balancing a busy order queue.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/papas-burgeria",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/4fad37685af404ca0f987d927358ab79/papas-burgeria-logo.jfif",
+      "id": "papa-s-burgeria",
+      "developer": "Flipline Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/papas-burgeria",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Papa's Sushiria",
+      "url": "https://poki.com/en/g/papas-sushiria",
+      "category": "Simulation",
+      "tags": [
+        "cooking",
+        "management"
+      ],
+      "description": "Prepare rice, rolls, and drinks for a demanding sushi crowd.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/papas-sushiria",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/cfd5ae6652950cfeb5b4cc0ffe41ed81/papas-sushiria-logo.png",
+      "id": "papa-s-sushiria",
+      "developer": "Flipline Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/papas-sushiria",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Stickman Climb 2",
+      "url": "https://poki.com/en/g/stickman-climb-2",
+      "category": "Platformer",
+      "tags": [
+        "physics",
+        "2-player"
+      ],
+      "description": "Use a pickaxe to swing a precarious climber past hazards.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/stickman-climb-2",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/3c338d4afffa6a269b9642efef13f5ca/stickman-climb-2-logo.png",
+      "id": "stickman-climb-2",
+      "developer": "No Pressure Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/stickman-climb-2",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Stickman Bike",
+      "url": "https://poki.com/en/g/stickman-bike",
+      "category": "Racing",
+      "tags": [
+        "bikes",
+        "physics"
+      ],
+      "description": "Stay upright as you ride across narrow platforms and big drops.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/stickman-bike",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/17432e2e72a990cfc88e1a58b76b5af0/stickman-bike-logo.png",
+      "id": "stickman-bike",
+      "developer": "WeLoPlay",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/stickman-bike",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Fancy Pants",
+      "url": "https://poki.com/en/g/fancy-pants",
+      "category": "Platformer",
+      "tags": [
+        "adventure",
+        "keyboard"
+      ],
+      "description": "Run and leap through a hand-drawn platform adventure.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/fancy-pants",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/e86e8f057ec357e9b1bc04963a99e752/fancy-pants-logo.png",
+      "id": "fancy-pants",
+      "developer": "Borne Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/fancy-pants",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "There Is No Game",
+      "url": "https://poki.com/en/g/there-is-no-game",
+      "category": "Puzzle",
+      "tags": [
+        "meta",
+        "mouse"
+      ],
+      "description": "Poke at the interface and discover what it is trying to hide.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/there-is-no-game",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/13d6aa7b-b818-4560-ad6b-2a6aa5444546/there-is-no-game-logo.jpg",
+      "id": "there-is-no-game",
+      "developer": "KaMiZoTo",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/there-is-no-game",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Who Is?",
+      "url": "https://poki.com/en/g/who-is",
+      "category": "Puzzle",
+      "tags": [
+        "logic",
+        "mouse"
+      ],
+      "description": "Look for clues and solve a series of visual riddles.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/who-is",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/373740bfb89dd3e6c1fb96674148e806/who-is-logo.png",
+      "id": "who-is",
+      "developer": "Unico Studio",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/who-is",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Brain Test: Tricky Puzzles",
+      "url": "https://poki.com/en/g/brain-test-tricky-puzzles",
+      "category": "Puzzle",
+      "tags": [
+        "logic",
+        "mouse"
+      ],
+      "description": "Question the obvious solution in a collection of tricky puzzles.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/brain-test-tricky-puzzles",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/f262d83ee394fcf98b378674e1430bfd/brain-test-tricky-puzzles-logo.png",
+      "id": "brain-test-tricky-puzzles",
+      "developer": "Unico Studio",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/brain-test-tricky-puzzles",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Big Tall Small",
+      "url": "https://poki.com/en/g/big-tall-small",
+      "category": "Puzzle",
+      "tags": [
+        "platformer",
+        "keyboard"
+      ],
+      "description": "Switch between three characters to reach every exit together.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/big-tall-small",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/f59d46dacd06735ccc83e92a39df96fd/big-tall-small-logo.png",
+      "id": "big-tall-small",
+      "developer": "Robert Alvarez",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/big-tall-small",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Red Ball 4",
+      "url": "https://poki.com/en/g/red-ball-4",
+      "category": "Platformer",
+      "tags": [
+        "physics",
+        "keyboard"
+      ],
+      "description": "Roll, jump, and push your way through a colorful adventure.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/red-ball-4",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/9b739087f9938fb143a2519252addbb8/red-ball-4-logo.png",
+      "id": "red-ball-4",
+      "developer": "Yohoho Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/red-ball-4",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Bloxorz",
+      "url": "https://www.coolmathgames.com/0-bloxorz",
+      "category": "Puzzle",
+      "tags": [
+        "logic",
+        "keyboard"
+      ],
+      "description": "Tip a rectangular block into its destination without falling.",
+      "source": "Coolmath Games",
+      "sourceUrl": "https://www.coolmathgames.com/0-bloxorz",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "http://www.coolmathgames.com/sites/default/files/Bloxorz_OG-logo.jpg",
+      "id": "bloxorz",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://www.coolmathgames.com/0-bloxorz"
+    },
+    {
+      "name": "Block the Pig",
+      "url": "https://poki.com/en/g/block-the-pig",
+      "category": "Puzzle",
+      "tags": [
+        "strategy",
+        "mouse"
+      ],
+      "description": "Place obstacles to stop a clever pig from finding an escape.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/block-the-pig",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/9fec1234ce2afd5e789f56da463dcffc/block-the-pig-logo.jpeg",
+      "id": "block-the-pig",
+      "developer": "Sun Temple",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/block-the-pig",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Sushi Party",
+      "url": "https://poki.com/en/g/sushi-party-io",
+      "category": "Arcade",
+      "tags": [
+        "snake",
+        "multiplayer"
+      ],
+      "description": "Gather tasty snacks and outmaneuver other snakes in a shared arena.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/sushi-party-io",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/e327f46027899af3e9573ef51450bb54/sushi-party-io-logo.png",
+      "id": "sushi-party",
+      "developer": "Terminarch Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/sushi-party-io",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Snake.is MLG Edition",
+      "url": "https://poki.com/en/g/snake-is-mlg-edition",
+      "category": "Arcade",
+      "tags": [
+        "snake",
+        "multiplayer"
+      ],
+      "description": "Grow a neon snake while navigating a crowded arena.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/snake-is-mlg-edition",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/30ed4c9b54023bb0d62d89a374d7ac8e/snake-is-mlg-edition-logo.png",
+      "id": "snake-is-mlg-edition",
+      "developer": "CrioDev",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/snake-is-mlg-edition",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Venge.io",
+      "url": "https://poki.com/en/g/venge-io",
+      "category": "FPS",
+      "tags": [
+        "multiplayer",
+        "keyboard"
+      ],
+      "description": "Compete in quick objective matches with a compact shooter loadout.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/venge-io",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/a2ddd7d16a599f8f01b65a3bc453e698/venge-io-logo.png",
+      "id": "venge-io",
+      "developer": "OnRush Studio",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/venge-io",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "War of Sticks",
+      "url": "https://poki.com/en/g/war-of-sticks",
+      "category": "Strategy",
+      "tags": [
+        "management",
+        "battles"
+      ],
+      "description": "Build resources and send an army into the next battle.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/war-of-sticks",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/3b580a021580bf9266fba837a8837039/war-of-sticks-logo.png",
+      "id": "war-of-sticks",
+      "developer": "Shoom Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/war-of-sticks",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Sword Masters",
+      "url": "https://poki.com/en/g/sword-masters",
+      "category": "Adventure",
+      "tags": [
+        "combat",
+        "exploration"
+      ],
+      "description": "Fight enemies, find equipment, and grow a stronger adventurer.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/sword-masters",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/87451be138d3f0073d16d4ba34494959/sword-masters-logo.png",
+      "id": "sword-masters",
+      "developer": "emolingo games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/sword-masters",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Vectaria.io",
+      "url": "https://poki.com/en/g/vectaria-io",
+      "category": "Sandbox",
+      "tags": [
+        "building",
+        "multiplayer"
+      ],
+      "description": "Explore a shared block world with building and survival modes.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/vectaria-io",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/260f3251a55c78a27fd15b9e4d675f88/vectaria-io-logo.png",
+      "id": "vectaria-io",
+      "developer": "Vectaria",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/vectaria-io",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Narrow.One",
+      "url": "https://poki.com/en/g/narrow-one",
+      "category": "FPS",
+      "tags": [
+        "archery",
+        "multiplayer"
+      ],
+      "description": "Use a bow to defend your team and capture the opposing flag.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/narrow-one",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/e9f87aed2de11520ecac587ffa98627d/narrow-one-logo.png",
+      "id": "narrow-one",
+      "developer": "Pelican Party Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/narrow-one",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Raft Wars",
+      "url": "https://poki.com/en/g/raft-wars",
+      "category": "Strategy",
+      "tags": [
+        "aiming",
+        "physics"
+      ],
+      "description": "Choose the right angle and power to defend your raft.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/raft-wars",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/d2a3bbd1bb8aea542835f4f8a353d388/raft-wars-logo.png",
+      "id": "raft-wars",
+      "developer": "Martijn Kunst",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/raft-wars",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Raft Wars Multiplayer",
+      "url": "https://poki.com/en/g/raft-wars-multiplayer",
+      "category": "Strategy",
+      "tags": [
+        "aiming",
+        "multiplayer"
+      ],
+      "description": "Exchange carefully aimed shots with another raft captain.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/raft-wars-multiplayer",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/78e1995f93a3705feaaa7a4243d2417a/raft-wars-multiplayer-logo.png",
+      "id": "raft-wars-multiplayer",
+      "developer": "Martijn Kunst",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/raft-wars-multiplayer",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Rabbit Samurai",
+      "url": "https://poki.com/en/g/rabbit-samurai",
+      "category": "Platformer",
+      "tags": [
+        "grappling",
+        "mouse"
+      ],
+      "description": "Attach a grappling line and swing toward carrots and rescued friends.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/rabbit-samurai",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/1daa52ab00ee04b28b68db8d54b2eb1e/rabbit-samurai-logo.png",
+      "id": "rabbit-samurai",
+      "developer": "IP Eliseenko Maksim Andreevich",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/rabbit-samurai",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Jumping Shell",
+      "url": "https://poki.com/en/g/jumping-shell",
+      "category": "Puzzle",
+      "tags": [
+        "platformer",
+        "keyboard"
+      ],
+      "description": "Leave your shell and recombine at the right moment to progress.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/jumping-shell",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/8c089d8a9ee0c1715ce06261d27ab0a4/jumping-shell-logo.png",
+      "id": "jumping-shell",
+      "developer": "Robert Alvarez",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/jumping-shell",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Temple of Boom",
+      "url": "https://poki.com/en/g/temple-of-boom",
+      "category": "Arcade",
+      "tags": [
+        "2-player",
+        "survival"
+      ],
+      "description": "Survive waves of monsters inside an ancient temple.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/temple-of-boom",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/d710fe8830d731072485a582881605ea/temple-of-boom-logo.png",
+      "id": "temple-of-boom",
+      "developer": "Colin Lane Games AB",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/temple-of-boom",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Duo Survival",
+      "url": "https://poki.com/en/g/duo-survival",
+      "category": "Puzzle",
+      "tags": [
+        "2-player",
+        "co-op"
+      ],
+      "description": "Combine two survivors' abilities to get past each obstacle.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/duo-survival",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/874d68cb26daf46ff1ad69e3467edf33/duo-survival-logo.png",
+      "id": "duo-survival",
+      "developer": "7Spot Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/duo-survival",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Tube Jumpers",
+      "url": "https://poki.com/en/g/tube-jumpers",
+      "category": "Party",
+      "tags": [
+        "2-player",
+        "physics"
+      ],
+      "description": "Stay on your floating tube while the water gets chaotic.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/tube-jumpers",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/866c01d7-d1fe-48b0-bcbf-bf5656c036d8/tube-jumpers-logo.png",
+      "id": "tube-jumpers",
+      "developer": "Neweichgames",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/tube-jumpers",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Two Button Bounce",
+      "url": "https://poki.com/en/g/two-button-bounce",
+      "category": "Puzzle",
+      "tags": [
+        "2-player",
+        "co-op"
+      ],
+      "description": "Bounce two characters through challenges with simple controls.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/two-button-bounce",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/5dcfc6809ad044b621cd114081d96f19/two-button-bounce-logo.png",
+      "id": "two-button-bounce",
+      "developer": "Robert Alvarez",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/two-button-bounce",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Murder",
+      "url": "https://poki.com/en/g/murder",
+      "category": "Arcade",
+      "tags": [
+        "timing",
+        "mouse"
+      ],
+      "description": "Time your move and watch for the king looking back.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/murder",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/baccf9660bfb476fe2c8ae9f5a2ec4d2/murder-logo.png",
+      "id": "murder",
+      "developer": "Studio Seufz",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/murder",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Unicycle Hero",
+      "url": "https://poki.com/en/g/unicycle-hero",
+      "category": "Sports",
+      "tags": [
+        "physics",
+        "keyboard"
+      ],
+      "description": "Balance on one wheel while attempting unusual athletic events.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/unicycle-hero",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/4089ea8322c7fe8a5416ef5ee237ea53/unicycle-hero-logo.png",
+      "id": "unicycle-hero",
+      "developer": "Unept",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/unicycle-hero",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Idle Ants",
+      "url": "https://poki.com/en/g/idle-ants",
+      "category": "Idle",
+      "tags": [
+        "management",
+        "relaxing"
+      ],
+      "description": "Grow an ant workforce to carry ever-larger objects away.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/idle-ants",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/d769fe608502e4f17192cf496d1a4b16/idle-ants-logo.jpeg",
+      "id": "idle-ants",
+      "developer": "Madbox",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/idle-ants",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Idle Mining Empire",
+      "url": "https://poki.com/en/g/idle-mining-empire",
+      "category": "Idle",
+      "tags": [
+        "management",
+        "tycoon"
+      ],
+      "description": "Expand a mine and automate the trip from shaft to market.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/idle-mining-empire",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/5c4239ad22ce9b302ca8158adbcd9c02/idle-mining-empire-logo.png",
+      "id": "idle-mining-empire",
+      "developer": "MarketJS",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/idle-mining-empire",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "My Perfect Hotel",
+      "url": "https://poki.com/en/g/my-perfect-hotel",
+      "category": "Simulation",
+      "tags": [
+        "management",
+        "cozy"
+      ],
+      "description": "Clean rooms, serve guests, and expand a bustling hotel.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/my-perfect-hotel",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/f39e22538799cae88cf1a630492c2e7b/my-perfect-hotel-logo.png",
+      "id": "my-perfect-hotel",
+      "developer": "SayGames",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/my-perfect-hotel",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Cow Bay",
+      "url": "https://poki.com/en/g/cow-bay",
+      "category": "Simulation",
+      "tags": [
+        "crafting",
+        "cozy"
+      ],
+      "description": "Gather resources and build a little settlement on a new island.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/cow-bay",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/cbeba74384bccce06ab61ad4aa08f9d3/cow-bay-logo.png",
+      "id": "cow-bay",
+      "developer": "7Spot Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/cow-bay",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Olly the Paw",
+      "url": "https://poki.com/en/g/olly-the-paw",
+      "category": "Simulation",
+      "tags": [
+        "animals",
+        "cozy"
+      ],
+      "description": "Harvest treats and help a small community grow.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/olly-the-paw",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/c0685a94fced8e38cb03a820a5e35474/olly-the-paw-logo.png",
+      "id": "olly-the-paw",
+      "developer": "7Spot Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/olly-the-paw",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Watermelon Drop",
+      "url": "https://poki.com/en/g/watermelon-drop",
+      "category": "Puzzle",
+      "tags": [
+        "merge",
+        "physics"
+      ],
+      "description": "Drop fruit carefully and merge matching pairs into larger fruit.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/watermelon-drop",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/02018885c1521dd2830683a0ecc86440/watermelon-drop-logo.png",
+      "id": "watermelon-drop",
+      "developer": "yeqwep",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/watermelon-drop",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Water Color Sort",
+      "url": "https://poki.com/en/g/water-color-sort",
+      "category": "Puzzle",
+      "tags": [
+        "logic",
+        "relaxing"
+      ],
+      "description": "Pour colored layers into separate tubes in the right order.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/water-color-sort",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/bea9b33040f3776e709fbe8c6e23c623/water-color-sort-logo.png",
+      "id": "water-color-sort",
+      "developer": "VNStart Studio",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/water-color-sort",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Woody Sort",
+      "url": "https://poki.com/en/g/woody-sort",
+      "category": "Puzzle",
+      "tags": [
+        "logic",
+        "relaxing"
+      ],
+      "description": "Arrange wooden pieces into matching groups to clear the puzzle.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/woody-sort",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/c3c48026cdf5c40bef4a331eeeb6b369/woody-sort-logo.png",
+      "id": "woody-sort",
+      "developer": "Unico Studio",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/woody-sort",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Apple Worm",
+      "url": "https://poki.com/en/g/apple-worm",
+      "category": "Puzzle",
+      "tags": [
+        "logic",
+        "keyboard"
+      ],
+      "description": "Guide a growing worm around tight turns toward the exit.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/apple-worm",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/580fff71cb7dbc4089283b6c6010f34e/apple-worm-logo.png",
+      "id": "apple-worm",
+      "developer": "Gibton",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/apple-worm",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Longcat",
+      "url": "https://poki.com/en/g/longcat",
+      "category": "Puzzle",
+      "tags": [
+        "logic",
+        "keyboard"
+      ],
+      "description": "Stretch a cat through the board without blocking its own path.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/longcat",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/ec15abd72b846d7a64a0f9936e2350a4/longcat-logo.png",
+      "id": "longcat",
+      "developer": "Fancade",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/longcat",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Sling Kong",
+      "url": "https://poki.com/en/g/sling-kong",
+      "category": "Arcade",
+      "tags": [
+        "aiming",
+        "animals"
+      ],
+      "description": "Stretch and release to climb past traps and moving platforms.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/sling-kong",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/cedefd1d0e8e38762124bf516ffd1b60/sling-kong-logo.png",
+      "id": "sling-kong",
+      "developer": "Protostar",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/sling-kong",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Fish Eat Fish",
+      "url": "https://poki.com/en/g/fish-eat-fish",
+      "category": "Arcade",
+      "tags": [
+        "3-player",
+        "animals"
+      ],
+      "description": "Eat smaller fish and keep clear of anything bigger than you.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/fish-eat-fish",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/6b2dbec9cc373ad5732ec704eb0820f2/fish-eat-fish-logo.png",
+      "id": "fish-eat-fish",
+      "developer": "Indiesoft",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/fish-eat-fish",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Tag",
+      "url": "https://poki.com/en/g/tag",
+      "category": "Party",
+      "tags": [
+        "multiplayer",
+        "keyboard"
+      ],
+      "description": "Chase friends through a platform arena and pass on the tag.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/tag",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/32d2b1401c7a86c61fae5afeed977b37/tag-logo.png",
+      "id": "tag",
+      "developer": "WeLoPlay",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/tag",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Make It Meme",
+      "url": "https://makeitmeme.com/",
+      "category": "Party",
+      "tags": [
+        "multiplayer",
+        "creative"
+      ],
+      "description": "Write captions and rate the funniest submissions with friends.",
+      "source": "Poki",
+      "sourceUrl": "https://makeitmeme.com/",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://makeitmeme.com/header.webp",
+      "id": "make-it-meme",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://makeitmeme.com/"
+    },
+    {
+      "name": "PartyToons",
+      "url": "https://poki.com/en/g/partytoons",
+      "category": "Party",
+      "tags": [
+        "multiplayer",
+        "minigames"
+      ],
+      "description": "Race through a rotating set of compact multiplayer challenges.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/partytoons",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/76b6f909fbb2de0768ec4d2d7c173c22/partytoons-logo.png",
+      "id": "partytoons",
+      "developer": "TinyDobbins",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/partytoons",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Ducklings.io",
+      "url": "https://poki.com/en/g/ducklings-io",
+      "category": "Arcade",
+      "tags": [
+        "animals",
+        "multiplayer"
+      ],
+      "description": "Rescue wandering ducklings and guide a larger flock safely home.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/ducklings-io",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/a55d935638969875b674471530c0e0a1/ducklings-io-logo.png",
+      "id": "ducklings-io",
+      "developer": "Pelican Party Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/ducklings-io",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Gobble",
+      "url": "https://poki.com/en/g/gobble",
+      "category": "Puzzle",
+      "tags": [
+        "physics",
+        "mouse"
+      ],
+      "description": "Move a hungry hole to collect objects while protecting the people.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/gobble",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/1801ed3d50240731304d3c98106a9e7a/gobble-logo.png",
+      "id": "gobble",
+      "developer": "Fancade",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/gobble",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Swingo",
+      "url": "https://poki.com/en/g/swingo",
+      "category": "Platformer",
+      "tags": [
+        "grappling",
+        "mouse"
+      ],
+      "description": "Swing a stretchy character toward fruit on each small level.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/swingo",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/96e63cd83e86dacd79883c3bb564c8d9/swingo-logo.png",
+      "id": "swingo",
+      "developer": "Blumgi × Gesinimo × Venturous",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/swingo",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Moving Truck",
+      "url": "https://poki.com/en/g/moving-truck",
+      "category": "Racing",
+      "tags": [
+        "physics",
+        "precision"
+      ],
+      "description": "Deliver a fragile load across tricky terrain without dropping it.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/moving-truck",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/19b9642957551ad9b197cd5f3b51cd75/moving-truck-logo.png",
+      "id": "moving-truck",
+      "developer": "7Spot Games",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/moving-truck",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Funny Shooter 2",
+      "url": "https://poki.com/en/g/funny-shooter-2",
+      "category": "FPS",
+      "tags": [
+        "single-player",
+        "action"
+      ],
+      "description": "Fight waves of strange enemies and upgrade your equipment.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/funny-shooter-2",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/894abba63a6b23fed823f404831f444f/funny-shooter-2-logo.jpeg",
+      "id": "funny-shooter-2",
+      "developer": "GoGoMan",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/funny-shooter-2",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Super Liquid Soccer",
+      "url": "https://poki.com/en/g/super-liquid-soccer",
+      "category": "Sports",
+      "tags": [
+        "football",
+        "keyboard"
+      ],
+      "description": "Pass, shoot, and tackle with a lively low-poly football team.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/super-liquid-soccer",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/17788bea90fd61ae9b76916383514aa2/super-liquid-soccer-logo.png",
+      "id": "super-liquid-soccer",
+      "developer": "Punyrobot",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/super-liquid-soccer",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Football Legends",
+      "url": "https://poki.com/en/g/football-legends",
+      "category": "Sports",
+      "tags": [
+        "2-player",
+        "football"
+      ],
+      "description": "Battle for goals in quick matches with powerful special moves.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/football-legends",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/c6e0f5e01cd4cbd95ec12dd54c881a89/football-legends-logo.png",
+      "id": "football-legends",
+      "developer": "Madpuffers",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/football-legends",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Short Life",
+      "url": "https://poki.com/en/g/short-life",
+      "category": "Platformer",
+      "tags": [
+        "survival",
+        "physics"
+      ],
+      "description": "Get an unlucky character past a gauntlet of moving hazards.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/short-life",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/d144b13b-fb27-48b8-b373-d57a9a7fff33/short-life-logo.png",
+      "id": "short-life",
+      "developer": "Gametornado",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/short-life",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Short Ride",
+      "url": "https://poki.com/en/g/short-ride",
+      "category": "Racing",
+      "tags": [
+        "bikes",
+        "survival"
+      ],
+      "description": "Ride carefully through a course packed with dangerous contraptions.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/short-ride",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/e972fa3b-f3e4-4896-9896-44412e77cc1b/short-ride-logo.png",
+      "id": "short-ride",
+      "developer": "Gametornado",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/short-ride",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Dreadhead Parkour",
+      "url": "https://poki.com/en/g/dreadhead-parkour",
+      "category": "Platformer",
+      "tags": [
+        "parkour",
+        "keyboard"
+      ],
+      "description": "Sprint, flip, and jump through an obstacle-filled parkour course.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/dreadhead-parkour",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/5f983c03072b3e1997e214130a98a199/dreadhead-parkour-logo.png",
+      "id": "dreadhead-parkour",
+      "developer": "Gametornado",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/dreadhead-parkour",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Crazy Cars",
+      "url": "https://poki.com/en/g/crazy-cars",
+      "category": "Racing",
+      "tags": [
+        "2-player",
+        "stunts"
+      ],
+      "description": "Roam a driving playground and chase stunt challenges.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/crazy-cars",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/2bc8004fcbb4387908a636e2a9d9ab4a/crazy-cars-logo.png",
+      "id": "crazy-cars",
+      "developer": "No Pressure Studios",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/crazy-cars",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Super Star Car",
+      "url": "https://poki.com/en/g/super-star-car",
+      "category": "Racing",
+      "tags": [
+        "racing",
+        "keyboard"
+      ],
+      "description": "Guide a race car through a career on demanding circuits.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/super-star-car",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/8376e3a632b640cd3e9ca53b9963000a/super-star-car-logo.jpeg",
+      "id": "super-star-car",
+      "developer": "Barnzmu",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/super-star-car",
+      "devices": [
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Drift Boss",
+      "url": "https://poki.com/en/g/drift-boss",
+      "category": "Racing",
+      "tags": [
+        "timing",
+        "quick-play"
+      ],
+      "description": "Time each turn to keep a drifting car on a narrow road.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/drift-boss",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/baf55f009fd63dd63c760a5dcfe79615/drift-boss-logo.png",
+      "id": "drift-boss",
+      "developer": "MarketJS",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/drift-boss",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "Chess Grandmaster",
+      "url": "https://poki.com/en/g/chess-grandmaster",
+      "category": "Board",
+      "tags": [
+        "chess",
+        "logic"
+      ],
+      "description": "Play computer chess and tackle tactical chess puzzles.",
+      "source": "Poki",
+      "sourceUrl": "https://poki.com/en/g/chess-grandmaster",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=400,height=400,fit=cover,f=webp/2e0837e37358ccf4b42ee54325f9ea8a/chess-grandmaster-logo.png",
+      "id": "chess-grandmaster",
+      "developer": "Ravalmatic",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator or publisher game page is reachable; proxy game compatibility may depend on cookies, WebGL, ads, or multiplayer services.",
+      "logoSource": "https://poki.com/en/g/chess-grandmaster",
+      "devices": [
+        "Mobile",
+        "Tablet",
+        "Desktop"
+      ]
+    },
+    {
+      "name": "A Dark Room",
+      "url": "https://adarkroom.doublespeakgames.com/",
+      "category": "Adventure",
+      "developer": "doublespeak games",
+      "tags": [
+        "text-adventure",
+        "exploration"
+      ],
+      "description": "Start with a fire and uncover a much larger world.",
+      "source": "doublespeak games",
+      "sourceUrl": "https://adarkroom.doublespeakgames.com/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "img/adr.png",
+      "id": "a-dark-room",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check.",
+      "logoSource": "https://adarkroom.doublespeakgames.com/"
+    },
+    {
+      "name": "Gridland",
+      "url": "https://gridland.doublespeakgames.com/",
+      "category": "Puzzle",
+      "developer": "doublespeak games",
+      "tags": [
+        "match-3",
+        "survival"
+      ],
+      "description": "Gather supplies in daylight and survive what appears after dark.",
+      "source": "doublespeak games",
+      "sourceUrl": "https://gridland.doublespeakgames.com/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "https://glmedia.doublespeakgames.com/img/badge.png",
+      "id": "gridland",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check.",
+      "logoSource": "https://gridland.doublespeakgames.com/"
+    },
+    {
+      "name": "Universal Paperclips",
+      "url": "https://www.decisionproblem.com/paperclips/index2.html",
+      "category": "Idle",
+      "developer": "Frank Lantz",
+      "tags": [
+        "incremental",
+        "strategy"
+      ],
+      "description": "Build a paperclip business and follow the consequences of endless growth.",
+      "source": "Frank Lantz",
+      "sourceUrl": "https://www.decisionproblem.com/paperclips/index2.html",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "universal-paperclips",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Little Alchemy",
+      "url": "https://littlealchemy.com/",
+      "category": "Puzzle",
+      "developer": "Jakub Koziol",
+      "tags": [
+        "crafting",
+        "relaxing"
+      ],
+      "description": "Combine a handful of elements to discover hundreds of new creations.",
+      "source": "Jakub Koziol",
+      "sourceUrl": "https://littlealchemy.com/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "little-alchemy",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Kittens Game",
+      "url": "https://kittensgame.com/web/",
+      "category": "Idle",
+      "developer": "bloodrizer",
+      "tags": [
+        "management",
+        "incremental"
+      ],
+      "description": "Grow a kitten settlement from catnip farming to ambitious discoveries.",
+      "source": "bloodrizer",
+      "sourceUrl": "https://kittensgame.com/web/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "kittens-game",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Trimps",
+      "url": "https://trimps.github.io/",
+      "category": "Idle",
+      "developer": "GreenSatellite",
+      "tags": [
+        "management",
+        "incremental"
+      ],
+      "description": "Gather resources, equip a growing colony, and explore hostile worlds.",
+      "source": "GreenSatellite",
+      "sourceUrl": "https://trimps.github.io/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "trimps",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Antimatter Dimensions",
+      "url": "https://ivark.github.io/",
+      "category": "Idle",
+      "developer": "Hevipelle",
+      "tags": [
+        "incremental",
+        "strategy"
+      ],
+      "description": "Build layers of production and reach beyond the first infinity.",
+      "source": "Hevipelle",
+      "sourceUrl": "https://ivark.github.io/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "antimatter-dimensions",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Candy Box",
+      "url": "https://candybox2.github.io/candybox/",
+      "category": "Adventure",
+      "developer": "aniwey",
+      "tags": [
+        "text-adventure",
+        "incremental"
+      ],
+      "description": "Let a candy counter become a strange little adventure.",
+      "source": "aniwey",
+      "sourceUrl": "https://candybox2.github.io/candybox/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "candy-box",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Candy Box 2",
+      "url": "https://candybox2.github.io/",
+      "category": "Adventure",
+      "developer": "aniwey",
+      "tags": [
+        "text-adventure",
+        "exploration"
+      ],
+      "description": "Spend candies, collect equipment, and explore an ASCII world.",
+      "source": "aniwey",
+      "sourceUrl": "https://candybox2.github.io/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "candy-box-2",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "The Evolution of Trust",
+      "url": "https://ncase.me/trust/",
+      "category": "Strategy",
+      "developer": "Nicky Case",
+      "tags": [
+        "game-theory",
+        "educational"
+      ],
+      "description": "Experiment with cooperation and discover which strategies survive repeated play.",
+      "source": "Nicky Case",
+      "sourceUrl": "https://ncase.me/trust/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "http://ncase.me/trust/social/thumbnail.png",
+      "id": "the-evolution-of-trust",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check.",
+      "logoSource": "https://ncase.me/trust/"
+    },
+    {
+      "name": "Adventures with Anxiety",
+      "url": "https://ncase.me/anxiety/",
+      "category": "Adventure",
+      "developer": "Nicky Case",
+      "tags": [
+        "story",
+        "choices"
+      ],
+      "description": "Play an anxious companion in an interactive story about getting along.",
+      "source": "Nicky Case",
+      "sourceUrl": "https://ncase.me/anxiety/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "https://ncase.me/anxiety/sharing/thumb.png",
+      "id": "adventures-with-anxiety",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check.",
+      "logoSource": "https://ncase.me/anxiety/"
+    },
+    {
+      "name": "HexGL",
+      "url": "https://hexgl.bkcore.com/play/",
+      "category": "Racing",
+      "developer": "Thibaut Despoulain",
+      "tags": [
+        "webgl",
+        "keyboard"
+      ],
+      "description": "Pilot a futuristic racing craft through a winding elevated circuit.",
+      "source": "Thibaut Despoulain",
+      "sourceUrl": "https://hexgl.bkcore.com/play/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "http://hexgl.bkcore.com/image.png",
+      "id": "hexgl",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check.",
+      "logoSource": "https://hexgl.bkcore.com/play/"
+    },
+    {
+      "name": "Astray",
+      "url": "https://wwwtyro.github.io/Astray/",
+      "category": "Puzzle",
+      "developer": "Rye Terrell",
+      "tags": [
+        "maze",
+        "keyboard"
+      ],
+      "description": "Guide a ball through progressively more complex three-dimensional mazes.",
+      "source": "Rye Terrell",
+      "sourceUrl": "https://wwwtyro.github.io/Astray/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "astray",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Space Huggers",
+      "url": "https://killedbyapixel.github.io/SpaceHuggers/",
+      "category": "Arcade",
+      "developer": "Frank Force",
+      "tags": [
+        "action",
+        "co-op"
+      ],
+      "description": "Explore destructible terrain and battle through an alien invasion.",
+      "source": "Frank Force",
+      "sourceUrl": "https://killedbyapixel.github.io/SpaceHuggers/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "space-huggers",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check.",
+      "featured": true
+    },
+    {
+      "name": "Bounce Back",
+      "url": "https://killedbyapixel.github.io/BounceBack/",
+      "category": "Adventure",
+      "developer": "Frank Force",
+      "tags": [
+        "action",
+        "exploration"
+      ],
+      "description": "Throw a returning weapon and explore a compact adventure world.",
+      "source": "Frank Force",
+      "sourceUrl": "https://killedbyapixel.github.io/BounceBack/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "bounce-back",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Q1K3",
+      "url": "https://phoboslab.org/q1k3/",
+      "category": "FPS",
+      "developer": "Dominic Szablewski",
+      "tags": [
+        "webgl",
+        "single-player"
+      ],
+      "description": "Explore a compact shooter with carefully placed enemies and secret areas.",
+      "source": "Dominic Szablewski",
+      "sourceUrl": "https://phoboslab.org/q1k3/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "q1k3",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Underrun",
+      "url": "https://phoboslab.org/underrun/",
+      "category": "Arcade",
+      "developer": "Dominic Szablewski",
+      "tags": [
+        "shooter",
+        "single-player"
+      ],
+      "description": "Navigate a dark facility and clear a path through hostile creatures.",
+      "source": "Dominic Szablewski",
+      "sourceUrl": "https://phoboslab.org/underrun/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "underrun",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Voidcall",
+      "url": "https://phoboslab.org/voidcall/",
+      "category": "Strategy",
+      "developer": "Dominic Szablewski",
+      "tags": [
+        "rts",
+        "space"
+      ],
+      "description": "Build a fleet and command a small force across a space battlefield.",
+      "source": "Dominic Szablewski",
+      "sourceUrl": "https://phoboslab.org/voidcall/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "voidcall",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Xibalba",
+      "url": "https://phoboslab.org/xibalba/",
+      "category": "FPS",
+      "developer": "Dominic Szablewski",
+      "tags": [
+        "retro",
+        "single-player"
+      ],
+      "description": "Fight through a retro adventure set in the Mayan underworld.",
+      "source": "Dominic Szablewski",
+      "sourceUrl": "https://phoboslab.org/xibalba/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "xibalba",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "XType",
+      "url": "https://phoboslab.org/xtype/",
+      "category": "Arcade",
+      "developer": "Dominic Szablewski",
+      "tags": [
+        "shooter",
+        "bullet-hell"
+      ],
+      "description": "Dodge volleys and dismantle increasingly enormous space bosses.",
+      "source": "Dominic Szablewski",
+      "sourceUrl": "https://phoboslab.org/xtype/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "xtype",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "Biolab Disaster",
+      "url": "https://playbiolab.com/",
+      "category": "Platformer",
+      "developer": "Dominic Szablewski",
+      "tags": [
+        "action",
+        "keyboard"
+      ],
+      "description": "Explore an infected laboratory armed with a plasma gun.",
+      "source": "Dominic Szablewski",
+      "sourceUrl": "https://playbiolab.com/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "",
+      "id": "biolab-disaster",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check."
+    },
+    {
+      "name": "ZType",
+      "url": "https://zty.pe/",
+      "category": "Skill",
+      "developer": "Dominic Szablewski",
+      "tags": [
+        "typing",
+        "space"
+      ],
+      "description": "Type enemy words quickly to defend your spaceship.",
+      "source": "Dominic Szablewski",
+      "sourceUrl": "https://zty.pe/",
+      "launch": "direct",
+      "access": "Free browser play",
+      "logo": "https://zty.pe/media/ztype-card.png",
+      "id": "ztype",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Creator page returned HTTP 200 without a restrictive frame header; Aether loads it directly. Gameplay is not claimed from this check.",
+      "logoSource": "https://zty.pe/"
+    },
+    {
+      "name": "13th Floor",
+      "url": "https://play.js13kgames.com/13th-floor/",
+      "category": "Adventure",
+      "developer": "Rob Louie",
+      "tags": [
+        "horror",
+        "stealth",
+        "tiny-game"
+      ],
+      "description": "Find the next key and stay hidden from the presence stalking the floor.",
+      "source": "js13kGames 2024",
+      "sourceUrl": "https://js13kgames.com/2024/games/13th-floor",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/13th-floor/master/.website/cover.png",
+      "id": "13th-floor",
+      "sourceRepository": "https://github.com/js13kGames/13th-floor",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2024/games/13th-floor"
+    },
+    {
+      "name": "Coup Ahoo",
+      "url": "https://play.js13kgames.com/coup-ahoo/",
+      "category": "Strategy",
+      "developer": "Antti Haavikko",
+      "tags": [
+        "dice",
+        "ships",
+        "tiny-game"
+      ],
+      "description": "Build your cargo of dice and challenge a fleet of rival captains.",
+      "source": "js13kGames 2024",
+      "sourceUrl": "https://js13kgames.com/2024/games/coup-ahoo",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/coup-ahoo/main/.website/cover.png",
+      "id": "coup-ahoo",
+      "sourceRepository": "https://github.com/js13kGames/coup-ahoo",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2024/games/coup-ahoo"
+    },
+    {
+      "name": "Ghosted",
+      "url": "https://play.js13kgames.com/ghosted/",
+      "category": "Puzzle",
+      "developer": "Jani Nykänen",
+      "tags": [
+        "sokoban",
+        "keyboard",
+        "tiny-game"
+      ],
+      "description": "Push rocks while alive, then collect the coins as a ghost.",
+      "source": "js13kGames 2024",
+      "sourceUrl": "https://js13kgames.com/2024/games/ghosted",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/ghosted/main/.website/cover.png",
+      "id": "ghosted",
+      "sourceRepository": "https://github.com/js13kGames/ghosted",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2024/games/ghosted"
+    },
+    {
+      "name": "13 Steps to Escape",
+      "url": "https://play.js13kgames.com/13-steps-to-escape/",
+      "category": "Puzzle",
+      "developer": "Jonathan Vallet",
+      "tags": [
+        "escape",
+        "logic",
+        "tiny-game"
+      ],
+      "description": "Push crates, collect keys, and reach each flag within a limited move budget.",
+      "source": "js13kGames 2024",
+      "sourceUrl": "https://js13kgames.com/2024/games/13-steps-to-escape",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/13-steps-to-escape/main/.website/cover.png",
+      "id": "13-steps-to-escape",
+      "sourceRepository": "https://github.com/js13kGames/13-steps-to-escape",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2024/games/13-steps-to-escape"
+    },
+    {
+      "name": "The Way of the Dodo",
+      "url": "https://play.js13kgames.com/the-way-of-the-dodo/",
+      "category": "Platformer",
+      "developer": "Jesper Rasmussen",
+      "tags": [
+        "keyboard",
+        "arcade",
+        "tiny-game"
+      ],
+      "description": "Guide an unlikely hero through a compact platform adventure.",
+      "source": "js13kGames 2024",
+      "sourceUrl": "https://js13kgames.com/2024/games/the-way-of-the-dodo",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/the-way-of-the-dodo/main/.website/cover.png",
+      "id": "the-way-of-the-dodo",
+      "sourceRepository": "https://github.com/js13kGames/the-way-of-the-dodo",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2024/games/the-way-of-the-dodo"
+    },
+    {
+      "name": "Brewing Disaster",
+      "url": "https://play.js13kgames.com/brewing-disaster/",
+      "category": "Strategy",
+      "developer": "Adrien Guéret",
+      "tags": [
+        "alchemy",
+        "logic",
+        "tiny-game"
+      ],
+      "description": "Duel another wizard by manipulating the ingredients in a shared cauldron.",
+      "source": "js13kGames 2024",
+      "sourceUrl": "https://js13kgames.com/2024/games/brewing-disaster",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/brewing-disaster/main/.website/cover.png",
+      "id": "brewing-disaster",
+      "sourceRepository": "https://github.com/js13kGames/brewing-disaster",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2024/games/brewing-disaster"
+    },
+    {
+      "name": "Phantomicus",
+      "url": "https://play.js13kgames.com/phantomicus/",
+      "category": "FPS",
+      "developer": "Cody Ebberson",
+      "tags": [
+        "dungeon",
+        "exploration",
+        "tiny-game"
+      ],
+      "description": "Hunt troublesome ghosts in a small first-person horror shooter.",
+      "source": "js13kGames 2024",
+      "sourceUrl": "https://js13kgames.com/2024/games/phantomicus",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/phantomicus/main/.website/cover.png",
+      "id": "phantomicus",
+      "sourceRepository": "https://github.com/js13kGames/phantomicus",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2024/games/phantomicus"
+    },
+    {
+      "name": "DR1V3N WILD",
+      "url": "https://play.js13kgames.com/dr1v3n-wild/",
+      "category": "Racing",
+      "developer": "Frank Force",
+      "tags": [
+        "retro",
+        "keyboard",
+        "tiny-game"
+      ],
+      "description": "Race through ten colorful stages on a procedurally drawn highway.",
+      "source": "js13kGames 2024",
+      "sourceUrl": "https://js13kgames.com/2024/games/dr1v3n-wild",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/dr1v3n-wild/main/.website/cover.png",
+      "id": "dr1v3n-wild",
+      "sourceRepository": "https://github.com/js13kGames/dr1v3n-wild",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "featured": true,
+      "logoSource": "https://js13kgames.com/2024/games/dr1v3n-wild"
+    },
+    {
+      "name": "Bubble Burst",
+      "url": "https://play.js13kgames.com/bubble-burst/",
+      "category": "Arcade",
+      "developer": "John Edvard",
+      "tags": [
+        "arcade",
+        "aiming",
+        "tiny-game"
+      ],
+      "description": "Steer a bubble through obstacles and avoid dangerous enemy bubbles.",
+      "source": "js13kGames 2024",
+      "sourceUrl": "https://js13kgames.com/2024/games/bubble-burst",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/bubble-burst/main/.website/cover.png",
+      "id": "bubble-burst",
+      "sourceRepository": "https://github.com/js13kGames/bubble-burst",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2024/games/bubble-burst"
+    },
+    {
+      "name": "CLAWSTRIKE",
+      "url": "https://play.js13kgames.com/clawstrike/",
+      "category": "Arcade",
+      "developer": "Rémi Vansteelandt",
+      "tags": [
+        "action",
+        "keyboard",
+        "tiny-game"
+      ],
+      "description": "Cut through enemy waves and retry fast combat challenges as a furious cat.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/clawstrike",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/clawstrike/main/.website/cover.png",
+      "id": "clawstrike",
+      "sourceRepository": "https://github.com/js13kGames/clawstrike",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/clawstrike"
+    },
+    {
+      "name": "Cat Survivors",
+      "url": "https://play.js13kgames.com/cat-survivors/",
+      "category": "Arcade",
+      "developer": "Elias Ku and Alexandra Al",
+      "tags": [
+        "survival",
+        "roguelike",
+        "tiny-game"
+      ],
+      "description": "Keep a black cat alive while fighting a growing swarm.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/cat-survivors",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/cat-survivors/master/.website/cover.png",
+      "id": "cat-survivors",
+      "sourceRepository": "https://github.com/js13kGames/cat-survivors",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/cat-survivors"
+    },
+    {
+      "name": "Witchcat",
+      "url": "https://play.js13kgames.com/witchcat/",
+      "category": "Adventure",
+      "developer": "Jonathan Vallet and Lylouf",
+      "tags": [
+        "cats",
+        "magic",
+        "tiny-game"
+      ],
+      "description": "Explore a small magical adventure built around a black cat.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/witchcat",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/witchcat/main/.website/cover.png",
+      "id": "witchcat",
+      "sourceRepository": "https://github.com/js13kGames/witchcat",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/witchcat"
+    },
+    {
+      "name": "Triska the Ninja Cat",
+      "url": "https://play.js13kgames.com/triska-the-ninja-cat/",
+      "category": "Platformer",
+      "developer": "John Edvard",
+      "tags": [
+        "cats",
+        "action",
+        "tiny-game"
+      ],
+      "description": "Dash and leap through a nimble ninja cat adventure.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/triska-the-ninja-cat",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/triska-the-ninja-cat/main/.website/cover.png",
+      "id": "triska-the-ninja-cat",
+      "sourceRepository": "https://github.com/js13kGames/triska-the-ninja-cat",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/triska-the-ninja-cat"
+    },
+    {
+      "name": "Black Cat Squadron",
+      "url": "https://play.js13kgames.com/black-cat-squadron/",
+      "category": "Arcade",
+      "developer": "Jesper Rasmussen",
+      "tags": [
+        "flight",
+        "shooter",
+        "tiny-game"
+      ],
+      "description": "Tap to fire and hold to climb in a compact one-button flight shooter.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/black-cat-squadron",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/black-cat-squadron/main/.website/cover.png",
+      "id": "black-cat-squadron",
+      "sourceRepository": "https://github.com/js13kGames/black-cat-squadron",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/black-cat-squadron"
+    },
+    {
+      "name": "Catculus",
+      "url": "https://play.js13kgames.com/catculus/",
+      "category": "Puzzle",
+      "developer": "Antti Haavikko",
+      "tags": [
+        "cats",
+        "logic",
+        "tiny-game"
+      ],
+      "description": "Match tiles to a target sum and test your memory and arithmetic.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/catculus",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/catculus/main/.website/cover.png",
+      "id": "catculus",
+      "sourceRepository": "https://github.com/js13kGames/catculus",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/catculus"
+    },
+    {
+      "name": "Non-Mewtonian Cat",
+      "url": "https://play.js13kgames.com/non-mewtonian-cat/",
+      "category": "Puzzle",
+      "developer": "Mohammed Saud",
+      "tags": [
+        "physics",
+        "cats",
+        "tiny-game"
+      ],
+      "description": "Experiment with a cat and unconventional movement puzzles.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/non-mewtonian-cat",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/non-mewtonian-cat/main/.website/cover.png",
+      "id": "non-mewtonian-cat",
+      "sourceRepository": "https://github.com/js13kGames/non-mewtonian-cat",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/non-mewtonian-cat"
+    },
+    {
+      "name": "Whiskers Witch Adventure",
+      "url": "https://play.js13kgames.com/whiskers-witch-adventure/",
+      "category": "Adventure",
+      "developer": "Rob Louie",
+      "tags": [
+        "cats",
+        "magic",
+        "tiny-game"
+      ],
+      "description": "Help a witch's companion navigate a tiny magical world.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/whiskers-witch-adventure",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/whiskers-witch-adventure/master/.website/cover.png",
+      "id": "whiskers-witch-adventure",
+      "sourceRepository": "https://github.com/js13kGames/whiskers-witch-adventure",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/whiskers-witch-adventure"
+    },
+    {
+      "name": "Kuro Neko Market",
+      "url": "https://play.js13kgames.com/kuro-neko-market/",
+      "category": "Simulation",
+      "developer": "Federico Tibaldo",
+      "tags": [
+        "cats",
+        "management",
+        "tiny-game"
+      ],
+      "description": "Run a tiny market and keep the feline customers moving.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/kuro-neko-market",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/kuro-neko-market/main/.website/cover.png",
+      "id": "kuro-neko-market",
+      "sourceRepository": "https://github.com/js13kGames/kuro-neko-market",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/kuro-neko-market"
+    },
+    {
+      "name": "Ashes of Ulthar",
+      "url": "https://play.js13kgames.com/ashes-of-ulthar/",
+      "category": "Strategy",
+      "developer": "Elliot Nelson",
+      "tags": [
+        "survival",
+        "cats",
+        "tiny-game"
+      ],
+      "description": "Manage a small settlement in a dark cat-themed survival challenge.",
+      "source": "js13kGames 2025",
+      "sourceUrl": "https://js13kgames.com/2025/games/ashes-of-ulthar",
+      "launch": "proxy",
+      "access": "Free browser play",
+      "logo": "https://raw.githubusercontent.com/js13kGames/ashes-of-ulthar/main/.website/cover.png",
+      "id": "ashes-of-ulthar",
+      "sourceRepository": "https://github.com/js13kGames/ashes-of-ulthar",
+      "checkedAt": "2026-10-08",
+      "httpStatus": 200,
+      "launchNotes": "Official tiny-game player restricts frame ancestors; launch through Aether proxy. Gameplay was not verified by the page check.",
+      "logoSource": "https://js13kgames.com/2025/games/ashes-of-ulthar"
+    }
+  ],
+  "apps": [
+    {
+      "name": "YouTube",
+      "url": "https://www.youtube.com",
+      "logo": "/logos/logo-744e227b2723cfdc.svg",
+      "category": "Video"
+    },
+    {
+      "name": "Discord",
+      "url": "https://discord.com/app",
+      "logo": "/logos/logo-3b40645d553d86f2.svg",
+      "category": "Chat"
+    },
+    {
+      "name": "Spotify",
+      "url": "https://open.spotify.com",
+      "logo": "/logos/logo-53edcf76fba96d2d.svg",
+      "category": "Music"
+    },
+    {
+      "name": "Reddit",
+      "url": "https://www.reddit.com",
+      "logo": "/logos/logo-411d75793e656a70.svg",
+      "category": "Social"
+    },
+    {
+      "name": "Twitch",
+      "url": "https://www.twitch.tv",
+      "logo": "/logos/logo-b10a66592f87cf61.svg",
+      "category": "Video"
+    },
+    {
+      "name": "TikTok",
+      "url": "https://www.tiktok.com",
+      "logo": "/logos/logo-abe968142b2c7766.svg",
+      "category": "Social"
+    },
+    {
+      "name": "Instagram",
+      "url": "https://www.instagram.com",
+      "logo": "/logos/logo-47d981e7856f60ab.svg",
+      "category": "Social"
+    },
+    {
+      "name": "X (Twitter)",
+      "url": "https://twitter.com",
+      "logo": "/logos/logo-835f59eef34fe347.svg",
+      "category": "Social"
+    },
+    {
+      "name": "Netflix",
+      "url": "https://www.netflix.com",
+      "logo": "/logos/logo-7fea15eea5118472.svg",
+      "category": "Video"
+    },
+    {
+      "name": "ChatGPT",
+      "url": "https://chat.openai.com",
+      "logo": "/logos/logo-3a1dd941a107749a.png",
+      "category": "AI"
+    },
+    {
+      "name": "Claude",
+      "url": "https://claude.ai",
+      "logo": "/logos/logo-b16f8d71c79d204e.svg",
+      "category": "AI"
+    },
+    {
+      "name": "Wikipedia",
+      "url": "https://www.wikipedia.org",
+      "logo": "/logos/logo-65f982fc4688e0df.svg",
+      "category": "Reference"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com",
+      "logo": "/logos/logo-3afd34281e3f37c9.svg",
+      "category": "Dev"
+    },
+    {
+      "name": "Stack Overflow",
+      "url": "https://stackoverflow.com",
+      "logo": "/logos/logo-b96a44d7a514f30c.svg",
+      "category": "Dev"
+    },
+    {
+      "name": "Gmail",
+      "url": "https://mail.google.com",
+      "logo": "/logos/logo-f3ac6c44b6c73989.svg",
+      "category": "Email"
+    },
+    {
+      "name": "Google Drive",
+      "url": "https://drive.google.com",
+      "logo": "/logos/logo-88dd4a484f95b396.svg",
+      "category": "Files"
+    },
+    {
+      "name": "Google Docs",
+      "url": "https://docs.google.com",
+      "logo": "/logos/logo-2ad494e9d08de2a4.svg",
+      "category": "Files"
+    },
+    {
+      "name": "Google Sheets",
+      "url": "https://sheets.google.com",
+      "logo": "/logos/logo-df36c200e1624fd2.svg",
+      "category": "Files"
+    },
+    {
+      "name": "GeForce NOW",
+      "url": "https://play.geforcenow.com",
+      "logo": "/logos/logo-8532a547e18a9ab1.svg",
+      "category": "Cloud Gaming"
+    },
+    {
+      "name": "SoundCloud",
+      "url": "https://soundcloud.com",
+      "logo": "/logos/logo-79b3b5c32160ee32.svg",
+      "category": "Music"
+    },
+    {
+      "name": "Pinterest",
+      "url": "https://www.pinterest.com",
+      "logo": "/logos/logo-2ac8060ad5806912.svg",
+      "category": "Social"
+    },
+    {
+      "name": "Tumblr",
+      "url": "https://www.tumblr.com",
+      "logo": "/logos/logo-6e6d39528492900d.svg",
+      "category": "Social"
+    },
+    {
+      "name": "Notion",
+      "url": "https://www.notion.so",
+      "logo": "/logos/logo-7b2231e6d9e72023.svg",
+      "category": "Productivity"
+    },
+    {
+      "name": "Figma",
+      "url": "https://www.figma.com",
+      "logo": "/logos/logo-ad95b8e8af36ed5e.svg",
+      "category": "Design"
+    },
+    {
+      "name": "Khan Academy",
+      "url": "https://www.khanacademy.org",
+      "logo": "/logos/logo-179398f7c4b8325a.svg",
+      "category": "Learning"
+    },
+    {
+      "name": "Duolingo",
+      "url": "https://www.duolingo.com",
+      "logo": "/logos/logo-4ab467b25e4d94de.svg",
+      "category": "Learning"
+    },
+    {
+      "name": "Desmos",
+      "url": "https://www.desmos.com/calculator",
+      "logo": "/logos/logo-7cd02e4e69c56e97.png",
+      "category": "Learning"
+    }
+  ]
+}

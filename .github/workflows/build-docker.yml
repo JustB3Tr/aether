@@ -1,0 +1,56 @@
+name: Build Aether Docker Image
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build image for TrueNAS x86-64
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          tags: aether:5.0.0
+          load: true
+          push: false
+      - name: Smoke test container
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --detach --name aether-smoke --publish 127.0.0.1:13000:3000 aether:5.0.0
+          trap 'docker logs aether-smoke || true; docker rm -f aether-smoke || true' EXIT
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:13000/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo 'App did not become healthy in 60 seconds' >&2
+          exit 1
+      - name: Export Docker image as tar.gz
+        if: success() || failure()
+        shell: bash
+        run: |
+          if docker image inspect aether:5.0.0 >/dev/null 2>&1; then
+            docker save aether:5.0.0 | gzip -1 > aether-image-linux-amd64.tar.gz
+            sha256sum aether-image-linux-amd64.tar.gz > aether-image-linux-amd64.sha256
+          fi
+      - name: Upload Docker image artifacts
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aether-docker-image-linux-amd64
+          path: |
+            aether-image-linux-amd64.tar.gz
+            aether-image-linux-amd64.sha256
+          if-no-files-found: error
+          retention-days: 30
+

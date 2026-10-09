@@ -1,0 +1,17 @@
+.git
+.github
+node_modules
+npm-debug.log*
+*.tar
+*.tar.gz
+*.zip
+.env
+.env.*
+userdata
+dependency-inspect
+container-port.txt
+.Codex
+design
+tools
+outputs
+docs/research-catalog.json

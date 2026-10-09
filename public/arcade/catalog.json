@@ -1,0 +1,306 @@
+[
+  {
+    "id": "aether-snake",
+    "name": "Neon Serpent",
+    "url": "/arcade/index.html?game=snake",
+    "logo": "/arcade/covers/snake.svg",
+    "category": "Arcade",
+    "description": "One more bite. One less place to turn.",
+    "tags": [
+      "snake",
+      "keyboard",
+      "touch",
+      "quick",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": true
+  },
+  {
+    "id": "aether-merge",
+    "name": "Signal Merge",
+    "url": "/arcade/index.html?game=merge",
+    "logo": "/arcade/covers/merge.svg",
+    "category": "Puzzle",
+    "description": "Slide the signal. Find your way to 2048.",
+    "tags": [
+      "2048",
+      "numbers",
+      "keyboard",
+      "touch",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": true
+  },
+  {
+    "id": "aether-breakout",
+    "name": "Prism Break",
+    "url": "/arcade/index.html?game=breakout",
+    "logo": "/arcade/covers/breakout.svg",
+    "category": "Arcade",
+    "description": "A clean angle. A chain reaction.",
+    "tags": [
+      "breakout",
+      "keyboard",
+      "touch",
+      "quick",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": true
+  },
+  {
+    "id": "aether-mines",
+    "name": "Quiet Minefield",
+    "url": "/arcade/index.html?game=mines",
+    "logo": "/arcade/covers/mines.svg",
+    "category": "Puzzle",
+    "description": "Read the grid. Trust the numbers.",
+    "tags": [
+      "minesweeper",
+      "logic",
+      "keyboard",
+      "touch",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-memory",
+    "name": "Echo Pairs",
+    "url": "/arcade/index.html?game=memory",
+    "logo": "/arcade/covers/memory.svg",
+    "category": "Puzzle",
+    "description": "Sixteen cards. Eight little echoes.",
+    "tags": [
+      "memory",
+      "matching",
+      "touch",
+      "quick",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-tictactoe",
+    "name": "Threefold",
+    "url": "/arcade/index.html?game=tictactoe",
+    "logo": "/arcade/covers/tictactoe.svg",
+    "category": "Strategy",
+    "description": "Three in a row. Think a move ahead.",
+    "tags": [
+      "tic-tac-toe",
+      "ai",
+      "keyboard",
+      "touch",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-connect4",
+    "name": "Gravity Four",
+    "url": "/arcade/index.html?game=connect4",
+    "logo": "/arcade/covers/connect4.svg",
+    "category": "Strategy",
+    "description": "Let it drop. Make it count.",
+    "tags": [
+      "connect-four",
+      "ai",
+      "keyboard",
+      "touch",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-reaction",
+    "name": "Pulse Check",
+    "url": "/arcade/index.html?game=reaction",
+    "logo": "/arcade/covers/reaction.svg",
+    "category": "Skill",
+    "description": "Wait for the signal. Catch the moment.",
+    "tags": [
+      "reaction",
+      "keyboard",
+      "touch",
+      "quick",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-scramble",
+    "name": "Cipher Scramble",
+    "url": "/arcade/index.html?game=scramble",
+    "logo": "/arcade/covers/scramble.svg",
+    "category": "Word",
+    "description": "A familiar word hiding in plain sight.",
+    "tags": [
+      "word",
+      "keyboard",
+      "touch",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-slide",
+    "name": "Tile Shift",
+    "url": "/arcade/index.html?game=slide",
+    "logo": "/arcade/covers/slide.svg",
+    "category": "Puzzle",
+    "description": "Fifteen pieces. One space to breathe.",
+    "tags": [
+      "sliding-puzzle",
+      "logic",
+      "keyboard",
+      "touch",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-simon",
+    "name": "Afterglow",
+    "url": "/arcade/index.html?game=simon",
+    "logo": "/arcade/covers/simon.svg",
+    "category": "Memory",
+    "description": "Listen with your eyes. Follow the glow.",
+    "tags": [
+      "simon",
+      "memory",
+      "keyboard",
+      "touch",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-dodge",
+    "name": "Meteor Lane",
+    "url": "/arcade/index.html?game=dodge",
+    "logo": "/arcade/covers/dodge.svg",
+    "category": "Arcade",
+    "description": "A quiet ship in an increasingly busy sky.",
+    "tags": [
+      "survival",
+      "keyboard",
+      "touch",
+      "quick",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": true
+  },
+  {
+    "id": "aether-lights",
+    "name": "Night Switch",
+    "url": "/arcade/index.html?game=lights",
+    "logo": "/arcade/covers/lights.svg",
+    "category": "Puzzle",
+    "description": "A constellation waiting to go dark.",
+    "tags": [
+      "lights-out",
+      "logic",
+      "keyboard",
+      "touch",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-sudoku",
+    "name": "Still Sudoku",
+    "url": "/arcade/index.html?game=sudoku",
+    "logo": "/arcade/covers/sudoku.svg",
+    "category": "Puzzle",
+    "description": "Nine quiet lines. One complete pattern.",
+    "tags": [
+      "sudoku",
+      "logic",
+      "keyboard",
+      "touch",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-color",
+    "name": "Hue Hunt",
+    "url": "/arcade/index.html?game=color",
+    "logo": "/arcade/covers/color.svg",
+    "category": "Skill",
+    "description": "Find the signal hiding in the shades.",
+    "tags": [
+      "color",
+      "reaction",
+      "keyboard",
+      "touch",
+      "quick",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  },
+  {
+    "id": "aether-orbit",
+    "name": "Orbit Lock",
+    "url": "/arcade/index.html?game=orbit",
+    "logo": "/arcade/covers/orbit.svg",
+    "category": "Skill",
+    "description": "A moving needle. A shrinking window.",
+    "tags": [
+      "timing",
+      "keyboard",
+      "touch",
+      "quick",
+      "offline"
+    ],
+    "launch": "local",
+    "local": true,
+    "source": "Aether Originals",
+    "featured": false
+  }
+]

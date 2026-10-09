@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1230" viewBox="0 0 1280 1230" role="img" aria-labelledby="title desc">
+  <title id="title">Aether 5.0.0 data flow</title>
+  <desc id="desc">Aether browser shell uses local retry state, profile API and atomic files, Original game messages, proxy transports and remote sites, and temporary Party rooms. A separate private host updater validates GitHub releases and controls Docker preflight, replacement and retained backups.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto-start-reverse"><path d="M0 0 9 4.5 0 9Z" fill="#79c8b9"/></marker>
+    <style>
+      .box{fill:#192b30;stroke:#79c8b9;stroke-width:1.5;rx:12}.store{fill:#26323f;stroke:#b5a3eb;stroke-width:1.5;rx:12}.host{fill:#2a283b;stroke:#b5a3eb;stroke-width:1.5;rx:12}.edge{fill:none;stroke:#79c8b9;stroke-width:2;marker-end:url(#arrow)}.both{marker-start:url(#arrow)}.label{font:16px 'Segoe UI',Arial,sans-serif;fill:#ecf5f2}.small{font:13px 'Segoe UI',Arial,sans-serif;fill:#b4c7c4}.section{font:20px 'Segoe UI',Arial,sans-serif;fill:#b5a3eb}
+    </style>
+  </defs>
+  <rect width="1280" height="1230" fill="#101a20"/>
+  <text x="35" y="36" font-family="Segoe UI,Arial,sans-serif" font-size="25" fill="#edf8f4">Aether 5.0.0 · data and control flow</text>
+  <text x="35" y="59" class="small">2026-10-09 · Application origin, durable data and private host control</text>
+  <rect x="35" y="86" width="295" height="72" class="store"/><text x="55" y="114" class="label">Device state</text><text x="55" y="138" class="small">Profile-scoped cache + pending writes</text>
+  <rect x="420" y="86" width="400" height="72" class="box"/><text x="440" y="114" class="label">Browser: Aether shell / eight routes</text><text x="440" y="138" class="small">Navigation, library, Focus, profile, launches</text>
+  <path d="M420 122H330" class="edge both"/>
+  <rect x="35" y="230" width="270" height="75" class="box"/><text x="55" y="258" class="label">Local Original iframe</text><text x="55" y="282" class="small">16 games / paused runtime / rules</text>
+  <rect x="350" y="230" width="270" height="75" class="box"/><text x="370" y="258" class="label">Express API</text><text x="370" y="282" class="small">Catalog + profile CRUD / save ACK</text>
+  <rect x="665" y="230" width="245" height="75" class="box"/><text x="685" y="258" class="label">Artwork fetch / cache</text><text x="685" y="282" class="small">Catalog allowlist / safe DNS / limits</text>
+  <rect x="955" y="230" width="290" height="75" class="box"/><text x="975" y="258" class="label">Proxy iframe</text><text x="975" y="282" class="small">UV / Scramjet / Rammerhead</text>
+  <path d="M460 158V187H170V230" class="edge both"/><text x="55" y="211" class="small">gp-init / checked gp-save messages</text>
+  <path d="M535 158V230" class="edge both"/><text x="544" y="194" class="small">CRUD / ACK</text>
+  <path d="M715 158V187H788V230" class="edge"/><text x="790" y="208" class="small">Covers</text>
+  <path d="M820 122H1100V230" class="edge"/><text x="1000" y="181" class="small">Launch</text>
+  <rect x="35" y="395" width="270" height="75" class="box"/><text x="55" y="424" class="label">Party WebSocket server</text><text x="55" y="448" class="small">Bounded clients / messages / state</text>
+  <rect x="350" y="395" width="270" height="75" class="store"/><text x="370" y="424" class="label">data/games.json</text><text x="370" y="448" class="small">202 games + 27 apps / source metadata</text>
+  <rect x="955" y="395" width="290" height="75" class="box"/><text x="975" y="424" class="label">Server proxy transports</text><text x="975" y="448" class="small">Bare / Wisp / RH request pipelines</text>
+  <path d="M435 86V72H18V433H35" class="edge both"/><text x="34" y="366" class="small">Create / join / chat / share / ACK</text>
+  <path d="M485 395V305" class="edge"/><text x="496" y="360" class="small">Parsed catalog</text>
+  <path d="M1100 305V395" class="edge both"/><text x="1114" y="356" class="small">Engine traffic</text>
+  <rect x="35" y="555" width="270" height="75" class="store"/><text x="55" y="584" class="label">Temporary Party rooms</text><text x="55" y="608" class="small">Memory only / reset on restart</text>
+  <rect x="350" y="555" width="270" height="75" class="store"/><text x="370" y="584" class="label">USERS_DIR profile JSON</text><text x="370" y="608" class="small">Serialized writes / atomic rename</text>
+  <rect x="665" y="555" width="245" height="75" class="box"/><text x="685" y="584" class="label">Remote websites</text><text x="685" y="608" class="small">Third-party behavior / accounts</text>
+  <rect x="955" y="555" width="290" height="75" class="store"/><text x="975" y="584" class="label">Persistent RH sessions</text><text x="975" y="608" class="small">USERS_DIR/rammerhead-sessions</text>
+  <path d="M170 470V555" class="edge both"/>
+  <path d="M585 305H637V518H485V555" class="edge both"/><text x="352" y="539" class="small">Read / write / return saved profile</text>
+  <path d="M788 305V555" class="edge both"/><text x="795" y="494" class="small">Validated covers</text>
+  <path d="M1020 470V510H880V555" class="edge both"/><text x="885" y="532" class="small">Browsing egress</text>
+  <path d="M1170 470V555" class="edge both"/>
+  <text x="35" y="686" class="small">Trust boundary: proxy transport access and untrusted same-origin content require an explicit deployment policy.</text>
+  <text x="35" y="710" class="small">Profiles use UUID capabilities. General proxy routes are separate from artwork's safe fetch policy.</text>
+  <rect x="18" y="755" width="1244" height="430" rx="18" fill="#171c2c" stroke="#b5a3eb" stroke-dasharray="7 5"/>
+  <text x="40" y="794" class="section">Private NAS host control · no Docker socket or updater API in the web image</text>
+  <rect x="40" y="853" width="280" height="88" class="host"/><text x="60" y="884" class="label">GitHub stable release assets</text><text x="60" y="910" class="small">Pinned repository / HTTPS hosts</text>
+  <rect x="390" y="853" width="300" height="88" class="host"/><text x="410" y="884" class="label">Host updater</text><text x="410" y="910" class="small">Kernel lock / event watcher / state</text>
+  <rect x="760" y="853" width="465" height="88" class="host"/><text x="780" y="884" class="label">Docker: isolated preflight then replacement</text><text x="780" y="910" class="small">Health + version checks / preserve named volume</text>
+  <path d="M320 897H390" class="edge"/><text x="41" y="829" class="small">Version / size / SHA-256 / platform / image ID</text>
+  <path d="M690 897H760" class="edge"/><text x="704" y="880" class="small">CLI</text>
+  <path d="M805 853V780H648V666H485V630" class="edge both"/><text x="679" y="768" class="small">Same userdata volume on replacement</text>
+  <rect x="390" y="1050" width="390" height="82" class="store"/><text x="410" y="1080" class="label">Retained image and userdata backup</text><text x="410" y="1107" class="small">Consistent snapshot / caught-failure restoration</text>
+  <path d="M540 941V1050" class="edge"/><text x="555" y="1000" class="small">Snapshot before switch</text>
+  <text x="40" y="1162" class="small">Publisher trust remains explicit. Backups/containers persist; power-loss recovery can require an administrator.</text>
+  <text x="35" y="1211" class="small">Rendered vector version of the Mermaid flow in AUDIT.md. Solid edges: requests, messages or control. Purple boxes: stored state/private host.</text>
+</svg>
