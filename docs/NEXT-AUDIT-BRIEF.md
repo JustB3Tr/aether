@@ -4,23 +4,23 @@ Prepared on 2026-10-09 for the **next turn**. This is a handoff, not an audit, a
 
 ## 1. Release status and evidence gate
 
-The current work is **Aether 5.1.0**, a visual overhaul of all eight main pages. At preparation time, source/package/Docker version fields are 5.1.0; the v5.1 image build, publication, and NAS deployment are **in progress**. The release owner must fill the following table from actual final evidence before ending the current turn. Do not infer deployment from a source version or a Docker build completing.
+The current release is **Aether 5.1.0**, a visual overhaul of all eight main pages. The release owner completed the local image build, publication, and real restart-triggered NAS upgrade on 2026-10-10 UTC / 2026-10-09 Pacific. The table below records deployment-owner evidence, not an independent clean-room audit verdict. Refresh live state when the next pass starts.
 
-| Final v5.1 field | Status at preparation |
+| Final v5.1 field | Release-owner evidence |
 | --- | --- |
-| Source commit / release tag target | Pending release owner |
-| Docker tag / platform | Expected `aether:5.1.0` / `linux/amd64`; confirmation pending |
-| Image config ID / version label | Pending image inspection |
-| Saved gzip bytes / SHA-256 | Pending final archive manifest |
-| Local image startup / source-to-image agreement | Pending current-image evidence |
-| Public GitHub release asset identities | Pending provider readback |
-| NAS installed image / `/health.version` | Pending deployed checks |
-| Preserved `aether-data` / rollback snapshot | Pending deployment evidence |
-| HTTPS frontend and actual proxy content | Pending deployed browser evidence |
-| Restart watcher log / replacement outcome | Pending private-host evidence |
+| Source commit / release tag target | `1c10141a8e98969b569d9f4842fc9ae990617718` / `v5.1.0` |
+| Docker tag / platform | `aether:5.1.0` / `linux/amd64` |
+| Image config ID / version label | `sha256:0c43c4947cd803d4a65940c40236fa836caf6b4d3633055729e47b880bd04ab1` / `5.1.0`, matching NAS |
+| Saved gzip bytes / SHA-256 | 81,704,057 / `9e1020e5178588503916e6965938e0dd79773a9c383a2d99503bc7a780a77e47` |
+| Local image startup / source-to-image agreement | Healthy; 117 shipped files match current workspace; ten HTTP readbacks and initialized Original launch |
+| Public GitHub release asset identities | Stable release archive asset `626697180`, manifest `626697179`, SHA file `626697177`; provider archive digest matches |
+| NAS installed image / `/health.version` | Matching config ID, `aether:5.1.0`, running/healthy, health `5.1.0` |
+| Preserved `aether-data` / rollback snapshot | Existing volume; all three persistent files match stopped-write snapshot; backup container `aether-backup-20261010T014224846043Z` retained |
+| HTTPS frontend and actual proxy content | New Home; deployed Enter launches actual UV destination inside shell, no recorded console error; other full proxy journeys pending fresh audit |
+| Restart watcher log / replacement outcome | Download 01:42:17, install 01:42:27 UTC; actual 5.0.0 to 5.1.0 replacement, no failed version |
 | v5.1 UI journeys independently exercised | Not established by this brief |
 
-The previous completed deployment is documented in [DEPLOYMENT.md](DEPLOYMENT.md) and `outputs/v5.0.0/`. Those facts describe **v5.0.0**, not the final v5.1 image. The prior audit is [audit/AUDIT.md](audit/AUDIT.md); its report cutoff and owner-attributed results are explicit. Do not copy its passing counts into a fresh audit as new work.
+The current release is documented in [DEPLOYMENT.md](DEPLOYMENT.md) and `outputs/v5.1.0/`. Historical [v5.0 deployment](DEPLOYMENT-5.0.0.md) and `outputs/v5.0.0/` do not establish fresh v5.1 results. The prior audit is [audit/AUDIT.md](audit/AUDIT.md); its report cutoff and owner-attributed results are explicit. Do not copy its passing counts into a fresh audit as new work.
 
 ## 2. Verified source and run context
 
@@ -43,6 +43,8 @@ npm start
 ```
 
 Open `http://127.0.0.1:15000/` and `/health`. The README path is disposable preview data, not the NAS volume. Do not point a test process at production userdata. If the documented port is already owned by a preview, identify its process, version, and directory before deciding whether to reuse it; do not kill every Node process or silently invent startup flags. If the README is missing/ambiguous or the documented startup fails, the auditor skill requires a clear user request for the missing information.
+
+At this turn's handoff, the documented source preview remains on port 15000 with v5.1.0 and disposable data. An additional actual-image preview is `aether-v51-preview`, `http://127.0.0.1:15002/`, volume `aether-v51-preview-data`; it is healthy. These are live-state hints to verify again. The README's generic Docker example uses port 15001 and may encounter an older preview, so do not infer its version from its name. Private current captures are `.Codex/design-v51/screenshots/`; release-owner readbacks are `outputs/v5.1.0/`.
 
 Do not set `NODE_TLS_REJECT_UNAUTHORIZED=0`. The existing local preview bootstrap explicitly removes that inherited variable before starting its child. This does not resolve RH's separate internal certificate-validation finding.
 
