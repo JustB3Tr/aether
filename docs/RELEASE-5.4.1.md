@@ -1,5 +1,7 @@
 # Aether 5.4.1
 
+Superseded by [5.4.2](RELEASE-5.4.2.md), which fixes the Wisp stream limiter issue found during public deployment checks. The NAS is deployed on 5.4.2.
+
 ## Changes
 
 - Public production mode without a Cloudflare Access login. Separate app and proxy HTTPS hosts remain mandatory.
