@@ -1,5 +1,9 @@
 # Aether: next full audit and visionary brief
 
+## Current handoff, 2026-10-10
+
+The local source/image is now **5.4.0**. Read [5.4 release notes](RELEASE-5.4.0.md) and the current [README](../README.md) before using the historical brief below. Local Docker previews are at ports 15007 and 15008, with 228 games, 23 Originals and 41 apps. The completed checks are 59 JavaScript tests, 30 mocked updater tests, real local proxy journeys for all engines/both Scramjet transports, and the new game smoke checks documented in the release notes. The local image archive is ready, but 5.4 has not been published or deployed; production Cloudflare Access configuration remains required. Refresh actual NAS/provider state rather than treating the old 5.1 deployment snapshot below as current. This notice does not constitute a fresh independent audit or visionary session.
+
 Prepared on 2026-10-09 for the **next turn**. This is a handoff, not an audit, a new visionary session, or an implementation plan approved for execution. No application changes, browser checks, tests, NAS actions, or skill exercise were performed while preparing this document.
 
 ## 1. Release status and evidence gate

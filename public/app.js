@@ -1,8 +1,12 @@
-/* Aether 5.1.0: one shell, a fast library, and explicit save acknowledgements. */
+/* Aether 5.4.0: isolated browser routes, visible recovery, and explicit save acknowledgements. */
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
 const $$ = selector => [...document.querySelectorAll(selector)];
+const AETHER_CONFIG = window.AETHER_CONFIG || {};
+const launchHealth = window.AetherLaunchHealth;
+const isolatedProxyOrigin = AETHER_CONFIG.proxyOrigin && AETHER_CONFIG.appOrigin && AETHER_CONFIG.proxyOrigin !== AETHER_CONFIG.appOrigin ? AETHER_CONFIG.proxyOrigin : '';
+const engineAsset = path => `${path}?v=${encodeURIComponent(AETHER_CONFIG.version || 'dev')}`;
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
 const put = (id, text) => { if ($(id)) $(id).textContent = text; };
@@ -27,14 +31,18 @@ async function api(path, method = 'GET', body, ms = 15000) {
 }
 let toastTimer;
 function toast(message) { put('toast', message); $('toast')?.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast')?.classList.remove('show'), 4500); }
-const PAGE_META = {home:['Home','Find your next favorite.'],games:['Games','Small worlds. Big possibilities.'],apps:['Apps','Your useful corner of the web.'],focus:['Focus','Make room for one good thing.'],multiplayer:['Party','A room for your people.'],proxies:['Proxies','The web, through Aether.'],profile:['Profile','Your progress travels with you.'],settings:['Settings','Make Aether feel like you.']};
-const defaults = {motion:'system',density:'comfortable',newTab:false,focusDefault:false,timerLen:25,confirmLeave:true};
+const PAGE_META = {home:['Home','Find your next favorite.'],games:['Games','Small worlds. Big possibilities.'],apps:['Apps','Your useful corner of the web.'],focus:['Focus','Make room for one good thing.'],multiplayer:['Party','A room for your people.'],proxies:['Browser','The web, through Aether.'],profile:['Profile','Your progress travels with you.'],settings:['Settings','Make Aether feel like you.']};
+const defaults = {scramjetTransport:'libcurl',motion:'system',density:'comfortable',newTab:false,focusDefault:false,timerLen:25,confirmLeave:true};
 const legacySettings = readLocal('aether_settings',{});
 let settings = {...defaults,...legacySettings,newTab:Boolean(legacySettings.newTab ?? legacySettings.aboutBlank),...readLocal('aether_v5_settings',{})};
 let games = [], apps = [], items = [], byId = new Map(), canonical = new Map();
 function cookieProfileUUID() { const value = (document.cookie || '').split(';').map(part => part.trim()).find(part => part.startsWith('gp_uid='))?.slice(7) || ''; return /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(value) ? value : ''; }
 let user = {uuid:cookieProfileUUID(),saves:{}}, favorites = new Set(), recents = [], notes = '', todos = [], profileReady = false;
 let currentPage = '', active = null, launchSerial = 0, frameTimer, overlayInvoker, paletteInvoker;
+let profileGate = Promise.resolve();
+let profileHydrated = false;
+const routePreferenceKey = 'aether_v54_routes';
+let routePreferences = launchHealth.validatePreferences(readLocal(routePreferenceKey,{}));
 let focusMode = false, profileRevealed = false;
 const library = {query:'',category:'all',favorites:false,availability:'all',sort:'recommended',limit:48};
 const appFilter = {query:'',category:'all',favorites:false};
@@ -116,8 +124,8 @@ async function flushMetadata() {
   const saves = {'__meta__:favorites':[...favorites],'__meta__:recents':recents,'__meta__:focus_notes':notes,'__meta__:todos':todos,'__meta__:settings':settings};
   const key = pendingKey(); await api('/api/save-batch','POST',{saves}); Object.assign(user.saves,saves); for (const [name,value] of Object.entries(saves)) acknowledgeMetadata(key,name.slice('__meta__:'.length),value);
 }
-function favorite(item) { if (!item) return; favorites.has(item.id) ? favorites.delete(item.id) : favorites.add(item.id); saveMetadata('favorites',[...favorites]); refreshActivePage(); toast(favorites.has(item.id) ? 'Added to favorites' : 'Removed from favorites'); }
-function recordRecent(item,score) { if (!item?.id || !byId.has(item.id)) return; const previous = recents.find(r => r.id === item.id); recents = [{id:item.id,url:item.url,at:Date.now(),score:Number.isFinite(score) ? score : previous?.score},...recents.filter(r => r.id !== item.id)].slice(0,30); saveMetadata('recents',recents); }
+function favorite(item) { if (!item) return;if(!profileHydrated){toast('Your profile is loading. This favorite is queued.');void profileGate.then(()=>favorite(item));return;} favorites.has(item.id) ? favorites.delete(item.id) : favorites.add(item.id); saveMetadata('favorites',[...favorites]); refreshActivePage(); toast(favorites.has(item.id) ? 'Added to favorites' : 'Removed from favorites'); }
+function recordRecent(item,score) { if (!item?.id || !byId.has(item.id)) return;if(!profileHydrated){void profileGate.then(()=>recordRecent(item,score));return;} const previous = recents.find(r => r.id === item.id); recents = [{id:item.id,url:item.url,at:Date.now(),score:Number.isFinite(score) ? score : previous?.score},...recents.filter(r => r.id !== item.id)].slice(0,30); saveMetadata('recents',recents); }
 function artwork(item) { if (!item.logo) return ''; try { const url = new URL(item.logo,location.origin); return url.origin === location.origin ? url.pathname + url.search : `/api/artwork?url=${encodeURIComponent(url.href)}`; } catch { return ''; } }
 function accessLabel(item) { return /portal/i.test(item.access || '') ? 'Game portal' : /room|host/i.test(item.access || '') ? 'Room code' : /account|paid/i.test(item.access || '') ? 'Account / plan' : item.local ? 'Ready here' : item.launch === 'direct' ? 'Direct play' : 'Through proxy'; }
 function card(item,index = 0) {
@@ -150,26 +158,62 @@ function renderApps() { const result = apps.filter(a => (!appFilter.query || a.s
 function refreshActivePage() { if (currentPage === 'home') renderHome(); else if (currentPage === 'games') renderGames(); else if (currentPage === 'apps') renderApps(); else if (currentPage === 'focus') renderFocus(); else if (currentPage === 'profile') renderProfile(); }
 function go(page,updateHash = true) {
   if (!PAGE_META[page]) page = 'home'; const changed = currentPage !== page; currentPage = page;
+  focusMode = page === 'focus'; document.body.classList.toggle('focus-mode',focusMode);
   document.body.dataset.page = page;
   $$('.page').forEach(el => el.classList.toggle('active',el.id === `page-${page}`)); $$('.nav-item').forEach(el => { const chosen = el.dataset.page === page; el.classList.toggle('active',chosen); if (chosen) el.setAttribute('aria-current','page'); else el.removeAttribute('aria-current'); });
-  put('pageTitle',PAGE_META[page][0]); put('pageSubtitle',PAGE_META[page][1]); if (updateHash && location.hash !== `#${page}`) history.pushState(null,'',`#${page}`);
+  put('pageTitle',PAGE_META[page][0]); put('pageSubtitle',PAGE_META[page][1]); $('focusToggle')?.setAttribute('aria-label',focusMode ? 'Exit Focus' : 'Open Focus'); $('focusToggle')?.setAttribute('aria-pressed',String(focusMode)); if (updateHash && location.hash !== `#${page}`) history.pushState(null,'',`#${page}`);
   refreshActivePage(); if (page === 'multiplayer') refreshRooms(); if (page === 'settings') renderSettings();
   if (changed) window.scrollTo({top:0,left:0,behavior:'instant'});
   if (typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('aether:page',{detail:{page,changed}}));
 }
 function syncInert() { const app = document.querySelector('.app'); if (app) app.inert = Boolean(!$('overlay')?.hidden || !$('palette')?.hidden); }
-function trapFocus(event) { if (event.key !== 'Tab') return; const modal = !$('palette')?.hidden ? $('palette') : !$('overlay')?.hidden ? $('overlay') : null; if (!modal) return; const buttons = [...modal.querySelectorAll('button,input,textarea,select,iframe,[tabindex="0"]')].filter(el => !el.hidden && !el.disabled && el.getClientRects().length); if (!buttons.length) return; const first = buttons[0], last = buttons[buttons.length - 1]; if (event.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }
+function trapFocus(event) { if (event.key !== 'Tab') return; const modal = !$('palette')?.hidden ? $('palette') : !$('overlay')?.hidden ? $('overlay') : null; if (!modal) return; const buttons = [...modal.querySelectorAll('button,a[href],input,textarea,select,iframe,[tabindex="0"]')].filter(el => !el.hidden && !el.disabled && el.getClientRects().length); if (!buttons.length) return; const first = buttons[0], last = buttons[buttons.length - 1]; if (event.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }
 function normalizeTarget(raw) { const value = String(raw).trim(); if (!value) throw new Error('Enter a website or search first.'); if (/^https?:\/\//i.test(value)) return new URL(value).href; if (/^[a-z][a-z0-9+.-]*:/i.test(value) && !/^[^\s/:]+:\d+(\/|$)/.test(value)) throw new Error('Use an HTTP or HTTPS website.'); if (/^(localhost|[a-z0-9-]+(?:\.[a-z0-9-]+)+)(:\d+)?([/?#].*)?$/i.test(value)) return new URL(`https://${value}`).href; return `https://duckduckgo.com/?q=${encodeURIComponent(value)}`; }
-function shellURL(item,engine,url) { const target = new URL(location.pathname,location.origin); if (item?.id && byId.has(item.id)) { target.searchParams.set('aether_game',item.id); if (['uv','scramjet','rammer'].includes(engine)) target.searchParams.set('aether_proxy',engine); } else { target.searchParams.set('aether_proxy',engine || 'uv'); target.searchParams.set('aether_url',url); } target.hash = item?.kind === 'app' ? 'apps' : item?.id ? 'games' : 'proxies'; return target.href; }
-function openShell(item,engine,url) { const tab = window.open(shellURL(item,engine,url),'_blank'); if (!tab) { toast('Your browser blocked the new tab. Allow popups for Aether.'); return false; } try { tab.opener = null; } catch {} return true; }
+function shellURL(item,engine,url,transport = settings.scramjetTransport) { const target = new URL(location.pathname,location.origin); if (item?.id && byId.has(item.id)) { target.searchParams.set('aether_game',item.id); if (['direct','uv','scramjet','rammer'].includes(engine)) target.searchParams.set('aether_proxy',engine); } else { target.searchParams.set('aether_proxy',engine || 'uv'); target.searchParams.set('aether_url',url); } if (engine === 'scramjet') target.searchParams.set('aether_transport',transport === 'epoxy' ? 'epoxy' : 'libcurl'); target.hash = item?.kind === 'app' ? 'apps' : item?.id ? 'games' : 'proxies'; return target.href; }
+function openShell(item,engine,url,transport = settings.scramjetTransport) { const tab = window.open(shellURL(item,engine,url,transport),'_blank'); if (!tab) { toast('Your browser blocked the new tab. Allow popups for Aether.'); return false; } try { tab.opener = null; } catch {} return true; }
+function proxyViewerURL(engine,url,transport = settings.scramjetTransport,launchId = '') { const viewer = new URL('/proxy-viewer',isolatedProxyOrigin); viewer.searchParams.set('engine',engine); viewer.searchParams.set('url',url); viewer.searchParams.set('launchId',launchId);viewer.searchParams.set('motion',document.body.dataset.motion==='reduced'?'reduced':'system'); if (engine === 'scramjet') viewer.searchParams.set('transport',transport === 'epoxy' ? 'epoxy' : 'libcurl'); return viewer.href; }
 function closeOverlay(force = false) {
   if (!$('overlay') || $('overlay').hidden) return;
-  launchSerial++; clearTimeout(frameTimer); active = null; $('gameFrame').src = 'about:blank'; $('gameFrame').removeAttribute('credentialless'); visible('overlay',false); document.body.classList.remove('overlay-open'); syncInert(); overlayInvoker?.focus?.();
+  launchSerial++; clearTimeout(frameTimer); active?.recoveryCleanup?.(); active = null; $('gameFrame').src = 'about:blank'; $('gameFrame').removeAttribute('credentialless'); visible('overlay',false); visible('overlayRecovery',false); document.body.classList.remove('overlay-open'); syncInert(); overlayInvoker?.focus?.();
 }
-function loading(message,detail,recovery = false) { visible('frameLoading',true); put('loadingTitle',message); put('loadingDetail',detail); visible('overlayRecovery',recovery); }
-function launchError(error,serial) { if (active?.serial !== serial) return; clearTimeout(frameTimer); loading('This launch needs another try',error.message || 'The site did not respond.',true); put('saveStatus','Not loaded'); }
-const scripts = new Map(); let uvPromise, scramjetPromise, scramjetFrame;
-function loadScript(src) { if (scripts.has(src)) return scripts.get(src); const promise = timeout(new Promise((resolve,reject) => { const script = document.createElement('script'); script.src = src; script.onload = resolve; script.onerror = () => { script.remove(); reject(new Error('A browser engine file could not load.')); }; document.head.appendChild(script); }),18000,'A browser engine file took too long to load.').catch(error => { scripts.delete(src); throw error; }); scripts.set(src,promise); return promise; }
+function loading(message,detail,recovery = false) { visible('frameLoading',true); put('loadingTitle',message); put('loadingDetail',detail); visible('overlayRecovery',recovery); visible('proxyAuthTab',false); }
+function renderLaunchOptions() {
+  if (!active) return;
+  const route = launchHealth.routeId(active.engine,active.transport), info = launchHealth.progress(active);
+  put('launchStatusTitle',info.title); put('launchStatusDetail',info.detail);
+  put('launchTiming',active.loadedAt ? `First page: ${((active.loadedAt-active.openedAt)/1000).toFixed(1)}s` : 'Waiting for a page response');
+  for (const node of $$('#launchSteps li')) node.classList.toggle('complete',Number(node.dataset.step)<=info.step);
+  const picker = $('launchRoute');
+  if (picker && picker.dataset.launchSerial!==String(active.serial)) { picker.replaceChildren(...launchHealth.routesFor(active.item).map(value => { const option=document.createElement('option');option.value=value;option.textContent=launchHealth.routeLabel(value);return option; })); picker.value=route;picker.dataset.launchSerial=String(active.serial); }
+  visible('launchRouteForm',!active.item.local);visible('tryOtherEngine',!active.item.local);
+  const canRemember = !active.item.local && byId.has(active.item.id) && active.loaded;
+  visible('rememberRoute',canRemember); if ($('rememberRoute')) $('rememberRoute').disabled=Boolean(active.confirmed);
+  put('rememberRoute',active.confirmed ? 'Route remembered' : 'This works · remember route');
+  visible('forgetRoute',Boolean(launchHealth.savedRoute(active.item,routePreferences)));
+  visible('proxyAuthTab',Boolean(active.isolatedProxy && !active.loaded));
+  visible('launchNotes',Boolean(active.item.launchNotes || active.item.frameBlocked));
+  put('launchNotes',active.item.frameBlocked ? 'This creator blocks direct embedding. Its original website is also available from the toolbar.' : active.item.launchNotes || '');
+}
+function showLaunchOptions() {
+  if (!active || active.item.local) return;
+  renderLaunchOptions();visible('overlayRecovery',true);$('overlayRoute')?.setAttribute('aria-expanded','true');$('launchRoute')?.focus();
+}
+function hideLaunchOptions() { const restore=$('overlayRecovery')?.contains(document.activeElement);visible('overlayRecovery',false);$('overlayRoute')?.setAttribute('aria-expanded','false');if(restore)$('overlayRoute')?.focus(); }
+function startNavigation(serial) {
+  if (active?.serial !== serial) return;
+  active.stage='navigating';clearTimeout(frameTimer);
+  if (!active.loaded) frameTimer=setTimeout(() => { if (active?.serial===serial && !active.loaded) launchError(new Error('No page response yet. You can keep waiting or choose another route.'),serial); },30000);
+  renderLaunchOptions();
+}
+function launchError(error,serial) {
+  if (active?.serial !== serial) return; clearTimeout(frameTimer);
+  active.issue=launchHealth.diagnosis(error.message,active.isolatedProxy,active.loaded);active.confirmed=false;
+  if (!active.loaded) loading('This launch needs attention',active.issue,true);
+  renderLaunchOptions();visible('overlayRecovery',true);$('overlayRoute')?.setAttribute('aria-expanded','true');
+  put('saveStatus',active.loaded ? 'Page received' : 'No page response');
+}
+const scripts = new Map(), scramjetTransports = new Map(); let uvPromise, scramjetPromise, scramjetController, scramjetFrame;
+function loadScript(src) { if (scripts.has(src)) return scripts.get(src); const promise = new Promise((resolve,reject) => { const script=document.createElement('script');let timer; const finish=(error)=>{clearTimeout(timer);script.onload=null;script.onerror=null;if(error){script.remove();reject(error);}else resolve();};script.src=src;script.onload=()=>finish();script.onerror=()=>finish(new Error('A browser engine file could not load.'));timer=setTimeout(()=>finish(new Error('A browser engine file took too long to load.')),18000);document.head.appendChild(script); }).catch(error => { scripts.delete(src); throw error; }); scripts.set(src,promise); return promise; }
 async function activatedWorker(path,scope) { const registration = await navigator.serviceWorker.register(path,{scope}); const worker = registration.active || registration.installing || registration.waiting; if (!worker) throw new Error('The browser engine did not install.'); if (worker.state === 'activated') return worker; await timeout(new Promise((resolve,reject) => { worker.addEventListener('statechange',() => { if (worker.state === 'activated') resolve(); if (worker.state === 'redundant') reject(new Error('The browser engine failed to activate.')); }); }),18000,'The browser engine took too long to start.'); return registration.active || worker; }
 function secureProxy() { if (!window.isSecureContext || !navigator.serviceWorker) throw new Error('This proxy needs HTTPS or localhost. Aether Originals and direct games work here; open your HTTPS Aether address for proxies.'); }
 function originalStorage(item) { if (!item?.local) return null; const game = new URL(item.url,location.origin).searchParams.get('game'); return {key:`aether.arcade.${game}`,owner:`aether_v5_arcade_owner_${game}`,cache:`aether_v5_arcade_${user.uuid || 'offline'}_${game}`,game}; }
@@ -187,45 +231,113 @@ function prepareOriginal(item) {
   writeLocal(storage.owner,currentOwner);
 }
 function clearOriginalCache(item) { const storage = originalStorage(item); if (!storage) return; try { localStorage.removeItem(storage.cache); if (readLocal(storage.owner,null) === (user.uuid || 'offline')) localStorage.removeItem(storage.key); } catch {} }
-function ensureUV() { if (!uvPromise) uvPromise = (async () => { secureProxy(); await loadScript('/uv/uv.bundle.js'); await loadScript('/uv/uv.config.js'); await loadScript('/baremux/index.js'); if (!window.__uv$config || !window.BareMux?.BareMuxConnection) throw new Error('Ultraviolet could not initialize.'); const config = window.__uv$config; await activatedWorker(config.sw,config.prefix); const connection = new window.BareMux.BareMuxConnection('/baremux/worker.js'); await timeout(connection.setTransport('/epoxy/index.mjs',[{wisp:`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/wisp/`}]),18000,'The proxy transport did not respond.'); return config; })().catch(error => { uvPromise = null; throw error; }); return uvPromise; }
-function ensureScramjet() { if (!scramjetPromise) scramjetPromise = (async () => { secureProxy(); await loadScript('/scramjet/scramjet.js'); await loadScript('/controller/controller.api.js'); await loadScript('/libcurl/index.js'); const worker = await activatedWorker('/scramjet-sw.js','/service-sj/'); const api = window.$scramjetController; if (!api?.Controller || !window.LibcurlTransport?.LibcurlClient) throw new Error('Scramjet could not initialize.'); Object.assign(api.config,{prefix:'/service-sj/',scramjetPath:'/scramjet/scramjet.js',injectPath:'/controller/controller.inject.js',wasmPath:'/scramjet/scramjet.wasm'}); const transport = new window.LibcurlTransport.LibcurlClient({wisp:`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/wisp/`}); const controller = new api.Controller({serviceworker:worker,transport}); await timeout(controller.wait(),18000,'Scramjet took too long to start.'); scramjetFrame = controller.createFrame($('gameFrame')); return scramjetFrame; })().catch(error => { scramjetPromise = null; throw error; }); return scramjetPromise; }
+function ensureUV() { if (!uvPromise) uvPromise = (async () => { secureProxy(); await loadScript(engineAsset('/uv/uv.bundle.js')); await loadScript(engineAsset('/uv/uv.config.js')); await loadScript(engineAsset('/baremux/index.js')); if (!window.__uv$config || !window.BareMux?.BareMuxConnection) throw new Error('Ultraviolet could not initialize.'); const config = window.__uv$config; await activatedWorker(config.sw,config.prefix); const connection = new window.BareMux.BareMuxConnection(engineAsset('/baremux/worker.js')); await timeout(connection.setTransport(engineAsset('/epoxy/index.mjs'),[{wisp:`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/wisp/`}]),18000,'The proxy transport did not respond.'); return config; })().catch(error => { uvPromise = null; throw error; }); return uvPromise; }
+async function getScramjetTransport(name) {
+  if (!scramjetTransports.has(name)) {
+    const ready = (async () => {
+      const wisp = `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/wisp/`;
+      if (name === 'epoxy') {
+        const { default: EpoxyTransport } = await timeout(import(engineAsset('/epoxy-v3/index.mjs')),18000,'The Epoxy transport took too long to load.');
+        return new EpoxyTransport({wisp});
+      }
+      await loadScript(engineAsset('/libcurl/index.js'));
+      if (!window.LibcurlTransport?.LibcurlClient) throw new Error('Libcurl could not initialize.');
+      return new window.LibcurlTransport.LibcurlClient({wisp});
+    })().catch(error => { scramjetTransports.delete(name); throw error; });
+    scramjetTransports.set(name,ready);
+  }
+  return scramjetTransports.get(name);
+}
+async function ensureScramjet(name = 'libcurl', serial = active?.serial) {
+  if (!scramjetPromise) scramjetPromise = (async () => {
+    secureProxy();
+    await loadScript(engineAsset('/scramjet/scramjet.js'));
+    await loadScript(engineAsset('/controller/controller.api.js'));
+    const worker = await activatedWorker('/scramjet-sw.js','/service-sj/');
+    const api = window.$scramjetController;
+    if (!api?.Controller) throw new Error('Scramjet could not initialize.');
+    Object.assign(api.config,{prefix:'/service-sj/',scramjetPath:engineAsset('/scramjet/scramjet.js'),injectPath:engineAsset('/controller/controller.inject.js'),wasmPath:engineAsset('/scramjet/scramjet.wasm')});
+    const transport = await getScramjetTransport(name);
+    scramjetController = new api.Controller({serviceworker:worker,transport});
+    await timeout(scramjetController.wait(),18000,'Scramjet took too long to start.');
+    scramjetFrame = scramjetController.createFrame($('gameFrame'));
+  })().catch(error => { scramjetPromise = null; throw error; });
+  await scramjetPromise;
+  const transport = await getScramjetTransport(name);
+  if (active?.serial !== serial) return null;
+  scramjetController.setTransport(transport);
+  return scramjetFrame;
+}
 async function launch(item,options = {}) {
   const url = item?.url || options.url; if (!url) return;
-  const engine = options.engine || (item?.local ? 'local' : item?.launch === 'direct' ? 'direct' : 'uv');
-  if (!options.same && (options.newTab ?? settings.newTab)) { if (openShell(item,engine,url)) recordRecent(item); return; }
-  closePalette(); overlayInvoker = document.activeElement; const serial = ++launchSerial; clearTimeout(frameTimer);
-  active = {serial,item:item || {name:'Web session',url},engine,url,loaded:false,started:false};
+  const route = launchHealth.chooseRoute(item,options,settings.scramjetTransport,routePreferences);
+  const {engine,transport} = launchHealth.routeOptions(route);
+  if (!options.same && (options.newTab ?? settings.newTab)) { if (openShell(item,engine,url,transport)) recordRecent(item); return; }
+  closePalette(); overlayInvoker = document.activeElement; const serial = ++launchSerial; clearTimeout(frameTimer); active?.recoveryCleanup?.();
+  active = {serial,launchId:launchHealth.createLaunchId(),openedAt:performance.now(),item:item || {name:'Web session',url},engine,transport,url,loaded:false,started:false,stage:'preparing',isolatedProxy:Boolean(isolatedProxyOrigin && ['uv','scramjet','rammer'].includes(engine))};
   if ($('overlay')) $('overlay').dataset.engine = engine;
-  put('overlayEngine',({local:'Aether Original',direct:'Direct site',uv:'Ultraviolet',scramjet:'Scramjet',rammer:'Rammerhead'}[engine] || 'Web session'));
-  visible('overlay',true); syncInert(); document.body.classList.add('overlay-open'); put('overlayTitle',item?.name || ({uv:'Ultraviolet',scramjet:'Scramjet',rammer:'Rammerhead'}[engine] || 'Web session')); put('overlayUrl',url); put('saveStatus',item?.local ? 'Aether save ready' : 'Site saves depend on the game');
+  put('overlayEngine',launchHealth.routeLabel(route));
+  visible('overlay',true); syncInert(); document.body.classList.add('overlay-open'); put('overlayTitle',item?.name || ({uv:'Ultraviolet',scramjet:'Scramjet',rammer:'Rammerhead'}[engine] || 'Web session')); put('overlayUrl',url); put('saveStatus',item?.local ? 'Aether save ready' : item?.kind === 'app' ? 'Export work from the app' : 'Site saves depend on the game');
   if ($('overlayLogo')) { $('overlayLogo').hidden = false; $('overlayLogo').src = item?.logo ? artwork(item) : '/assets/aether-mark.webp'; $('overlayLogo').alt = ''; }
+  const originalLink = $('overlayOriginal'); if (originalLink) { const originalURL = new URL(url,location.origin); originalLink.hidden = engine === 'local'; originalLink.href = ['http:','https:'].includes(originalURL.protocol) ? originalURL.href : '#'; originalLink.setAttribute('aria-label',`Open ${item?.name || 'this site'} on its original website in a new tab`); }
+  visible('overlayRoute',engine !== 'local');
+  $('overlayRoute')?.setAttribute('aria-expanded','false');
   const frame = $('gameFrame'); frame.src = 'about:blank'; frame.removeAttribute('credentialless'); loading(`Opening ${item?.name || 'your site'}`,engine === 'local' ? 'Ready here. No proxy needed.' : engine === 'direct' ? 'Connecting to the original creator.' : 'Starting the browser engine.'); $('overlayBack')?.focus();
-  frameTimer = setTimeout(() => launchError(new Error('The site is taking longer than expected. Retry or try another engine.'),serial),30000);
+  renderLaunchOptions();
   recordRecent(item);
-  if (item?.launchNotes && /portal|room|host|account|paid/i.test(item.access || '')) toast(item.launchNotes);
+  if (item?.frameBlocked) toast('This editor blocks direct embedding. Use Original site for its normal editor, or try the proxy here.');
+  if (item?.launchNotes && ((engine === 'direct' && /Recommended direct/i.test(item.launchNotes)) || /portal|room|host|account|paid/i.test(item.access || ''))) toast(item.launchNotes);
   try {
-    if (engine === 'local') { if (active?.serial !== serial) return; prepareOriginal(item); active.started = true; frame.src = new URL(url,location.origin).href; }
+    if (active.isolatedProxy) {
+      active.started = true;
+      active.viewerUrl = proxyViewerURL(engine,url,transport,active.launchId);
+      frame.src = active.viewerUrl;
+      // This outer page can be held at Access before its own status arrives.
+      frameTimer=setTimeout(()=>{if(active?.serial===serial&&!active.loaded)launchError(new Error('The browser page did not respond. Open a separate Aether tab to complete Access sign-in, or retry.'),serial);},65000);
+      return;
+    }
+    if (engine === 'local') { await profileGate;if (active?.serial !== serial) return; prepareOriginal(item); active.started = true; startNavigation(serial);const localURL=new URL(url,location.origin);localURL.searchParams.set('launchId',active.launchId);frame.src = localURL.href; }
     else if (engine === 'direct') { if (window.crossOriginIsolated && !('credentialless' in frame)) throw new Error('Your browser needs a proxy for this game. Use Try another engine.'); frame.setAttribute('credentialless',''); active.started = true; frame.src = url; }
     else if (engine === 'uv') { const config = await ensureUV(); if (active?.serial !== serial) return; active.started = true; frame.src = `${config.prefix}${config.encodeUrl(url)}`; }
-    else if (engine === 'scramjet') { const proxyFrame = await ensureScramjet(); if (active?.serial !== serial) return; active.started = true; await timeout(proxyFrame.go(url),20000,'Scramjet did not finish opening this site.'); }
+    else if (engine === 'scramjet') { const proxyFrame = await ensureScramjet(transport,serial); if (active?.serial !== serial) return; active.started = true; proxyFrame.go(url); }
     else if (engine === 'rammer') { const controller = new AbortController(); const timer = setTimeout(() => controller.abort(),15000); let response; try { response = await fetch('/newsession',{signal:controller.signal}); } finally { clearTimeout(timer); } if (!response.ok) throw new Error(`Rammerhead session failed (${response.status})`); const session = (await response.text()).trim(); if (!/^[a-f0-9]{32}$/i.test(session)) throw new Error('Rammerhead returned an invalid session.'); if (active?.serial !== serial) return; if (!('credentialless' in frame)) throw new Error('Rammerhead needs a browser with credentialless frame support.'); frame.setAttribute('credentialless',''); active.started = true; frame.src = `/${session}/${url}`; }
     else throw new Error('Unknown browser engine.');
+    if (engine !== 'local') startNavigation(serial);
   } catch (error) { launchError(error,serial); }
 }
-function frameLoaded() { if (!active?.started) return; try { if ($('gameFrame').contentWindow.location.href === 'about:blank') return; } catch {} clearTimeout(frameTimer); active.loaded = true; visible('frameLoading',false); visible('overlayRecovery',false); sendGameInit(); }
-function sendGameInit(explicitReady = false) {
-  if (!active || active.engine === 'direct' || active.engine === 'rammer') return;
-  const saves = {};
-  if (active.item.local) { const key = `aether.arcade.${new URL(active.url,location.origin).searchParams.get('game')}`; if (Object.hasOwn(user.saves,key)) saves[key] = user.saves[key]; }
-  else if (explicitReady && ['uv','scramjet'].includes(active.engine)) { const prefix = `${new URL(active.url,location.origin).hostname}:`; for (const [key,value] of Object.entries(user.saves)) if (key.startsWith(prefix)) saves[key] = value; }
-  else return;
-  $('gameFrame').contentWindow?.postMessage({type:'gp-init',saves},location.origin);
+function frameLoaded() {
+  if (!active?.started || active.isolatedProxy) return; try { if ($('gameFrame').contentWindow.location.href === 'about:blank') return; } catch {}
+  clearTimeout(frameTimer); active.loaded = true; active.loadedAt=performance.now();active.stage = 'document-loaded'; visible('frameLoading',false);
+  if(active.gameError){launchError(new Error(active.gameError),active.serial);return;}
+  active.issue=null;hideLaunchOptions(); put('saveStatus',active.engine === 'local' ? active.gameReady ? 'Aether Original ready' : 'Loading game code' : 'Page received'); sendGameInit();renderLaunchOptions();
+  // A document load is not a game-ready signal. Keep route controls available
+  // without guessing readiness from a timer or cross-origin input events.
 }
-function allowedGameKey(key,session) { if (typeof key !== 'string' || key.length > 512 || key.startsWith('__meta__:')) return false; if (session.item.local) return key === `aether.arcade.${new URL(session.url,location.origin).searchParams.get('game')}`; if (!['uv','scramjet'].includes(session.engine)) return false; return key.startsWith(`${new URL(session.url,location.origin).hostname}:`); }
+function sendGameInit() {
+  if (!active?.item?.local || active.engine !== 'local') return;
+  const saves = {};
+  const key = `aether.arcade.${new URL(active.url,location.origin).searchParams.get('game')}`; if (Object.hasOwn(user.saves,key)) saves[key] = user.saves[key];
+  $('gameFrame').contentWindow?.postMessage({type:'gp-init',launchId:active.launchId,saves,settings:{motion:settings.motion}},location.origin);
+}
+function allowedGameKey(key,session) { if (typeof key !== 'string' || key.length > 512 || key.startsWith('__meta__:') || !session.item.local || session.engine !== 'local') return false; return key === `aether.arcade.${new URL(session.url,location.origin).searchParams.get('game')}`; }
 async function gameMessage(event) {
-  const session = active, profileAtRequest = user.uuid; if (!session || event.source !== $('gameFrame').contentWindow || event.origin !== location.origin || !event.data || typeof event.data !== 'object') return;
+  const session = active; if (!session || event.source !== $('gameFrame').contentWindow || !event.data || typeof event.data !== 'object') return;
   const data = event.data;
-  if (data.type === 'gp-ready') { sendGameInit(true); return; }
+  if (session.isolatedProxy) {
+    if (event.origin !== isolatedProxyOrigin || !launchHealth.statusMatches(session,data)) return;
+    if (data.stage === 'preparing' || data.stage === 'engine-ready') { if(active.loaded)return;active.stage = data.stage;put('saveStatus',data.stage === 'engine-ready' ? 'Waiting for site' : 'Preparing');if(data.stage==='engine-ready')startNavigation(session.serial);renderLaunchOptions();return; }
+    if (data.stage === 'document-loaded') {
+      clearTimeout(frameTimer); active.loaded = true;active.loadedAt??=performance.now();active.issue=null;active.stage = data.stage; visible('frameLoading',false); hideLaunchOptions(); put('saveStatus','Page received');renderLaunchOptions();
+      return;
+    }
+    if (data.stage === 'error') { launchError(new Error(typeof data.message === 'string' ? data.message.slice(0,240) : 'The browser route needs another try.'),session.serial); return; }
+    return;
+  }
+  if (event.origin !== location.origin || (session.item.local && data.launchId!==session.launchId)) return;
+  const profileAtRequest = user.uuid;
+  if (data.type === 'gp-ready') { sendGameInit(); return; }
+  if (data.type === 'aether-arcade-ready' && session.item.local) {active.gameReady=true;put('saveStatus','Aether Original ready');return;}
+  if (data.type === 'aether-arcade-error' && session.item.local) {active.gameError='The local game code did not load. Retry this Original.';launchError(new Error(active.gameError),session.serial);return;}
   if (data.type === 'aether-arcade-exit' && session.item.local) { closeOverlay(true); go('games'); return; }
   if (data.type === 'aether-arcade-result' && session.item.local) { const gameId = new URL(session.url,location.origin).searchParams.get('game'); if (data.game === gameId && Number.isFinite(data.score) && data.score >= 0) { recordRecent(session.item,data.score); put('saveStatus',`Score: ${data.score}`); } return; }
   if (!['gp-save','gp-delete','gp-save-batch'].includes(data.type)) return;
@@ -275,9 +387,9 @@ function renderTodos() {
   if ($('todoList')) $('todoList').innerHTML = todos.length ? todos.map(t => `<li class="todo-item ${t.done ? 'done' : ''}"><label><input type="checkbox" data-todo-check="${esc(t.id)}" ${t.done ? 'checked' : ''}><span>${esc(t.text)}</span></label><button class="icon-btn" data-todo-delete="${esc(t.id)}" aria-label="Delete task ${esc(t.text)}">${icon('close')}</button></li>`).join('') : '<li class="todo-empty">Start with one small thing.</li>';
 }
 function renderFocus() { updateTimer(true); renderTodos(); const reward = [...recents.map(r => byId.get(r.id)).filter(Boolean),...games.filter(g => g.local)]; const seen = new Set(); const choices = reward.filter(g => !seen.has(g.id) && seen.add(g.id)).slice(0,3); if ($('quickLaunch')) $('quickLaunch').innerHTML = choices.map(g => `<button class="quick-game" data-launch="${esc(g.id)}">${g.logo ? `<img src="${esc(artwork(g))}" width="44" height="44" alt="" loading="lazy">` : icon('play')}<span>${esc(g.name)}<small>${esc(g.category)}</small></span>${icon('arrow')}</button>`).join(''); }
-function toggleFocus() { if (currentPage === 'focus') { focusMode = false; document.body.classList.remove('focus-mode'); go('home'); } else { focusMode = true; document.body.classList.add('focus-mode'); go('focus'); } }
-function validateSettings() { settings.motion = ['system','full','reduced'].includes(settings.motion) ? settings.motion : 'system'; settings.density = ['comfortable','compact'].includes(settings.density) ? settings.density : 'comfortable'; settings.timerLen = [15,25,40,50].includes(Number(settings.timerLen)) ? Number(settings.timerLen) : 25; for (const key of ['newTab','focusDefault','confirmLeave']) settings[key] = Boolean(settings[key]); }
-function applySettings() { validateSettings(); const reduced = settings.motion === 'reduced' || (settings.motion === 'system' && matchMedia('(prefers-reduced-motion: reduce)').matches); for (const el of [document.documentElement,document.body]) { el.dataset.motion = reduced ? 'reduced' : 'full'; el.dataset.motionPreference = settings.motion; el.dataset.density = settings.density; } document.body.classList.toggle('reduce-motion',reduced); document.body.classList.toggle('compact',settings.density === 'compact'); if ($('proxyNewTab')) $('proxyNewTab').checked = settings.newTab; writeLocal('aether_v5_settings',settings); renderSettings(); if (typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('aether:settings')); }
+function toggleFocus() { go(currentPage === 'focus' ? 'home' : 'focus'); }
+function validateSettings() { settings.scramjetTransport = settings.scramjetTransport === 'epoxy' ? 'epoxy' : 'libcurl'; settings.motion = ['system','full','reduced'].includes(settings.motion) ? settings.motion : 'system'; settings.density = ['comfortable','compact'].includes(settings.density) ? settings.density : 'comfortable'; settings.timerLen = [15,25,40,50].includes(Number(settings.timerLen)) ? Number(settings.timerLen) : 25; for (const key of ['newTab','focusDefault','confirmLeave']) settings[key] = Boolean(settings[key]); }
+function applySettings() { validateSettings(); const reduced = settings.motion === 'reduced' || (settings.motion === 'system' && matchMedia('(prefers-reduced-motion: reduce)').matches); for (const el of [document.documentElement,document.body]) { el.dataset.motion = reduced ? 'reduced' : 'full'; el.dataset.motionPreference = settings.motion; el.dataset.density = settings.density; } document.body.classList.toggle('reduce-motion',reduced); document.body.classList.toggle('compact',settings.density === 'compact'); if ($('proxyNewTab')) $('proxyNewTab').checked = settings.newTab; if ($('scramjetTransport')) $('scramjetTransport').value = settings.scramjetTransport; writeLocal('aether_v5_settings',settings); renderSettings(); if (active?.item?.local && active.loaded) sendGameInit(); if (typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('aether:settings')); }
 const SHORTCUTS = [['Ctrl / ⌘ + K','Find a game, app, or page'],['Esc','Close the current overlay'],['/','Search this collection'],['G then H','Home'],['G then G','Games'],['G then A','Apps'],['G then P','Party'],['G then X','Proxies'],['G then R','Profile'],['G then S','Settings'],['F','Enter Focus']];
 function renderSettings() { if ($('setMotion')) $('setMotion').value = settings.motion; if ($('setDensity')) $('setDensity').value = settings.density; if ($('setTimerLen')) $('setTimerLen').value = String(settings.timerLen); for (const [id,key] of [['setNewTab','newTab'],['setFocusDefault','focusDefault'],['setConfirmLeave','confirmLeave']]) if ($(id)) $(id).checked = settings[key]; if ($('shortcutsList')) $('shortcutsList').innerHTML = SHORTCUTS.map(([keys,label]) => `<div class="shortcut-row"><span>${esc(label)}</span><kbd>${esc(keys)}</kbd></div>`).join(''); }
 async function copy(text,message) { if (!text) { toast('Nothing to copy yet.'); return; } try { await navigator.clipboard.writeText(text); toast(message || 'Copied'); } catch { toast('Your browser could not copy this. Select and copy the value instead.'); } }
@@ -371,7 +483,7 @@ let shortcutPrefix = 0;
 function keyboard(event) {
   trapFocus(event);
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); !$('palette')?.hidden ? closePalette() : openPalette(); return; }
-  if (event.key === 'Escape') { if (!$('palette')?.hidden) closePalette(); else closeOverlay(); return; }
+  if (event.key === 'Escape') { if (!$('palette')?.hidden) closePalette();else if(!$('overlayRecovery')?.hidden)hideLaunchOptions();else closeOverlay();return; }
   if (event.target.closest('input,textarea,select,[contenteditable="true"]') || event.ctrlKey || event.metaKey || event.altKey || !$('overlay')?.hidden) return;
   const key = event.key.toLowerCase(); if (key === '/') { event.preventDefault(); focusSearch(); return; }
   if (key === '?') { go('settings'); return; } if (key === 'f') { toggleFocus(); return; }
@@ -413,11 +525,18 @@ function bindUI() {
   on('todoForm','submit',event => { event.preventDefault(); const text = $('todoInput').value.trim(); if (!text) return; if (todos.length >= 100) { toast('You have 100 tasks. Finish or clear a few before adding more.'); return; } todos.push({id:crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`,text:text.slice(0,180),done:false}); $('todoInput').value = ''; saveMetadata('todos',todos); renderTodos(); });
   $$('.proxy-launch-form').forEach(form => form.addEventListener('submit',event => { event.preventDefault(); try { const url = normalizeTarget(form.querySelector('input').value); launch(null,{url,engine:form.dataset.engine,newTab:$('proxyNewTab')?.checked}); } catch (error) { toast(error.message); } }));
   on('gameFrame','load',frameLoaded); window.addEventListener('message',gameMessage);
+  on('scramjetTransport','change',() => { settings.scramjetTransport = $('scramjetTransport').value; applySettings(); saveMetadata('settings',settings); });
   on('overlayBack','click',() => closeOverlay()); on('cancelLaunch','click',() => closeOverlay(true));
-  on('overlayReload','click',() => { if (active) launch(active.item,{url:active.url,engine:active.engine,same:true}); });
-  on('retryLaunch','click',() => { if (active) launch(active.item,{url:active.url,engine:active.engine,same:true}); });
-  on('tryOtherEngine','click',() => { if (!active) return; const next = active.engine === 'uv' ? 'scramjet' : active.engine === 'scramjet' ? 'rammer' : active.engine === 'local' ? 'local' : 'uv'; launch(active.item,{url:active.url,engine:next,same:true}); });
-  on('overlayNewTab','click',() => { if (active) openShell(active.item,active.engine,active.url); });
+  on('overlayReload','click',() => { if (active) launch(active.item,{url:active.url,engine:active.engine,transport:active.transport,same:true}); });
+  on('retryLaunch','click',() => { if (active) launch(active.item,{url:active.url,engine:active.engine,transport:active.transport,same:true}); });
+  const tryOtherEngine = () => { if (!active || active.item.local) return; const next=launchHealth.nextRoute(active.item,launchHealth.routeId(active.engine,active.transport));launch(active.item,{url:active.url,...launchHealth.routeOptions(next),same:true}); };
+  on('tryOtherEngine','click',tryOtherEngine);on('overlayRoute','click',() => { if ($('overlayRecovery').hidden) showLaunchOptions();else hideLaunchOptions(); });
+  on('dismissRecovery','click',hideLaunchOptions);on('keepWaiting','click',hideLaunchOptions);
+  on('launchRouteForm','submit',event => {event.preventDefault();if(!active || active.item.local)return;const route=$('launchRoute').value;if(!launchHealth.routesFor(active.item).includes(route))return;launch(active.item,{url:active.url,...launchHealth.routeOptions(route),same:true});});
+  on('rememberRoute','click',() => {if(!active?.loaded || active.item.local || !byId.has(active.item.id))return;routePreferences=launchHealth.validatePreferences({...routePreferences,[active.item.id]:{route:launchHealth.routeId(active.engine,active.transport),url:active.item.url,at:Date.now()}});if(!writeLocal(routePreferenceKey,routePreferences)){toast('This browser could not remember the route.');return;}active.confirmed=true;active.issue=null;renderLaunchOptions();put('saveStatus','You confirmed working');toast('Working route remembered on this browser.');});
+  on('forgetRoute','click',() => {if(!active)return;delete routePreferences[active.item.id];writeLocal(routePreferenceKey,routePreferences);active.confirmed=false;renderLaunchOptions();toast('Saved route forgotten.');});
+  on('overlayNewTab','click',() => { if (active) openShell(active.item,active.engine,active.url,active.transport); });
+  on('proxyAuthTab','click',() => { if (!active?.viewerUrl) return; const tab = window.open(active.viewerUrl,'_blank');if(tab){try{tab.opener=null;}catch{}}else toast('Your browser blocked the new tab. Allow popups for Aether.'); });
   on('overlayFullscreen','click',async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await $('gameFrame').requestFullscreen(); } catch { toast('This browser could not enter fullscreen.'); } });
   on('revealUUID','click',() => { profileRevealed = !profileRevealed; renderProfile(); }); on('copyUUIDBtn','click',() => copy(user.uuid,'Profile key copied. Keep it private.'));
   on('exportProfileBtn','click',exportProfile); on('settingsExport','click',exportProfile); on('importForm','submit',importProfile); on('clearAllBtn','click',clearProfile);
@@ -437,21 +556,26 @@ function bindUI() {
   if (!window.isSecureContext || !navigator.serviceWorker) { visible('proxyContextNotice',true); put('proxyContextNotice','Ultraviolet and Scramjet need HTTPS or localhost. Try your HTTPS Aether address for these engines. Local games and direct play are available here.'); }
 }
 async function loadCatalog() {
-  try { const data = await api('/api/games?v=5.1.0'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
+  try { const data = await api('/api/games?v=5.4.0'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
   catch (error) { visible('catalogNotice',true); put('catalogNoticeText',`The library could not refresh. ${error.message}`); }
 }
 async function boot() {
   bindUI(); applySettings(); updateTimer(true);
-  const [catalogResult,userResult] = await Promise.allSettled([api('/api/games?v=5.1.0'),api('/api/user')]);
+  for(const page of ['page-focus','page-profile','page-settings']) {$(page).inert=true;$(page).setAttribute('aria-busy','true');}
+  go(location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'),false);
+  let settleProfile;profileGate=new Promise(resolve=>{settleProfile=resolve;});
+  const catalogRequest=api('/api/games?v=5.4.0').then(data=>{indexCatalog(data);refreshActivePage();return data;});
+  const [catalogResult,userResult] = await Promise.allSettled([catalogRequest,api('/api/user')]);
   if (catalogResult.status === 'fulfilled') { indexCatalog(catalogResult.value); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(catalogResult.value)); } catch {} }
   else { let cached; try { cached = JSON.parse(sessionStorage.getItem('aether_catalog_v5')); } catch {} if (cached) indexCatalog(cached); visible('catalogNotice',true); put('catalogNoticeText',`${cached ? 'Showing the library from this tab. ' : ''}${catalogResult.reason.message}`); }
   if (userResult.status === 'fulfilled') { user = {...userResult.value,saves:userResult.value.saves || {}}; profileReady = true; adoptOfflineMetadata(); }
   else { user.uuid ||= cookieProfileUUID(); profileReady = false; toast(`Profile connection failed. Notes and favorites will stay on this device: ${userResult.reason.message}`); }
-  hydrateProfile();
-  const parameters = new URLSearchParams(location.search), requestedGame = parameters.get('aether_game'), requestedEngine = parameters.get('aether_proxy'), requestedURL = parameters.get('aether_url');
+  hydrateProfile();profileHydrated=true;settleProfile();
+  for(const page of ['page-focus','page-profile','page-settings']) {$(page).inert=false;$(page).removeAttribute('aria-busy');}
+  const parameters = new URLSearchParams(location.search), requestedGame = parameters.get('aether_game'), requestedEngine = parameters.get('aether_proxy'), requestedURL = parameters.get('aether_url'), requestedTransport = parameters.get('aether_transport') === 'epoxy' ? 'epoxy' : 'libcurl';
   const requestedPage = location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'); go(requestedPage,false);
-  if (requestedGame || requestedEngine || requestedURL) { parameters.delete('aether_game'); parameters.delete('aether_proxy'); parameters.delete('aether_url'); history.replaceState(null,'',`${location.pathname}${parameters.size ? `?${parameters}` : ''}${location.hash}`); if (requestedGame) { const item = resolveItem(requestedGame); if (item) launch(item,{same:true,engine:['uv','scramjet','rammer'].includes(requestedEngine) ? requestedEngine : undefined}); else toast('That game is no longer in the library.'); } else if (requestedURL && ['uv','scramjet','rammer'].includes(requestedEngine)) { try { launch(null,{url:normalizeTarget(requestedURL),engine:requestedEngine,same:true}); } catch (error) { toast(error.message); } } }
-  window.Aether = {version:'5.1.0',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
+  if (requestedGame || requestedEngine || requestedURL) { parameters.delete('aether_game'); parameters.delete('aether_proxy'); parameters.delete('aether_url'); parameters.delete('aether_transport'); history.replaceState(null,'',`${location.pathname}${parameters.size ? `?${parameters}` : ''}${location.hash}`); if (requestedGame) { const item = resolveItem(requestedGame); if (item) launch(item,{same:true,transport:requestedTransport,engine:['direct','uv','scramjet','rammer'].includes(requestedEngine) ? requestedEngine : undefined}); else toast('That game is no longer in the library.'); } else if (requestedURL && ['direct','uv','scramjet','rammer'].includes(requestedEngine)) { try { launch(null,{url:normalizeTarget(requestedURL),engine:requestedEngine,transport:requestedTransport,same:true}); } catch (error) { toast(error.message); } } }
+  window.Aether = {version:'5.4.0',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
 }
 window.openGame = (url,name) => launch(resolveItem(url) || {name:name || 'Game',url:decode(url),launch:'proxy'});
 window.openApp = window.openGame;

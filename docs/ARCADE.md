@@ -1,6 +1,6 @@
 # Aether Originals
 
-Aether v5 includes 16 original browser games bundled with the app. They use a shared graphite and teal shell and have no external runtime libraries, asset hosts, ads, or network calls for gameplay. Covers are original local SVG drawings. Sound is off until a player enables it. The games remain playable when an external proxy destination is unavailable.
+Aether 5.4 includes 23 original browser games bundled with the app. They use a shared graphite and teal shell and have no external runtime libraries, asset hosts, ads, or network calls for gameplay. Covers are original local SVG drawings. Sound is off until a player enables it. The games remain playable when an external proxy destination is unavailable.
 
 ## Catalog and launch URLs
 
@@ -24,6 +24,13 @@ The integration-ready catalog is `public/arcade/catalog.json`. Every entry uses 
 | Still Sudoku | `/arcade/index.html?game=sudoku` | Generated 9 by 9 Sudoku with exactly one solution, conflict highlighting, number pad, keyboard and unranked hints |
 | Hue Hunt | `/arcade/index.html?game=color` | Thirty-second odd-color puzzle with increasing difficulty and an alternative symbol mode |
 | Orbit Lock | `/arcade/index.html?game=orbit` | Circular timing challenge, shrinking target, direction changes and three lives; tap or Space |
+| Aether Drift | `/arcade/index.html?game=drift` | One-minute arena survival shooter with seekers, heavy units, collectible fire-rate cores, WASD/touch movement, keyboard or mouse aim, held fire and dash |
+| Prism Stack | `/arcade/index.html?game=stack` | Falling block puzzle with a seven-piece bag, wall kicks, ghost preview, soft/hard drop, row clears and rising gravity; arrows/A/D/S, Space and touch controls |
+| Word Rush | `/arcade/index.html?game=typerush` | Forty-five second typing challenge with live accuracy, net WPM, automatic prompts, backspace and pause-aware timing |
+| Breachline | `/arcade/index.html?game=breach` | Cover, swept projectile collisions, auto/manual aim, dashes, six sectors, permanent upgrades and a final Warden |
+| Overdrive | `/arcade/index.html?game=overdrive` | A 4.4 km projected highway, traffic, nitro, close passes, batteries, checkpoints and three hull pips |
+| Driftline | `/arcade/index.html?game=driftline` | Three clockwise dockside laps in 90 seconds, lateral tire slip, banked drift combos, ordered checkpoints and five hull; W/S or arrows gas/brake, A/D or arrows steer, Space handbrake, touch pad, cruise assist and racing line |
+| Pulse Arena | `/arcade/index.html?game=pulsearena` | A 90-second score attack, five waves, shrinking ring, telegraphed floor hazards, Pulse/Scatter/Lance weapons, shield cells and Blink; WASD/arrows, mouse or Space fire, Shift Blink, touch drag/pad and assisted aim |
 
 ## Shared behavior
 
@@ -31,7 +38,7 @@ The integration-ready catalog is `public/arcade/catalog.json`. Every entry uses 
 - Restart clears the current game and its input handlers before building a fresh round. The personal best stays intact.
 - Sound uses short synthesized Web Audio tones and starts off. Its local setting is remembered independently of the individual game.
 - Keyboard focus is visible. All buttons have names, canvas games have an accessible description, and the rules explain keyboard and touch input. DOM game controls are usable through normal button navigation. Complex canvas gameplay is not a screen reader equivalent.
-- Decorative transitions honor `prefers-reduced-motion`. Actual game movement still runs, because it is part of the rules.
+- Decorative transitions honor both the system `prefers-reduced-motion` setting and Aether's explicit `Motion` preference. Actual game movement still runs, because it is part of the rules.
 - The layout was checked at 390 by 844 with no horizontal overflow across Snake, 2048, Minesweeper, word scramble, Connect Four, Sudoku and reaction screens.
 
 ## Save bridge
@@ -42,11 +49,12 @@ Embedded games also communicate with the Aether parent using `location.origin` a
 
 ```js
 // Child requests initialization after its module has loaded.
-{ type: 'gp-ready', game: 'snake' }
+{ type: 'gp-ready', game: 'snake', launchId: '<active launch token>' }
 
 // Child persists a completed scored round.
 {
   type: 'gp-save',
+  launchId: '<active launch token>',
   key: 'aether.arcade.snake',
   value: { best: 17, rounds: 4, wins: 0 },
   requestId: 'arcade-snake-<timestamp>'
@@ -55,35 +63,50 @@ Embedded games also communicate with the Aether parent using `location.origin` a
 // Child reports a round for activity/UI integration.
 {
   type: 'aether-arcade-result',
+  launchId: '<active launch token>',
   game: 'snake', score: 17, won: false,
   stats: { won: false }
 }
 
 // Header/footer requests returning to the library without nesting Aether.
-{ type: 'aether-arcade-exit', game: 'snake' }
+{ type: 'aether-arcade-exit', game: 'snake', launchId: '<active launch token>' }
 
 // Parent hydrates stats after frame load or gp-ready.
-{ type: 'gp-init', saves: { 'aether.arcade.snake': { best: 17, rounds: 4, wins: 0 } } }
+{ type: 'gp-init', launchId: '<active launch token>', saves: { 'aether.arcade.snake': { best: 17, rounds: 4, wins: 0 } }, settings: { motion: 'system' } }
 ```
 
-The child only accepts initialization from `parent` at its own origin. The parent must validate `event.source === gameFrame.contentWindow`, check the origin against the active local player, and validate the save key/value before accepting changes. Do not accept local-game score messages from an arbitrary page, a previous player frame, or a proxied external site.
+The child only accepts initialization from `parent` at its own origin with the matching `launchId` query token. The parent validates `event.source === gameFrame.contentWindow`, the active local origin, launch token, and save key/value before accepting changes. Queued packets from an earlier navigation are rejected even when the iframe's window identity is reused. Standalone games use an empty token. The token correlates navigation; it is not authentication.
+
+`gp-ready` starts the save handshake. After the selected renderer finishes initializing, the child sends `{ type: 'aether-arcade-ready', game: 'snake', launchId: '<active launch token>' }`. A failed module sends `aether-arcade-error` and exposes Play again. The parent preserves a received ready or error state when an iframe load notification arrives later.
 
 `gp-save-result` acknowledgments can be used by the parent to show network errors. Local bests remain available even if profile synchronization fails; these local games do not claim an unacknowledged profile write succeeded. There is no server-authoritative or competitive scoring: scores are convenience statistics on the user's own client.
 
 ## Files and size
 
-`index.html` supplies the shell, `main.js` owns lifecycle and saves, `games.js` renders the 16 games, and `core.js` holds pure rules. `arcade.css` styles only the arcade. The game page requests approximately 68 KB of uncompressed HTML/CSS/JavaScript total before normal HTTP compression. Each game shares those assets rather than loading a framework or remote game portal. Only the selected game builds its board and runs its gameplay loop.
+`index.html` supplies the shell and `main.js` owns lifecycle and saves. `game-definitions.js` collects lightweight metadata; `game-loader.js` imports only the selected renderer family: `games.js`, `games-extra.js`, `games-action.js`, `driftline-game.js`, or `pulse-arena-game.js`. Their corresponding core modules hold pure rules. `arcade.css` styles only the arcade. Each game shares the same small local runtime rather than loading a framework or remote game portal. Only the selected game builds its board and runs its gameplay loop.
 
-`covers/` holds the sixteen original SVG covers. The catalog file is an integration artifact; gameplay does not request it. `tests/core.test.mjs` is a dependency-free rules suite.
+`covers/` holds the original SVG covers. The catalog file is an integration artifact; gameplay does not request it. `tests/core.test.mjs` is a dependency-free rules suite. Its pure helper coverage is separate from the browser smoke results below.
 
 ## Verification
 
 Run the focused rules suite from the Aether root:
 
 ```sh
-node --test public/arcade/tests/core.test.mjs
+node --test public/arcade/tests/*.test.mjs public/tests/*.test.mjs
 ```
 
-Nine tests passed: Snake movement/collisions, all merge directions and single merges, protected minefield starts/floods, every human tic-tac-toe path against perfect AI, Connect Four forced wins/blocks and win directions, one hundred solvable slide shuffles, reversible Lights Out switches, twenty unique Sudoku puzzles and valid solutions, and wrapped orbit angle checks plus all sixteen definitions.
+The classic rules and catalog tests cover Snake movement/collisions, all merge directions and single merges, protected minefield starts/floods, every human tic-tac-toe path against perfect AI, Connect Four forced wins/blocks and win directions, one hundred solvable slide shuffles, reversible Lights Out switches, twenty unique Sudoku puzzles and valid solutions, wrapped orbit angles, Prism Stack rotation/collision/row clearing, typing speed and accuracy, all 23 game definitions, and the match between local catalog entries, implementations, and covers.
 
-Browser checks initialized all sixteen games without console errors. Completed Night Switch, Echo Pairs and a full Sudoku using their visible controls. Night Switch showed its result and retained its personal best after reload. Additional checks covered Snake food collection/wall collision/result and retained best, 2048 keyboard/direction moves, Minefield safe flood reveal and touch flag mode, Tic-tac-toe and Connect Four AI replies, a legal sliding-puzzle move, Hue Hunt symbol-mode scoring, and Orbit Lock hit/miss/round results. Checked the real pause overlay, reset behavior, reaction false-start/pause handling, and seven narrow-screen layouts. These checks establish local mechanics and rendering; they do not claim every accessibility mode, browser version, or long-session gameplay case has been exhaustively covered.
+The previous browser pass initialized the 16 games that existed before Aether Drift without console errors. It completed Night Switch, Echo Pairs and a full Sudoku using their visible controls. Night Switch showed its result and retained its personal best after reload. Additional checks covered Snake food collection/wall collision/result and retained best, 2048 keyboard/direction moves, Minefield safe flood reveal and touch flag mode, Tic-tac-toe and Connect Four AI replies, a legal sliding-puzzle move, Hue Hunt symbol-mode scoring, and Orbit Lock hit/miss/round results. Checked the real pause overlay, reset behavior, reaction false-start/pause handling, and seven narrow-screen layouts. The new 390-pixel browser pass confirmed no horizontal overflow for Prism Stack or Word Rush. Prism Stack started, rotated, hard-dropped, paused, topped out, saved a 128-point best, and retained it after restart. Word Rush showed error feedback, advanced after a correct prompt, and held its timer while paused. Neither new game produced browser console errors. The full 45-second typing result and broader device/browser coverage have not been exercised.
+
+### 5.3 action additions
+
+The nine additional helper checks cover deterministic randomness, swept circle and wall hits, dash collision and bounds, six increasing enemy waves, racer acceleration/braking/speed caps, nitro rules, road geometry, and actual forward crossings for traffic. The combined rule and catalog suite passes 21 checks. Full campaign wins, full race wins, broad browser/device coverage and multiplayer remote sessions remain separate gameplay checks.
+
+The 5.3 browser pass cleared Breachline sector one, selected Reinforce for sector two, exercised the dash cooldown and the real pause overlay. Overdrive accelerated, used nitro, retained the paused clock, rendered its highway, and reached its real timer-expired result with cruise assist disabled. Its existing personal best remained after reload, and the result exposed Play again. Overdrive's start panel fit a 390-pixel viewport without horizontal overflow. Full winning runs and Breachline's phone layout still need a live check; the browser connection was unavailable on resumption.
+
+### 5.4 additions and checks
+
+The combined JavaScript suite passes 59 tests: 40 arcade rules/rendering/catalog checks and 19 launcher, route preference, and viewer lifecycle checks. Thirty separate updater tests also pass. Driftline's guided physics simulation completed three legal laps in 25.4 seconds with no barrier hits; this is a simulation, not a browser winning run. Pulse Arena's renderer tests exercise all three weapons, touch controls, pause cleanup, finite geometry and endings, and one-time result handling.
+
+The browser pass exercised Driftline acceleration, steering, handbrake input, hull damage, pause and restart. Pulse Arena selected Scatter, moved, used Blink, earned 600 points, lost shield and paused. Both start panels and touch controls fit the narrow viewport without horizontal overflow. Full browser wins, drift combo banking, broad device coverage and multiplayer remote sessions remain unverified. See [5.4 release notes](RELEASE-5.4.0.md) for subsequent result and persistence checks.

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240" viewBox="0 0 400 240">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#15363e"/><stop offset="1" stop-color="#09151f"/></linearGradient><pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#2d5560" stroke-opacity=".38"/></pattern></defs>
+  <rect width="400" height="240" fill="url(#bg)"/><rect width="400" height="240" fill="url(#grid)"/>
+  <path d="M34 35H139V62H34zM242 164H358V190H242zM181 79H215V130H181z" fill="#294957" stroke="#658993"/>
+  <g fill="#ff889f"><path d="m297 67-23 11 8-24z"/><path d="m82 155 21 14-24 2z"/></g>
+  <g stroke="#83ffe1" stroke-width="3"><path d="m190 154 23-25m12-13 16-18m12-11 12-14"/></g>
+  <circle cx="172" cy="173" r="18" fill="#68efcf"/><path d="m172 174 19-21" stroke="#d7fff1" stroke-width="9"/>
+  <path d="M168 171h-6v9h9" stroke="#0b3235" stroke-width="5" fill="none"/>
+  <text x="22" y="24" fill="#8fbbb7" font-family="system-ui,sans-serif" font-size="9" font-weight="700" letter-spacing="3">AETHER ORIGINALS</text>
+  <text x="376" y="223" text-anchor="end" fill="#d4f5ed" font-family="system-ui,sans-serif" font-size="23" font-weight="800" letter-spacing="1">BREACHLINE</text>
+</svg>

@@ -1,0 +1,14 @@
+// Load this in the proxy-origin shell after the Scramjet API and worker are ready.
+// The asset path is same-origin with the browser shell and therefore works in local dev.
+const version = window.AETHER_PROXY_CONFIG?.version || 'dev';
+const { default: EpoxyTransport } = await import(`/epoxy-v3/index.mjs?v=${encodeURIComponent(version)}`);
+const wisp = `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/wisp/`;
+const transport = new EpoxyTransport({ wisp });
+
+const controller = new window.$scramjetController.Controller({
+  serviceworker: activeWorker,
+  transport,
+});
+await controller.wait();
+const proxyFrame = controller.createFrame(frame);
+proxyFrame.go(targetUrl);

@@ -1,11 +1,11 @@
 # Game sources and launch coverage
 
-Catalog checked on 2026-10-08 for Aether v5.0.0. This document records sources, attribution, launch behavior, and the limits of the checks.
+The inherited source audit checked the original remote catalog on 2026-10-08 for Aether v5.0.0. The v5.2 and v5.3 remote additions below are current catalog links but are not represented as Aether gameplay tests. The v5.4 additions are two locally implemented Originals. This document records sources, attribution, launch behavior, and the limits of the checks.
 
 ## Library summary
 
-- 202 distinct catalog entries: 16 Aether Originals and 186 remote game or game-service entries.
-- 134 remote additions plus 16 local originals were added to the previous 57-entry library; 5 unsuitable legacy targets were removed.
+- 228 distinct game entries: 23 Aether Originals and 205 remote game or game-service entries, plus a separate shelf of 41 apps.
+- The inherited v5.0 expansion added 134 remote entries and 16 local originals to the previous 57-entry library; 5 unsuitable legacy targets were removed. Later additions are described below.
 - 52 legacy entries were retained, with 15 launch targets repaired or moved to creator or publishing-platform pages.
 - The remote library includes 2 publisher portals (Poki and CrazyGames) and 2 room-code companions (Kahoot! and Jackbox). These are labeled and are not represented as standalone games.
 - GeoGuessr may require an account or a paid plan. All other access labels describe the provider landing page and do not promise the absence of provider ads or optional purchases.
@@ -23,13 +23,34 @@ Catalog checked on 2026-10-08 for Aether v5.0.0. This document records sources, 
 
 | Mode | Count | Behavior |
 | --- | ---: | --- |
-| `local` | 16 | Original same-origin game implementation, delivered inside Aether without proxy startup or a remote provider. |
-| `direct` | 22 | Creator-hosted game iframe loaded inside Aether. The checked response had no restrictive frame-ancestor or X-Frame-Options header. A provider can change that policy later. |
-| `proxy` | 164 | A creator or publisher page launched through Aether. WebGL, cookies, ads, and multiplayer services can require further compatibility checks. |
+| `local` | 23 | Original same-origin game implementation, delivered inside Aether without proxy startup or a remote provider. Renderer families load only when selected. |
+| `direct` | 44 | Creator-hosted game iframe loaded inside Aether. Several v5.2 realtime FPS links are candidates and have not received a fresh frame-policy or gameplay check. |
+| `proxy` | 161 | A creator or publisher page launched through Aether. WebGL, cookies, ads, and multiplayer services can require further compatibility checks. |
 
 Official js13kGames player responses restrict frame ancestors to the competition site. Those targets therefore use the Aether proxy. Their competition packages were constrained to 13 KB, but the served document and browser transfer can be larger. No promise is made that a proxied launch transfers only 13 KB.
 
 Direct external games keep their provider origin and browser storage. They are not automatically imported into an Aether profile merely because they appear in the library. Aether Originals use their own game-specific save namespace.
+
+V5.4 adds a manual route chooser and loading help. Page receipt is shown separately from working gameplay; the user can explicitly confirm a working route and remember it on this browser for the exact catalog entry and URL. Aether does not switch routes or open a new tab automatically. Both Scramjet transports remain selectable. A remembered route is a user preference, not a compatibility certification.
+
+## V5.2 FPS additions and transport limits
+
+The following official FPS destinations were added or moved to direct launch. The official sites were identified during source research, but no gameplay, account, matchmaking, frame-policy, or mobile-control checks are claimed here.
+
+| Game | Official source | Launch | Aether status |
+| --- | --- | --- | --- |
+| Veck.io | [veck.io](https://veck.io/) | `direct` | Existing entry; changed from proxy-first after the reported post-document loading hang. Direct launch avoids the Aether HTTP proxy but remains embedded. |
+| Venge.io (Official) | [venge.io](https://venge.io/) | `direct` | Added beside the existing Poki-hosted Venge entry; Aether gameplay unverified. |
+| Deadshot.io | [deadshot.io](https://deadshot.io/) | `direct` | Added from the official site; Aether gameplay unverified. |
+| Kour.io | [kour.io](https://kour.io/) | `direct` | Added from the official site; Aether gameplay unverified. |
+| Repuls.io | [repuls.io](https://repuls.io/) | `direct` | Added from the official site; publisher recommends a separate browser window. |
+| War Brokers | [warbrokers.io](https://warbrokers.io/) | `direct` | Added from the official site; publisher FAQ recommends a separate browser window for performance. |
+
+Wisp carries traffic that the configured browser transports send through it. It does not automatically tunnel browser-native WebRTC ICE or peer traffic. Direct launch is therefore the preferred path for these real-time shooters, but the current Aether direct mode is still an iframe and a site can refuse embedding. Use the site's own top-level page if its publisher requires a separate browser window.
+
+## V5.2 app links
+
+CodePen (`https://codepen.io/`), Excalidraw (`https://excalidraw.com/`), and Photopea (`https://www.photopea.com/`) were added to the Apps shelf as tools for prototyping, diagramming, and image editing. Their sign-in, persistence, and embedded behavior have not been verified inside Aether.
 
 ## Attribution and rights
 
@@ -53,6 +74,12 @@ Primary source examples:
 
 | Game | Category | Launch URL |
 | --- | --- | --- |
+| Driftline | Driving | `/arcade/index.html?game=driftline` |
+| Pulse Arena | Action | `/arcade/index.html?game=pulsearena` |
+| Breachline | Action | `/arcade/index.html?game=breach` |
+| Overdrive | Racing | `/arcade/index.html?game=overdrive` |
+| Aether Drift | Arcade | `/arcade/index.html?game=drift` |
+| Prism Stack | Arcade | `/arcade/index.html?game=stack` |
 | Neon Serpent | Arcade | `/arcade/index.html?game=snake` |
 | Signal Merge | Puzzle | `/arcade/index.html?game=merge` |
 | Prism Break | Arcade | `/arcade/index.html?game=breakout` |
@@ -62,6 +89,7 @@ Primary source examples:
 | Gravity Four | Strategy | `/arcade/index.html?game=connect4` |
 | Pulse Check | Skill | `/arcade/index.html?game=reaction` |
 | Cipher Scramble | Word | `/arcade/index.html?game=scramble` |
+| Word Rush | Word | `/arcade/index.html?game=typerush` |
 | Tile Shift | Puzzle | `/arcade/index.html?game=slide` |
 | Afterglow | Memory | `/arcade/index.html?game=simon` |
 | Meteor Lane | Arcade | `/arcade/index.html?game=dodge` |
@@ -72,7 +100,7 @@ Primary source examples:
 
 ## Remote catalog source index
 
-Every source below is the creator, publisher game page, or official competition entry. Known creator names are listed when supplied by that page or its submission. The launch URL can differ from the source page, for example the js13kGames player URL.
+This is the inherited v5.0 source audit index, including its launch modes and page-check results at that time. Later mode changes and additions are recorded in the v5.2 and v5.3 sections; `data/games.json` holds current defaults. Every source below is the creator, publisher game page, or official competition entry. Known creator names are listed when supplied by that page or its submission. The launch URL can differ from the source page, for example the js13kGames player URL.
 
 | Game | Category | Creator / provider | Source | Mode | Page check |
 | --- | --- | --- | --- | --- | --- |
@@ -291,3 +319,15 @@ Failed candidates are recorded to avoid reintroducing them as apparently new gam
 4. Keep remote game clients and artwork outside the Docker build unless their licenses have been explicitly reviewed.
 5. Treat a URL change as a migration. The catalog retains `previousUrl` for repaired legacy targets because favorites, recents, and older save data may reference the original address.
 6. Recheck target pages and test representative games from each provider during future releases.
+
+## V5.3 discovery additions
+
+Fourteen official-source game links and eleven useful browser apps were integrated from [game research](discovery-games-2026-10-09.md) and [app research](discovery-apps-2026-10-09.md). Their supplied JSON files preserve the pre-integration proposals. New directory covers are original Aether artwork stored locally; they are labeled as directory artwork rather than provider logos. Catalog counts include these links, not a claim that every game is playable inside Aether.
+
+The new games include Kirka, Kart Bros, Slow Roads, HaxBall, TagPro, TETR.IO, Lurkers and the sports/brawler Bros titles. Multiplayer-heavy destinations prefer direct launch. Piskel and Kleki forbid direct framing and therefore default to a proxy; their original-site link is the normal top-level escape path. Direct editors use temporary credentialless storage inside Aether. Export or share work using provider controls; Aether profile saves do not capture third-party creations.
+
+## V5.4 Original additions and validation
+
+Driftline is a dockside racer with three ordered clockwise laps, tire slip, handbrake drift combos, and five hull. Pulse Arena is a 90-second drone score attack with five waves, three weapons, Blink, shield pickups, and a shrinking ring. Both contain local Aether code and original SVG covers; no remote game bundle or additional proxy engine was added.
+
+The release passed 59 JavaScript checks and 30 updater checks. Browser checks covered movement, pause/restart, selected abilities, phone start layouts, and representative launches through all four proxy routes. These checks do not establish full browser wins or compatibility for every remote title. See [v5.4 release evidence](RELEASE-5.4.0.md) for the exact scope and remaining limits.

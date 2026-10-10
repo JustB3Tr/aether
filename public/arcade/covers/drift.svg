@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none">
+  <defs>
+    <radialGradient id="glow"><stop stop-color="#286d60" stop-opacity=".52"/><stop offset="1" stop-color="#101c23" stop-opacity="0"/></radialGradient>
+    <linearGradient id="ship" x1="155" x2="230" y1="82" y2="157" gradientUnits="userSpaceOnUse"><stop stop-color="#c9fff0"/><stop offset="1" stop-color="#65e9cc"/></linearGradient>
+  </defs>
+  <rect width="400" height="240" rx="24" fill="#101c23"/>
+  <circle cx="195" cy="115" r="155" fill="url(#glow)"/>
+  <path stroke="#25413f" stroke-width="2" d="M35 45h330v150H35z"/>
+  <path stroke="#20363b" d="M68 45v150M101 45v150M134 45v150M167 45v150M200 45v150M233 45v150M266 45v150M299 45v150M332 45v150M35 78h330M35 111h330M35 144h330M35 177h330"/>
+  <circle cx="93" cy="88" r="9" fill="#ffbd82"/><circle cx="297" cy="77" r="13" fill="#ff8a9e"/><circle cx="312" cy="163" r="8" fill="#ffbd82"/>
+  <path d="m183 74 48 37-48 37-13-20 18-17-18-17 13-20Z" fill="url(#ship)"/>
+  <path stroke="#9af8e3" stroke-linecap="round" stroke-width="3" d="m165 105-23-8m23 20-27 11"/>
+  <path fill="#ffda87" d="m112 151 8 8-8 8-8-8 8-8Zm190-66 7 7-7 7-7-7 7-7Z"/>
+  <path stroke="#65e9cc" stroke-linecap="round" stroke-width="3" d="m237 111 38-22m-37 34 20 24"/>
+  <circle cx="294" cy="125" r="25" stroke="#65e9cc" stroke-opacity=".32" stroke-width="2"/>
+</svg>

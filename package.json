@@ -1,23 +1,33 @@
 {
   "name": "aether-proxy",
-  "version": "5.1.0",
+  "version": "5.4.0",
   "type": "module",
   "main": "server.js",
-  "scripts": { "start": "node server.js" },
+  "scripts": {
+    "start": "node server.js",
+    "postinstall": "node tools/patch-hammerhead-tls.mjs"
+  },
   "dependencies": {
     "@mercuryworkshop/bare-mux": "^2.1.9",
     "@mercuryworkshop/epoxy-transport-v2": "npm:@mercuryworkshop/epoxy-transport@2.1.28",
+    "@mercuryworkshop/epoxy-transport-v3": "npm:@mercuryworkshop/epoxy-transport@3.0.1",
     "@mercuryworkshop/libcurl-transport": "2.0.5",
     "@mercuryworkshop/proxy-transports": "1.0.2",
     "@mercuryworkshop/scramjet": "2.0.67-alpha.2",
     "@mercuryworkshop/scramjet-controller": "0.0.14",
     "@mercuryworkshop/scramjet-utils": "0.0.3",
     "@mercuryworkshop/wisp-js": "^0.5.0",
+    "@rubynetwork/rammerhead": "^1.3.6",
     "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
     "@tomphttp/bare-server-node": "^2.0.5",
-    "@rubynetwork/rammerhead": "^1.3.6",
     "express": "^4.21.0",
     "ws": "^8.18.0"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "overrides": {
+    "testcafe-hammerhead": "31.7.8",
+    "underscore": "1.13.8"
+  }
 }

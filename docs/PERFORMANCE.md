@@ -164,3 +164,11 @@ At the first v5.0.0 preview restart, the catalog contained 202 games and 27 apps
 ## Remaining audit risks
 
 The UUID capability model, public proxy exposure, same-origin untrusted game content, dependency advisories, destination certificate validation, and process-local Party persistence remain material concerns. No dependency was upgraded automatically. Input bounds and origin checks improve robustness but are not authentication, authorization, a proxy destination allowlist, or deployment access control. Browser gameplay, touch/keyboard controls, bridge failure messages, real game compatibility, reduced-motion behavior, and final Docker/runtime checks belong in the completed app audit.
+
+## 5.4 arcade loading measurement
+
+On 2026-10-10, the local 5.4 Docker preview served the initial arcade JavaScript bootstrap in **8,421 gzip bytes**, compared with **30,829 bytes** in the retained 5.3 preview, a **72.7% reduction**. The measured files include the shared lifecycle, lazy loader and definition modules. Each renderer family and its rules module load when selected. This measures transfer before the selected renderer, not the full game, styles, fonts, whole-page speed, or remote game performance. Raw per-file measurements are in `.Codex/launch-5.4/runtime.json`.
+
+The 5.4 catalog contains 228 games and 41 apps and transfers in 27,711 gzip bytes (175,338 uncompressed). Both new game modules and covers returned HTTP 200 with gzip from the built container. Driftline bounds its smoke/trail collections and caches the circuit drawing; Pulse Arena caps entities, shots, particles and hazards. Both cap canvas DPR at two and update DOM HUD values at 10 Hz. These implementation bounds are not a measured frame-rate guarantee on every device.
+
+Production requirements have changed since the historical backend review above: the current image requires separate HTTPS app/proxy origins and Cloudflare Access audiences, and rejects destination certificate bypasses. Refer to [security and origins](SECURITY-AND-ORIGINS.md) and [5.4 release notes](RELEASE-5.4.0.md) for current requirements and the local versus production verification boundary.

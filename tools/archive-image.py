@@ -2,7 +2,7 @@
 import argparse, gzip, hashlib, json, pathlib, shutil, tarfile
 parser=argparse.ArgumentParser()
 parser.add_argument('tar')
-parser.add_argument('--tag',default='aether:5.0.0')
+parser.add_argument('--tag',default='aether:5.4.0')
 args=parser.parse_args()
 source=pathlib.Path(args.tar).resolve()
 target=source.with_suffix(source.suffix+'.gz')

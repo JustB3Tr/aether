@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {snakeStep,mergeLine,moveMerge,mergeHasMoves,makeMines,revealMines,ticWinner,ticAI,dropConnect,connectWinner,connectAI,slideMove,slideSolved,makeSlide,toggleLights,sudokuAllowed,countSudoku,makeSudoku,angleDistance} from '../core.js';
-import {gameDefinitions} from '../games.js';
+import {gameDefinitions} from '../game-loader.js';
+import {makeStackBoard,createStackPiece,canPlaceStackPiece,rotateStackShape,rotateStackPiece,lockStackPiece,clearStackLines,typingStats} from '../extra-core.js';
 const random=seed=>()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 
 test('snake grows on food, collides with walls and can enter a vacated tail cell',()=>{
@@ -52,6 +54,40 @@ test('lights switches affect orthogonal neighbors and are reversible',()=>{
 test('sudoku creates unique puzzles with valid full solutions',()=>{
   for(let seed=1;seed<=20;seed++){const {puzzle,solution}=makeSudoku(random(seed));assert.equal(countSudoku(puzzle),1);assert.ok(puzzle.filter(Boolean).length>=38);assert.ok(puzzle.filter(Boolean).length<60);assert.equal(new Set(solution.slice(0,9)).size,9);for(let i=0;i<81;i++)assert.equal(sudokuAllowed(solution,i,solution[i]),true);}
 });
-test('orbit timing distance wraps around and all 16 game definitions have rules',()=>{
-  assert.ok(angleDistance(.1,Math.PI*2-.1)<.21);assert.ok(angleDistance(0,Math.PI)>3.14);assert.equal(Object.keys(gameDefinitions).length,16);for(const game of Object.values(gameDefinitions)){assert.ok(game.name);assert.ok(game.rules.length>100);}
+test('orbit timing distance wraps around and all 23 game definitions have rules',()=>{
+  assert.ok(angleDistance(.1,Math.PI*2-.1)<.21);assert.ok(angleDistance(0,Math.PI)>3.14);assert.equal(Object.keys(gameDefinitions).length,23);for(const game of Object.values(gameDefinitions)){assert.ok(game.name);assert.ok(game.rules.length>100);}
+});
+
+test('Prism Stack rotates, respects the field, locks pieces, and clears full rows',()=>{
+  const board=makeStackBoard(4,4);
+  const piece=createStackPiece('O',0,0);
+  assert.equal(canPlaceStackPiece(board,piece),true);
+  assert.equal(canPlaceStackPiece(board,piece,-1,0),false);
+  assert.deepEqual(rotateStackShape([[1,1,0],[0,1,0]]),[[0,1],[1,1],[0,0]]);
+  const rotated=rotateStackPiece(board,createStackPiece('I',0,0));
+  assert.equal(canPlaceStackPiece(board,rotated),true);
+  board[2]=['T','T',0,0];board[3]=['T','T',0,0];
+  const locked=lockStackPiece(board,createStackPiece('O',2,2));
+  assert.equal(locked.overflow,false);
+  const cleared=clearStackLines(locked.board);
+  assert.equal(cleared.lines,2);assert.deepEqual(cleared.board,makeStackBoard(4,4));
+});
+
+test('Word Rush reports net words per minute and typing accuracy',()=>{
+  assert.deepEqual(typingStats(200,220,60),{wpm:40,accuracy:90.9});
+  assert.deepEqual(typingStats(0,0,0),{wpm:0,accuracy:0});
+});
+
+test('every Aether Original is wired to a playable game and matching cover catalog',()=>{
+  const sourceCatalog=JSON.parse(readFileSync(new URL('../../../data/games.json',import.meta.url),'utf8')).games;
+  const arcadeCatalog=JSON.parse(readFileSync(new URL('../catalog.json',import.meta.url),'utf8'));
+  const originals=sourceCatalog.filter(entry=>entry.source==='Aether Originals');
+  assert.equal(originals.length,23);assert.equal(arcadeCatalog.length,originals.length);
+  for(const entry of originals){
+    const gameId=new URL(entry.url,'http://aether.local').searchParams.get('game');
+    assert.ok(gameDefinitions[gameId],entry.id+' has a registered game implementation');
+    assert.equal(entry.launch,'local');assert.equal(entry.local,true);
+    assert.equal(arcadeCatalog.find(item=>item.id===entry.id)?.url,entry.url);
+    assert.ok(readFileSync(new URL('../'+entry.logo.replace(/^\/arcade\//,''),import.meta.url)));
+  }
 });

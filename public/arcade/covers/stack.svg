@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none" role="img" aria-labelledby="title">
+  <title id="title">Prism Stack</title>
+  <defs>
+    <radialGradient id="glow"><stop stop-color="#286d60" stop-opacity=".55"/><stop offset="1" stop-color="#101c23" stop-opacity="0"/></radialGradient>
+    <linearGradient id="teal" x1="80" x2="140" y1="65" y2="134" gradientUnits="userSpaceOnUse"><stop stop-color="#c8fff0"/><stop offset="1" stop-color="#65e9cc"/></linearGradient>
+  </defs>
+  <rect width="400" height="240" rx="24" fill="#101c23"/>
+  <ellipse cx="195" cy="115" fill="url(#glow)" rx="170" ry="150"/>
+  <path stroke="#25413f" stroke-width="2" d="M84 31h174v178H84z"/>
+  <path stroke="#20363b" d="M119 31v178M154 31v178M189 31v178M224 31v178M84 66h174M84 101h174M84 136h174M84 171h174"/>
+  <g fill="#68ead1"><rect x="85" y="137" width="33" height="33" rx="4"/><rect x="120" y="137" width="33" height="33" rx="4"/><rect x="155" y="137" width="33" height="33" rx="4"/><rect x="190" y="137" width="33" height="33" rx="4"/><rect x="190" y="172" width="33" height="33" rx="4"/><rect x="225" y="172" width="33" height="33" rx="4"/></g>
+  <g fill="url(#teal)"><rect x="120" y="66" width="33" height="33" rx="4"/><rect x="155" y="66" width="33" height="33" rx="4"/><rect x="155" y="101" width="33" height="33" rx="4"/></g>
+  <g fill="#ffda87"><rect x="304" y="64" width="21" height="21" rx="4"/><rect x="327" y="64" width="21" height="21" rx="4"/><rect x="304" y="87" width="21" height="21" rx="4"/><rect x="327" y="87" width="21" height="21" rx="4"/></g>
+  <text x="295" y="142" fill="#cfe8e0" font-family="system-ui" font-size="13" font-weight="700" letter-spacing="2">PRISM</text>
+  <text x="295" y="161" fill="#65e9cc" font-family="system-ui" font-size="13" font-weight="700" letter-spacing="2">STACK</text>
+  <text x="30" y="218" fill="#659d95" font-family="system-ui" font-size="9" font-weight="700" letter-spacing="2">AETHER ORIGINALS</text>
+</svg>

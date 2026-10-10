@@ -21,6 +21,8 @@ class FakeDocker:
         self.base, self.failure, self.fault_used = base, failure, False
         self.volume = base / 'volume'
         self.volume.mkdir()
+        self.docker_root = base / 'docker-root'
+        self.docker_root.mkdir()
         (self.volume / 'profile.json').write_text('saved before update')
         self.config = {'container':'aether-test','volume':'aether-test-data','port':15002,'hostIp':'127.0.0.1','env':[]}
         self.old_id, self.new_id = 'a' * 64, 'sha256:' + '2' * 64
@@ -53,6 +55,8 @@ class FakeDocker:
 
     def docker(self, *args, **kwargs):
         self.calls.append(args)
+        if args[:2] == ('info','--format'):
+            return str(self.docker_root)
         if args[:2] == ('image','inspect'):
             image = self.old_image if args[2] in (self.old_image_id,'aether:5.0.0') else self.new_image
             return json.dumps([image])
@@ -111,6 +115,29 @@ class FakeDocker:
 
 
 class UpdaterTests(unittest.TestCase):
+    def seed_rollback_set(self, fake, updater, stamp, include_backup=True):
+        backup_dir = updater.backup_directory(create=True)
+        container_name = fake.config['container'] + '-backup-' + stamp
+        container_id = hashlib.sha256(stamp.encode()).hexdigest()
+        image_id = 'sha256:' + hashlib.sha256((stamp + '-image').encode()).hexdigest()
+        info = copy.deepcopy(fake.old)
+        info.update(Id=container_id,Image=image_id,Name='/'+container_name)
+        info['Config']['Image'] = 'aether:5.0.0'
+        info['Config']['Labels'][up.VERSION_LABEL] = '5.0.0'
+        info['State']['Running'] = False
+        fake.containers[container_name] = info
+        (backup_dir/(stamp+'-container.json')).write_text(json.dumps(info))
+        if include_backup:
+            with tarfile.open(backup_dir/(stamp+'-userdata.tar.gz'),'w:gz') as archive:
+                root = tarfile.TarInfo('userdata')
+                root.type = tarfile.DIRTYPE
+                archive.addfile(root)
+        return {
+            'status':'successful','stamp':stamp,'containerName':container_name,
+            'containerId':container_id,'imageId':image_id,
+            'previousVersion':'5.0.0','installedVersion':'5.0.1'
+        }
+
     def test_versions(self):
         self.assertGreater(up.version('v5.10.0'),up.version('5.9.9'))
         for value in ['latest','5.0','5.0.1-beta','v05.0.0','5.0.0;rm','-1.0.0']:
@@ -139,6 +166,7 @@ class UpdaterTests(unittest.TestCase):
     def transaction(self, failure=None):
         with tempfile.TemporaryDirectory() as directory:
             base = pathlib.Path(directory)
+            (base/'fake.tar.gz').write_bytes(b'disposable test archive')
             fake = FakeDocker(base,failure)
             updater = up.Updater(fake.config,base/'work')
             manifest = {'imageId':fake.new_id,'version':'5.0.1'}
@@ -184,9 +212,131 @@ class UpdaterTests(unittest.TestCase):
     def test_failed_preflight_run_cleans_only_owned_resources(self): self.transaction('preflight-run')
     def test_failed_restore_keeps_live_files_and_marks_manual_recovery(self): self.transaction('restore-extraction')
 
+    def test_rollback_retention_defaults_to_three_and_is_bounded(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertEqual(up.Updater({},pathlib.Path(directory)/'default').rollback_retention,3)
+            self.assertEqual(up.Updater({'rollbackRetention':2},pathlib.Path(directory)/'custom').rollback_retention,2)
+            for value in (True,0,11,'3'):
+                with self.subTest(value=value),self.assertRaises(ValueError):
+                    up.Updater({'rollbackRetention':value},pathlib.Path(directory)/'invalid')
+
+    def test_legacy_last_backup_is_imported_only_when_its_set_is_complete(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = pathlib.Path(directory)
+            fake = FakeDocker(base)
+            updater = up.Updater(fake.config,base/'work')
+            stamp = '20260101T000000000001Z'
+            entry = self.seed_rollback_set(fake,updater,stamp)
+            backup_file = updater.backup_directory()/(stamp+'-userdata.tar.gz')
+            updater.state.update(installedVersion='5.0.1',installedAt=stamp,backupContainer=entry['containerName'],backupFile=str(backup_file))
+            with patch.object(up,'docker',fake.docker),patch.object(up,'inspect',fake.inspect):
+                self.assertEqual(updater.known_rollback_sets(),[entry])
+                backup_file.unlink()
+                self.assertEqual(updater.known_rollback_sets(),[])
+
+    def test_successful_update_prunes_only_older_complete_sets_to_latest_three(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = pathlib.Path(directory)
+            fake = FakeDocker(base)
+            updater = up.Updater(fake.config,base/'work')
+            stamps = [f'20260101T00000{i:07d}Z' for i in range(1,5)]
+            entries = [self.seed_rollback_set(fake,updater,stamp) for stamp in stamps]
+            updater.state['rollbackSets'] = entries
+            failed_dir = updater.backup_directory()/(stamps[0]+'-failed-userdata')
+            failed_dir.mkdir()
+            failed_file = failed_dir/'profile.json'
+            failed_file.write_text('preserve failed recovery data')
+            # A matching name alone is not ownership. It is absent from updater state.
+            unmanaged_name = fake.config['container']+'-backup-20250101T000000000001Z'
+            unmanaged = copy.deepcopy(fake.old)
+            unmanaged.update(Id='b'*64,Name='/'+unmanaged_name)
+            unmanaged['State']['Running'] = False
+            fake.containers[unmanaged_name] = unmanaged
+            (base/'fake.tar.gz').write_bytes(b'disposable test archive')
+            manifest = {'imageId':fake.new_id,'version':'5.0.1'}
+            with patch.object(up,'docker',fake.docker),patch.object(up,'inspect',fake.inspect),patch.object(up,'verify_archive',return_value='aether:5.0.1'),patch.object(updater,'healthy',fake.healthy):
+                self.assertTrue(updater.install(base/'fake.tar.gz',manifest,'5.0.1'))
+            retained = updater.state['rollbackSets']
+            self.assertEqual(len(retained),3)
+            self.assertEqual([entry['stamp'] for entry in retained],stamps[-2:]+[updater.state['installedAt']])
+            backup_dir = updater.backup_directory()
+            for stamp in stamps[:2]:
+                self.assertNotIn(fake.config['container']+'-backup-'+stamp,fake.containers)
+                self.assertFalse((backup_dir/(stamp+'-userdata.tar.gz')).exists())
+                self.assertFalse((backup_dir/(stamp+'-container.json')).exists())
+            self.assertEqual(failed_file.read_text(),'preserve failed recovery data')
+            for stamp in stamps[2:]:
+                self.assertIn(fake.config['container']+'-backup-'+stamp,fake.containers)
+                self.assertTrue((backup_dir/(stamp+'-userdata.tar.gz')).is_file())
+                self.assertTrue((backup_dir/(stamp+'-container.json')).is_file())
+            self.assertIn(unmanaged_name,fake.containers)
+            self.assertTrue(fake.containers[fake.config['container']]['State']['Running'])
+            self.assertFalse(any(args[:2] == ('rm','-v') for args in fake.calls))
+
+    def test_retention_preserves_incomplete_failed_and_untracked_material(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = pathlib.Path(directory)
+            fake = FakeDocker(base)
+            updater = up.Updater(fake.config,base/'work')
+            stamps = [f'20260101T00000{i:07d}Z' for i in range(1,4)]
+            entries = [self.seed_rollback_set(fake,updater,stamp) for stamp in stamps]
+            incomplete_stamp = '20250101T000000000001Z'
+            incomplete = self.seed_rollback_set(fake,updater,incomplete_stamp,include_backup=False)
+            entries.insert(0,incomplete)
+            updater.state['rollbackSets'] = entries
+            backup_dir = updater.backup_directory()
+            failed_dir = backup_dir/(incomplete_stamp+'-failed-userdata')
+            failed_dir.mkdir()
+            failed_file = failed_dir/'profile.json'
+            failed_file.write_text('preserve failed recovery data')
+            loose_stamp = '20240101T000000000001Z'
+            loose = self.seed_rollback_set(fake,updater,loose_stamp)
+            # Leave this complete-looking set untracked so retention cannot claim it.
+            untracked_name = loose['containerName']
+            (backup_dir/(loose_stamp+'-userdata.tar.gz')).unlink()
+            (backup_dir/(loose_stamp+'-container.json')).unlink()
+            (backup_dir/(loose_stamp+'-container.json')).write_text(json.dumps(fake.containers[untracked_name]))
+            (backup_dir/(loose_stamp+'-userdata.tar.gz')).write_bytes(b'untracked material')
+            (base/'fake.tar.gz').write_bytes(b'disposable test archive')
+            manifest = {'imageId':fake.new_id,'version':'5.0.1'}
+            with patch.object(up,'docker',fake.docker),patch.object(up,'inspect',fake.inspect),patch.object(up,'verify_archive',return_value='aether:5.0.1'),patch.object(updater,'healthy',fake.healthy):
+                self.assertTrue(updater.install(base/'fake.tar.gz',manifest,'5.0.1'))
+            self.assertIn(incomplete,updater.state['rollbackSets'])
+            self.assertIn(incomplete['containerName'],fake.containers)
+            self.assertFalse((backup_dir/(incomplete_stamp+'-userdata.tar.gz')).exists())
+            self.assertEqual(failed_file.read_text(),'preserve failed recovery data')
+            self.assertIn(untracked_name,fake.containers)
+            self.assertTrue((backup_dir/(loose_stamp+'-userdata.tar.gz')).is_file())
+            self.assertTrue(fake.containers[fake.config['container']]['State']['Running'])
+
+    def test_failed_replacement_does_not_prune_successful_or_failed_recovery_material(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = pathlib.Path(directory)
+            fake = FakeDocker(base,'replacement-health')
+            updater = up.Updater(fake.config,base/'work')
+            stamps = [f'20260101T00000{i:07d}Z' for i in range(1,5)]
+            entries = [self.seed_rollback_set(fake,updater,stamp) for stamp in stamps]
+            updater.state['rollbackSets'] = entries
+            (base/'fake.tar.gz').write_bytes(b'disposable test archive')
+            with patch.object(up,'docker',fake.docker),patch.object(up,'inspect',fake.inspect),patch.object(up,'verify_archive',return_value='aether:5.0.1'),patch.object(updater,'healthy',fake.healthy):
+                with self.assertRaises(RuntimeError):
+                    updater.install(base/'fake.tar.gz',{'imageId':fake.new_id,'version':'5.0.1'},'5.0.1')
+            backup_dir = updater.backup_directory()
+            self.assertEqual(updater.state['rollbackSets'],entries)
+            for stamp in stamps:
+                self.assertIn(fake.config['container']+'-backup-'+stamp,fake.containers)
+                self.assertTrue((backup_dir/(stamp+'-userdata.tar.gz')).is_file())
+                self.assertTrue((backup_dir/(stamp+'-container.json')).is_file())
+            failed_dirs = [path for path in backup_dir.iterdir() if path.name.endswith('-failed-userdata')]
+            self.assertEqual(len(failed_dirs),1)
+            self.assertTrue((failed_dirs[0]/'profile.json').is_file())
+            self.assertEqual(fake.containers[fake.config['container']]['Id'],fake.old_id)
+            self.assertTrue(fake.containers[fake.config['container']]['State']['Running'])
+
     def test_preflight_collision_does_not_remove_unowned_resources(self):
         with tempfile.TemporaryDirectory() as directory:
             fake = FakeDocker(pathlib.Path(directory))
+            (pathlib.Path(directory)/'fake.tar.gz').write_bytes(b'disposable test archive')
             name = fake.config['container'] + '-update-preflight-collision'
             fake.containers[name] = {**copy.deepcopy(fake.old),'Id':'unrelated','Name':'/'+name}
             fake.volumes[name+'-data'] = {'Name':name+'-data','Labels':{}}
@@ -273,13 +423,33 @@ class UpdaterTests(unittest.TestCase):
             base = pathlib.Path(directory)
             fake = FakeDocker(base)
             updater = up.Updater(fake.config,base/'work')
-            backup = base/'bad.tar.gz'
+            backup_dir = updater.backup_directory(create=True)
+            stamp = '20260101T000000000001Z'
+            backup = backup_dir/(stamp+'-userdata.tar.gz')
             with tarfile.open(backup,'w:gz') as archive:
                 member = tarfile.TarInfo('userdata-lookalike/profile.json')
                 member.size = 3
                 archive.addfile(member,io.BytesIO(b'bad'))
             with self.assertRaises(RuntimeError):
-                updater.restore_userdata(backup,fake.volume,base,'unsafe')
+                updater.restore_userdata(backup,fake.volume,backup_dir,stamp)
+            self.assertEqual((fake.volume/'profile.json').read_text(),'saved before update')
+
+    def test_userdata_restore_rejects_paths_outside_managed_backup_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = pathlib.Path(directory)
+            fake = FakeDocker(base)
+            updater = up.Updater(fake.config,base/'work')
+            backup_dir = updater.backup_directory(create=True)
+            stamp = '20260101T000000000001Z'
+            outside = base/(stamp+'-userdata.tar.gz')
+            with tarfile.open(outside,'w:gz') as archive:
+                root = tarfile.TarInfo('userdata')
+                root.type = tarfile.DIRTYPE
+                archive.addfile(root)
+            with self.assertRaises(ValueError):
+                updater.restore_userdata(outside,fake.volume,base,stamp)
+            with self.assertRaises(ValueError):
+                updater.restore_userdata(outside,fake.volume,backup_dir,stamp)
             self.assertEqual((fake.volume/'profile.json').read_text(),'saved before update')
 
     def test_archive_hash_platform_label_and_image_id(self):
@@ -297,6 +467,104 @@ class UpdaterTests(unittest.TestCase):
             for key,value in [('sha256','0'*64),('imageId','sha256:wrong'),('version','5.0.2'),('platform','linux/arm64'),('tag','aether:latest'),('bytes',1)]:
                 with self.subTest(key=key),self.assertRaises(ValueError):
                     up.verify_archive(path,{**manifest,key:value},'5.0.1')
+
+    @staticmethod
+    def oci_archive(base, *, config_link=None, platform=None, corrupt=None, root_name='docker.io/library/aether:5.0.1', oversized=False):
+        blobs = {}
+
+        def blob(document, media_type, **extra):
+            data = json.dumps(document).encode()
+            digest = 'sha256:' + hashlib.sha256(data).hexdigest()
+            blobs['blobs/' + digest.replace(':', '/')] = data
+            return {'mediaType':media_type,'digest':digest,'size':len(data),**extra}
+
+        config = {'os':'linux','architecture':'amd64','config':{'Labels':{up.VERSION_LABEL:'5.0.1'}}}
+        config_descriptor = blob(config,'application/vnd.oci.image.config.v1+json')
+        linked_config = {**config_descriptor,'digest':config_link or config_descriptor['digest']}
+        image = {'schemaVersion':2,'mediaType':'application/vnd.oci.image.manifest.v1+json','config':linked_config,'layers':[]}
+        image_descriptor = blob(image,image['mediaType'],platform=platform or {'os':'linux','architecture':'amd64'})
+        # Attestation manifests are not runnable Linux AMD64 image candidates.
+        attestation = {'mediaType':image['mediaType'],'digest':'sha256:'+'f'*64,'size':100,'platform':{'os':'unknown','architecture':'unknown'}}
+        image_index = {'schemaVersion':2,'mediaType':'application/vnd.oci.image.index.v1+json','manifests':[image_descriptor,attestation]}
+        index_descriptor = blob(image_index,image_index['mediaType'],annotations={'io.containerd.image.name':root_name,'org.opencontainers.image.ref.name':'5.0.1'})
+        root = {'schemaVersion':2,'mediaType':image_index['mediaType'],'manifests':[index_descriptor]}
+        if oversized:
+            root['padding'] = 'x' * (4 * 1024 * 1024)
+        if corrupt:
+            descriptor = image_descriptor if corrupt == 'manifest' else index_descriptor
+            name = 'blobs/' + descriptor['digest'].replace(':','/')
+            blobs[name] = blobs[name].replace(b'"schemaVersion": 2',b'"schemaVersion": 3')
+        files = {
+            'oci-layout':json.dumps({'imageLayoutVersion':'1.0.0'}).encode(),
+            'index.json':json.dumps(root).encode(),
+            'manifest.json':json.dumps([{'Config':'blobs/'+config_descriptor['digest'].replace(':','/'),'RepoTags':['aether:5.0.1'],'Layers':[]}]).encode(),
+            **blobs,
+        }
+        path = base/up.ARCHIVE
+        with tarfile.open(path,'w:gz') as archive:
+            for name, data in files.items():
+                member = tarfile.TarInfo(name)
+                member.size = len(data)
+                archive.addfile(member,io.BytesIO(data))
+        manifest = {'archive':up.ARCHIVE,'version':'5.0.1','platform':'linux/amd64','tag':'aether:5.0.1','bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'imageId':config_descriptor['digest']}
+        return path, manifest, {'index':index_descriptor['digest'],'manifest':image_descriptor['digest']}
+
+    def test_legacy_loaded_config_id_needs_no_oci_metadata(self):
+        digest = 'sha256:'+'1'*64
+        with patch.object(tarfile,'open',side_effect=AssertionError('Legacy image must not require OCI metadata')):
+            self.assertTrue(up.loaded_image_id_matches_archive(pathlib.Path('unused.tar.gz'),{'imageId':digest},digest))
+
+    def test_containerd_index_and_platform_manifest_install_with_mocked_docker(self):
+        for kind in ('index','manifest'):
+            with self.subTest(kind=kind),tempfile.TemporaryDirectory() as directory:
+                base = pathlib.Path(directory)
+                path, manifest, ids = self.oci_archive(base)
+                fake = FakeDocker(base)
+                fake.new_id = ids[kind]
+                fake.new_image['Id'] = fake.new_id
+                updater = up.Updater(fake.config,base/'work')
+                with patch.object(up,'docker',fake.docker),patch.object(up,'inspect',fake.inspect),patch.object(updater,'healthy',fake.healthy):
+                    self.assertTrue(updater.install(path,manifest,'5.0.1'))
+                self.assertEqual(fake.containers[fake.config['container']]['Image'],ids[kind])
+                self.assertNotEqual(manifest['imageId'],ids[kind])
+                self.assertEqual(up.verify_archive(path,manifest,'5.0.1'),'aether:5.0.1')
+
+    def test_containerd_identity_failures_stop_before_preflight_or_downtime(self):
+        cases = {
+            'unrelated-loaded-id':{},
+            'wrong-linked-config':{'config_link':'sha256:'+'0'*64},
+            'corrupt-platform-manifest':{'corrupt':'manifest'},
+            'corrupt-image-index':{'corrupt':'index'},
+            'wrong-descriptor-platform':{'platform':{'os':'linux','architecture':'arm64'}},
+            'wrong-loaded-platform':{},
+            'wrong-loaded-version':{},
+            'wrong-root-tag':{'root_name':'docker.io/library/unrelated:5.0.1'},
+            'oversized-oci-metadata':{'oversized':True},
+        }
+        for name, options in cases.items():
+            with self.subTest(name=name),tempfile.TemporaryDirectory() as directory:
+                base = pathlib.Path(directory)
+                path, manifest, ids = self.oci_archive(base,**options)
+                fake = FakeDocker(base)
+                fake.new_id = ids['index'] if name != 'unrelated-loaded-id' else 'sha256:'+'e'*64
+                fake.new_image['Id'] = fake.new_id
+                if name == 'wrong-loaded-platform':
+                    fake.new_image['Architecture'] = 'arm64'
+                if name == 'wrong-loaded-version':
+                    fake.new_image['Config']['Labels'][up.VERSION_LABEL] = '5.0.2'
+                updater = up.Updater(fake.config,base/'work')
+                with patch.object(up,'docker',fake.docker),patch.object(up,'inspect',fake.inspect),patch.object(updater,'healthy',fake.healthy):
+                    with self.assertRaises(ValueError):
+                        updater.install(path,manifest,'5.0.1')
+                self.assertFalse(any(call[0] in ('run','stop','rename') for call in fake.calls))
+                self.assertTrue(fake.containers[fake.config['container']]['State']['Running'])
+                self.assertEqual((fake.volume/'profile.json').read_text(),'saved before update')
+
+    def test_containerd_descriptor_id_cannot_replace_release_config_digest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path, manifest, ids = self.oci_archive(pathlib.Path(directory))
+            with self.assertRaisesRegex(ValueError,'Docker image ID mismatch'):
+                up.verify_archive(path,{**manifest,'imageId':ids['index']},'5.0.1')
 
 
 if __name__ == '__main__':

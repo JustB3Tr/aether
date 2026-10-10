@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none" role="img" aria-labelledby="title">
+  <title id="title">Word Rush</title>
+  <defs>
+    <linearGradient id="bg" x1="18" x2="367" y1="14" y2="226" gradientUnits="userSpaceOnUse"><stop stop-color="#183833"/><stop offset=".52" stop-color="#14262d"/><stop offset="1" stop-color="#101c23"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#326f61" stop-opacity=".55"/><stop offset="1" stop-color="#101c23" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="400" height="240" rx="24" fill="url(#bg)"/>
+  <ellipse cx="200" cy="92" fill="url(#glow)" rx="190" ry="155"/>
+  <rect x="35" y="36" width="330" height="118" rx="16" fill="#0d1b20" fill-opacity=".72" stroke="#31514e"/>
+  <text x="56" y="76" fill="#718e8d" font-family="monospace" font-size="17">find your rhythm</text>
+  <text x="56" y="108" fill="#65e9cc" font-family="monospace" font-size="21" font-weight="700">find your</text>
+  <text x="166" y="108" fill="#ffda87" font-family="monospace" font-size="21" font-weight="700">rhythm</text>
+  <path stroke="#ffda87" stroke-width="3" d="M166 114v17"/>
+  <rect x="56" y="128" width="286" height="7" rx="3.5" fill="#20353a"/>
+  <rect x="56" y="128" width="181" height="7" rx="3.5" fill="#65e9cc"/>
+  <g fill="#c1d8d3" font-family="system-ui" font-size="11" font-weight="650"><text x="58" y="184">45 SEC</text><text x="166" y="184">96.4% ACCURACY</text><text x="303" y="184">WPM 72</text></g>
+  <text x="30" y="218" fill="#659d95" font-family="system-ui" font-size="9" font-weight="700" letter-spacing="2">AETHER ORIGINALS</text>
+</svg>

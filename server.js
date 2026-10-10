@@ -21,6 +21,7 @@ import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import { WebSocketServer } from 'ws';
 import rammerhead from '@rubynetwork/rammerhead';
 import rammerheadConfig from '@rubynetwork/rh/src/config.js';
+import { verifyAccessAssertion } from './security/cloudflare-access.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -28,10 +29,32 @@ const packageDir = (name) => dirname(require.resolve(name));
 const controllerPath = packageDir('@mercuryworkshop/scramjet-controller');
 const scramjetUtilsPath = packageDir('@mercuryworkshop/scramjet-utils');
 const libcurlPath = packageDir('@mercuryworkshop/libcurl-transport');
+const epoxyV3Path = packageDir('@mercuryworkshop/epoxy-transport-v3');
 const PORT = process.env.PORT || 3000;
 const USERS_DIR = process.env.USERS_DIR || join(__dirname, 'userdata');
 const RAMMERHEAD_SESSIONS_DIR = process.env.RAMMERHEAD_SESSIONS_DIR || join(USERS_DIR, 'rammerhead-sessions');
 const VERSION = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf-8')).version;
+const production = process.env.NODE_ENV === 'production';
+function configuredOrigin(value, name) {
+  if (!value) return '';
+  const parsed = new URL(value);
+  if (parsed.origin !== value.replace(/\/$/, '') || parsed.pathname !== '/' || parsed.search || parsed.hash || (production && parsed.protocol !== 'https:')) {
+    throw new Error(`${name} must be an origin only${production ? ' and use HTTPS' : ''}`);
+  }
+  return parsed.origin;
+}
+const APP_ORIGIN = configuredOrigin(process.env.AETHER_APP_ORIGIN, 'AETHER_APP_ORIGIN');
+const PROXY_ORIGIN = configuredOrigin(process.env.AETHER_PROXY_ORIGIN, 'AETHER_PROXY_ORIGIN');
+const ACCESS_TEAM_DOMAIN = String(process.env.AETHER_ACCESS_TEAM_DOMAIN || '').replace(/^https?:\/\//i, '').replace(/\/$/, '');
+const APP_ACCESS_AUDIENCE = process.env.AETHER_APP_ACCESS_AUDIENCE || '';
+const PROXY_ACCESS_AUDIENCE = process.env.AETHER_PROXY_ACCESS_AUDIENCE || '';
+if (ACCESS_TEAM_DOMAIN && !/^[a-z0-9.-]+$/i.test(ACCESS_TEAM_DOMAIN)) throw new Error('AETHER_ACCESS_TEAM_DOMAIN must be a hostname only.');
+if (production && (!APP_ORIGIN || !PROXY_ORIGIN || APP_ORIGIN === PROXY_ORIGIN || !ACCESS_TEAM_DOMAIN || !APP_ACCESS_AUDIENCE || !PROXY_ACCESS_AUDIENCE)) {
+  throw new Error('Production requires distinct HTTPS app/proxy origins and Cloudflare Access team and audience values for both origins.');
+}
+if ((APP_ORIGIN || PROXY_ORIGIN) && (!APP_ORIGIN || !PROXY_ORIGIN || APP_ORIGIN === PROXY_ORIGIN)) {
+  throw new Error('Configure both AETHER_APP_ORIGIN and AETHER_PROXY_ORIGIN as distinct origins.');
+}
 const gzipAsync = promisify(gzip);
 const brotliAsync = promisify(brotliCompress);
 
@@ -63,6 +86,64 @@ function requestOrigin(req) {
   const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
   const protocol = forwardedProto === 'https' || req.socket.encrypted ? 'https:' : 'http:';
   return new URL(`${protocol}//${host}`);
+}
+
+function requestRole(req) {
+  let origin;
+  try { origin = requestOrigin(req).origin; }
+  catch { return 'unknown'; }
+  if (APP_ORIGIN && origin === APP_ORIGIN) return 'app';
+  if (PROXY_ORIGIN && origin === PROXY_ORIGIN) return 'proxy';
+  if (!production && !APP_ORIGIN && !PROXY_ORIGIN) return 'development';
+  return 'unknown';
+}
+
+function proxyRouteAllowed(pathname) {
+  return pathname === '/proxy-viewer' || pathname === '/proxy-viewer.js' || pathname === '/proxy-viewer.css' ||
+    pathname === '/aether-proxy-config.js' || pathname === '/rammerhead.js' || pathname === '/scramjet-sw.js' ||
+    pathname === '/newsession' || pathname === '/wisp' || pathname.startsWith('/wisp/') ||
+    pathname === '/bare' || pathname.startsWith('/bare/') || pathname.startsWith('/uv/') ||
+    pathname.startsWith('/baremux/') || pathname.startsWith('/epoxy/') || pathname.startsWith('/epoxy-v3/') || pathname.startsWith('/scramjet/') ||
+    pathname.startsWith('/controller/') || pathname.startsWith('/utils/') || pathname.startsWith('/libcurl/') ||
+    pathname.startsWith('/service/') || pathname.startsWith('/service-sj/') || /^\/[a-f0-9]{32}(?:\/|$)/i.test(pathname);
+}
+
+function proxyOnlyPath(pathname) {
+  return pathname === '/proxy-viewer' || pathname === '/proxy-viewer.js' || pathname === '/proxy-viewer.css' || pathname === '/aether-proxy-config.js';
+}
+
+function isProxyEnginePath(pathname) {
+  return pathname === '/rammerhead.js' || pathname === '/scramjet-sw.js' || pathname === '/newsession' ||
+    pathname === '/wisp' || pathname.startsWith('/wisp/') || pathname === '/bare' || pathname.startsWith('/bare/') ||
+    pathname.startsWith('/uv/') || pathname.startsWith('/baremux/') || pathname.startsWith('/epoxy/') || pathname.startsWith('/epoxy-v3/') ||
+    pathname.startsWith('/scramjet/') || pathname.startsWith('/controller/') || pathname.startsWith('/utils/') ||
+    pathname.startsWith('/libcurl/') || pathname.startsWith('/service/') || pathname.startsWith('/service-sj/') ||
+    /^\/[a-f0-9]{32}(?:\/|$)/i.test(pathname);
+}
+
+function localHealthRequest(req, pathname) {
+  const address = req.socket.remoteAddress || '';
+  return pathname === '/health' && ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(address) &&
+    ['localhost', '127.0.0.1', '[::1]'].includes(String(req.headers.host || '').split(':')[0].replace(/^\[|\]$/g, '').toLowerCase());
+}
+
+async function authorizeRequest(req, res) {
+  let pathname;
+  try { pathname = new URL(req.url || '/', 'http://localhost').pathname; }
+  catch { res.statusCode = 400; res.end(); return false; }
+  if (localHealthRequest(req, pathname)) return true;
+  const role = requestRole(req);
+  if (role === 'unknown') { res.statusCode = 421; res.end('Unknown Aether origin'); return false; }
+  if (role === 'proxy' && !proxyRouteAllowed(pathname)) { res.statusCode = 404; res.end(); return false; }
+  if (role === 'app' && PROXY_ORIGIN && (isProxyEnginePath(pathname) || proxyOnlyPath(pathname))) { res.statusCode = 404; res.end(); return false; }
+  if (production || (ACCESS_TEAM_DOMAIN && APP_ACCESS_AUDIENCE && PROXY_ACCESS_AUDIENCE)) {
+    const audience = role === 'proxy' ? PROXY_ACCESS_AUDIENCE : role === 'app' ? APP_ACCESS_AUDIENCE : '';
+    const assertion = req.headers['cf-access-jwt-assertion'];
+    if (!await verifyAccessAssertion(assertion, { teamDomain: ACCESS_TEAM_DOMAIN, audience })) {
+      res.statusCode = 401; res.setHeader('Cache-Control', 'no-store'); res.end('Cloudflare Access authorization required'); return false;
+    }
+  }
+  return true;
 }
 
 function isSameOrigin(req) {
@@ -129,6 +210,9 @@ for (const item of [...(gamesData.games || []), ...(gamesData.apps || [])]) {
     catalogArtwork.add(url.href);
   } catch {}
 }
+// RH writes destination headers outside Express. Its document responses need
+// compatible COEP when nested in the isolated proxy viewer.
+rammerheadConfig.rewriteServerHeaders['cross-origin-embedder-policy'] = () => 'require-corp';
 const rammerheadServer = rammerhead.createRammerhead({
   logLevel: process.env.RAMMERHEAD_LOG_LEVEL || 'warn',
   reverseProxy: true,
@@ -294,7 +378,8 @@ function cacheAsset(key, value) {
 function assetPolicy(req, filename) {
   const path = req.path.toLowerCase();
   const worker = /(?:^|\/)(?:sw|.*[-.]sw|.*\.worker)\.js$/.test(path) || path === '/scramjet-sw.js';
-  if (extname(filename).toLowerCase() === '.html' || worker) return 'no-cache';
+  if (extname(filename).toLowerCase() === '.html' || worker || ['/proxy-viewer.js','/proxy-viewer.css'].includes(path)) return 'no-cache';
+  if (isProxyEnginePath(path) && req.query.v !== VERSION) return 'no-cache';
   if (req.query.v === VERSION) return 'public, max-age=31536000, immutable';
   return 'public, max-age=3600, stale-while-revalidate=86400';
 }
@@ -309,7 +394,7 @@ function staticFiles(root) {
   return async (req, res, next) => {
     const encoding = req.acceptsEncodings('br', 'gzip', 'identity');
     if (!['GET', 'HEAD'].includes(req.method) || req.headers.range || !['br', 'gzip'].includes(encoding) ||
-        !/\.(?:js|css|svg|json|wasm)$/i.test(req.path)) return fallback(req, res, next);
+        !/\.(?:m?js|css|svg|json|wasm)$/i.test(req.path)) return fallback(req, res, next);
     try {
       const filename = resolve(absoluteRoot, `.${sep}${decodeURIComponent(req.path)}`);
       if (!filename.startsWith(absoluteRoot + sep)) return fallback(req, res, next);
@@ -554,11 +639,41 @@ function loadArtwork(url) {
 const app = express();
 app.disable('x-powered-by');
 app.use((req, res, next) => {
+  if (localHealthRequest(req, req.path)) return next();
+  const role = requestRole(req);
+  if (role === 'unknown') return res.status(421).send('Unknown Aether origin');
+  if (role === 'proxy' && !proxyRouteAllowed(req.path)) return res.sendStatus(404);
+  if (role === 'app' && PROXY_ORIGIN && (isProxyEnginePath(req.path) || proxyOnlyPath(req.path))) return res.sendStatus(404);
+  next();
+});
+app.get('/aether-config.js', (_req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.type('application/javascript').send(`window.AETHER_CONFIG=${JSON.stringify({ appOrigin: APP_ORIGIN, proxyOrigin: PROXY_ORIGIN, version: VERSION })};`);
+});
+app.get('/proxy-viewer', (_req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  // This route returns before the generic document middleware. Its outer
+  // iframe must keep Access cookies while the isolated app embeds it.
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.setHeader('Content-Security-Policy', `frame-ancestors ${APP_ORIGIN || "'self'"}`);
+  res.sendFile(join(__dirname, 'public', 'proxy-viewer.html'));
+});
+app.get('/aether-proxy-config.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  const origin = PROXY_ORIGIN || requestOrigin(req).origin;
+  res.type('application/javascript').send(`window.AETHER_PROXY_CONFIG=${JSON.stringify({ appOrigin: APP_ORIGIN || origin, proxyOrigin: origin, version: VERSION })};`);
+});
+app.use((req, res, next) => {
   // SharedArrayBuffer transports need isolation on the shell and its own assets.
   // API JSON and health responses do not need document isolation headers.
   if (!req.path.startsWith('/api/') && req.path !== '/health') {
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    if (PROXY_ORIGIN && requestRole(req) === 'app') {
+      res.setHeader('Permissions-Policy', `cross-origin-isolated=(self "${PROXY_ORIGIN}")`);
+    }
   }
   if (req.path === '/uv/sw.js') res.setHeader('Service-Worker-Allowed', '/');
   next();
@@ -760,6 +875,7 @@ app.use('/uv/', (req, res, next) => {
 app.use('/uv/', staticFiles(uvPath));
 app.use('/baremux/', staticFiles(baremuxPath));
 app.use('/epoxy/', staticFiles(epoxyPath));
+app.use('/epoxy-v3/', staticFiles(epoxyV3Path));
 app.use('/scramjet/', staticFiles(scramjetPath));
 app.use('/controller/', staticFiles(controllerPath));
 app.use('/utils/', staticFiles(scramjetUtilsPath));
@@ -785,7 +901,7 @@ app.get('/scramjet-sw.js', (_req, res) => {
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Service-Worker-Allowed', '/');
   res.type('application/javascript').send(`
-    importScripts('/controller/controller.sw.js');
+    importScripts('/controller/controller.sw.js?v=${VERSION}');
     addEventListener('fetch', event => {
       if ($scramjetController.shouldRoute(event)) {
         event.respondWith($scramjetController.route(event));
@@ -807,10 +923,20 @@ app.use((error, _req, res, next) => {
 
 // ═══════════════ HTTP SERVER ═══════════════
 const server = createServer((req, res) => {
-  if (['GET','HEAD'].includes(req.method) && req.url.split('?')[0] === '/rammerhead.js') return app(req, res);
-  if (bare.shouldRoute(req)) return bare.routeRequest(req, res);
-  if (rammerhead.shouldRouteRh(req)) return rammerhead.routeRhRequest(rammerheadServer, req, res);
-  app(req, res);
+  void (async () => {
+    if (!await authorizeRequest(req, res)) return;
+    if (['GET','HEAD'].includes(req.method) && req.url.split('?')[0] === '/rammerhead.js') return app(req, res);
+    if (bare.shouldRoute(req)) return bare.routeRequest(req, res);
+    if (rammerhead.shouldRouteRh(req)) {
+      res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+      return rammerhead.routeRhRequest(rammerheadServer, req, res);
+    }
+    app(req, res);
+  })().catch(error => {
+    console.error('[request gate]', error.message);
+    if (!res.headersSent) res.statusCode = 503;
+    res.end('Aether request could not be authorized');
+  });
 });
 
 // ═══════════════ WEBSOCKET ROOMS ═══════════════
@@ -850,11 +976,7 @@ function leaveRoom(ws) {
   if (room.members.size === 0) {
     const code = ws.roomCode;
     clearTimeout(room.emptyTimer);
-    room.emptyTimer = setTimeout(() => {
-      const r = rooms.get(code);
-      if (r === room && r.members.size === 0) rooms.delete(code);
-    }, 10 * 60 * 1000);
-    room.emptyTimer.unref();
+    rooms.delete(code);
   }
   ws.roomCode = null;
 }
@@ -965,20 +1087,37 @@ setInterval(() => {
 }, 30_000).unref();
 
 server.on('upgrade', (req, socket, head) => {
-  if (req.url && req.url.startsWith('/wisp/')) return wisp.routeRequest(req, socket, head);
-  if (bare.shouldRoute(req)) return bare.routeUpgrade(req, socket, head);
-  if (rammerhead.shouldRouteRh(req)) return rammerhead.routeRhUpgrade(rammerheadServer, req, socket, head);
-  let pathname;
-  try { pathname = new URL(req.url, 'http://localhost').pathname; }
-  catch { return socket.destroy(); }
-  if (pathname === '/ws') {
-    if (!isSameOrigin(req) || wss.clients.size >= 500) {
-      socket.write(`HTTP/1.1 ${isSameOrigin(req) ? '503 Service Unavailable' : '403 Forbidden'}\r\nConnection: close\r\n\r\n`);
-      return socket.destroy();
+  const gateResponse = {
+    statusCode: 200,
+    setHeader() {},
+    end(body = '') {
+      const reason = ({400:'Bad Request',404:'Not Found',401:'Unauthorized',421:'Misdirected Request',503:'Service Unavailable'})[this.statusCode] || 'Forbidden';
+      const payload = Buffer.from(String(body));
+      socket.write(`HTTP/1.1 ${this.statusCode} ${reason}\r\nConnection: close\r\nContent-Length: ${payload.length}\r\n\r\n`);
+      if (payload.length) socket.write(payload);
+      socket.destroy();
+    },
+  };
+  void authorizeRequest(req, gateResponse).then(allowed => {
+    if (!allowed) return;
+    if (req.url && req.url.startsWith('/wisp/')) return wisp.routeRequest(req, socket, head);
+    if (bare.shouldRoute(req)) return bare.routeUpgrade(req, socket, head);
+    if (rammerhead.shouldRouteRh(req)) return rammerhead.routeRhUpgrade(rammerheadServer, req, socket, head);
+    let pathname;
+    try { pathname = new URL(req.url, 'http://localhost').pathname; }
+    catch { return socket.destroy(); }
+    if (pathname === '/ws') {
+      if (!isSameOrigin(req) || wss.clients.size >= 500) {
+        socket.write(`HTTP/1.1 ${isSameOrigin(req) ? '503 Service Unavailable' : '403 Forbidden'}\r\nConnection: close\r\n\r\n`);
+        return socket.destroy();
+      }
+      return wss.handleUpgrade(req, socket, head, (ws) => wss.emit('connection', ws, req));
     }
-    return wss.handleUpgrade(req, socket, head, (ws) => wss.emit('connection', ws, req));
-  }
-  socket.end();
+    socket.end();
+  }).catch(error => {
+    console.error('[upgrade gate]', error.message);
+    if (!socket.destroyed) socket.end('HTTP/1.1 503 Service Unavailable\r\nConnection: close\r\n\r\n');
+  });
 });
 
 server.keepAliveTimeout = 65_000;

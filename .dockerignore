@@ -12,6 +12,7 @@ dependency-inspect
 container-port.txt
 .Codex
 design
-tools
+tools/*
+!tools/patch-hammerhead-tls.mjs
 outputs
 docs/research-catalog.json

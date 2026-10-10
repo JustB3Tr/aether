@@ -23,6 +23,10 @@ MANIFEST = 'IMAGE-MANIFEST.json'
 VERSION_LABEL = 'org.opencontainers.image.version'
 MAX_IMAGE = 2 * 1024 * 1024 * 1024
 PREFLIGHT_LABEL = 'io.aether.updater.preflight'
+MIN_FREE_SPACE = 512 * 1024 * 1024
+DEFAULT_ROLLBACK_RETENTION = 3
+MAX_ROLLBACK_RETENTION = 10
+BACKUP_STAMP = re.compile(r'[0-9]{8}T[0-9]{12}Z')
 
 class RollbackRequired(RuntimeError):
     """A replacement failed and automatic recovery could not safely finish."""
@@ -139,9 +143,102 @@ def verify_archive(path, manifest, expected):
             raise ValueError('Docker image ID mismatch')
     return manifest['tag']
 
+def loaded_image_id_matches_archive(path, manifest, loaded_id):
+    """Accept containerd descriptors only when linked to the verified image config."""
+    if loaded_id == manifest['imageId']:
+        return True  # Classic Docker uses the config digest as its image ID.
+    if not re.fullmatch(r'sha256:[a-f0-9]{64}', str(loaded_id)):
+        return False
+    index_types = {'application/vnd.oci.image.index.v1+json', 'application/vnd.docker.distribution.manifest.list.v2+json'}
+    image_types = {'application/vnd.oci.image.manifest.v1+json', 'application/vnd.docker.distribution.manifest.v2+json'}
+    with tarfile.open(path, 'r:gz') as archive:
+        metadata_bytes, metadata_reads = 0, 0
+
+        def read_json(name, descriptor=None):
+            nonlocal metadata_bytes, metadata_reads
+            try:
+                member = archive.getmember(name)
+            except KeyError as error:
+                raise ValueError('Required OCI archive metadata is missing') from error
+            metadata_bytes += member.size
+            metadata_reads += 1
+            if not member.isfile() or not 0 <= member.size <= 4 * 1024 * 1024 or metadata_bytes > 16 * 1024 * 1024 or metadata_reads > 64:
+                raise ValueError('OCI archive metadata exceeds its bounds')
+            data = archive.extractfile(member).read()
+            if descriptor is not None and (descriptor.get('size') != len(data) or descriptor['digest'] != 'sha256:' + hashlib.sha256(data).hexdigest()):
+                raise ValueError('OCI archive descriptor digest or size mismatch')
+            result = json.loads(data)
+            if not isinstance(result, dict):
+                raise ValueError('Invalid OCI archive metadata object')
+            return result
+
+        def read_descriptor(descriptor):
+            if not isinstance(descriptor, dict) or not re.fullmatch(r'sha256:[a-f0-9]{64}', str(descriptor.get('digest'))):
+                raise ValueError('Invalid OCI archive descriptor')
+            return read_json('blobs/' + descriptor['digest'].replace(':', '/'), descriptor)
+
+        if read_json('oci-layout').get('imageLayoutVersion') != '1.0.0':
+            raise ValueError('Unsupported OCI archive layout')
+        root = read_json('index.json')
+        roots = root.get('manifests')
+        if root.get('schemaVersion') != 2 or not isinstance(roots, list) or len(roots) != 1:
+            raise ValueError('OCI archive must contain exactly one image root')
+        descriptor = roots[0]
+        if not isinstance(descriptor, dict):
+            raise ValueError('Invalid OCI archive root descriptor')
+        annotations = descriptor.get('annotations') or {}
+        if not isinstance(annotations, dict):
+            raise ValueError('Invalid OCI archive root annotations')
+        names = {manifest['tag'], 'docker.io/library/' + manifest['tag']}
+        refs = {manifest['tag'], manifest['version']}
+        name, ref = annotations.get('io.containerd.image.name'), annotations.get('org.opencontainers.image.ref.name')
+        if (name and name not in names) or (ref and ref not in refs) or (not name and ref not in refs):
+            raise ValueError('OCI archive image root tag mismatch')
+
+        def walk(descriptor, depth=0):
+            if depth > 8:
+                raise ValueError('OCI archive descriptor nesting exceeds its bound')
+            platform = descriptor.get('platform', {})
+            if not isinstance(platform, dict):
+                raise ValueError('Invalid OCI archive platform descriptor')
+            if platform and (platform.get('os') != 'linux' or platform.get('architecture') != 'amd64'):
+                return set()
+            document = read_descriptor(descriptor)
+            media_type = descriptor.get('mediaType')
+            if document.get('schemaVersion') != 2 or document.get('mediaType', media_type) != media_type:
+                raise ValueError('OCI archive descriptor schema or media type mismatch')
+            if media_type in index_types:
+                children = document.get('manifests')
+                if not isinstance(children, list) or not 0 < len(children) <= 64:
+                    raise ValueError('Invalid OCI archive image index')
+                matching = set()
+                for child in children:
+                    if not isinstance(child, dict) or not isinstance(child.get('platform', {}), dict):
+                        raise ValueError('Invalid OCI archive platform descriptor')
+                    platform = child.get('platform', {})
+                    if platform and (platform.get('os') != 'linux' or platform.get('architecture') != 'amd64'):
+                        continue
+                    matching.update(walk(child, depth + 1))
+                return matching | {descriptor['digest']} if matching else set()
+            if media_type not in image_types:
+                raise ValueError('Unsupported OCI archive image descriptor')
+            config_descriptor = document.get('config')
+            if not isinstance(config_descriptor, dict) or config_descriptor.get('digest') != manifest['imageId']:
+                raise ValueError('OCI image does not reference the verified Docker config')
+            config = read_descriptor(config_descriptor)
+            if config.get('os') != 'linux' or config.get('architecture') != 'amd64':
+                raise ValueError('OCI image config platform mismatch')
+            return {descriptor['digest']}
+
+        return loaded_id in walk(descriptor)
+
 class Updater:
     def __init__(self, config, workdir):
         self.config, self.work = config, pathlib.Path(workdir).resolve()
+        retention = config.get('rollbackRetention', DEFAULT_ROLLBACK_RETENTION)
+        if type(retention) is not int or not 1 <= retention <= MAX_ROLLBACK_RETENTION:
+            raise ValueError('rollbackRetention must be an integer from 1 to ' + str(MAX_ROLLBACK_RETENTION))
+        self.rollback_retention = retention
         self.work.mkdir(parents=True, exist_ok=True)
         self.state_path = self.work / 'state.json'
         try:
@@ -152,10 +249,184 @@ class Updater:
         if not isinstance(self.state, dict):
             raise ValueError('Updater state must be a JSON object')
 
+    def require_update_space(self, archive, volume_path, include_image=True):
+        volume_path = pathlib.Path(volume_path)
+        volume_bytes = sum(
+            entry.stat(follow_symlinks=False).st_size
+            for entry in volume_path.rglob('*')
+            if entry.is_file() and not entry.is_symlink()
+        )
+        needs = [(self.work, max(MIN_FREE_SPACE, volume_bytes * 3 + 256 * 1024 * 1024))]
+        if include_image:
+            docker_root = pathlib.Path(docker('info', '--format', '{{.DockerRootDir}}'))
+            needs.append((docker_root, max(MIN_FREE_SPACE, pathlib.Path(archive).stat().st_size * 3)))
+
+        by_device = {}
+        for path, required in needs:
+            path.mkdir(parents=True, exist_ok=True)
+            device = path.stat().st_dev
+            slot = by_device.setdefault(device, {'path': path, 'required': 0})
+            slot['required'] += required
+        for slot in by_device.values():
+            available = shutil.disk_usage(slot['path']).free
+            if available < slot['required']:
+                raise RuntimeError(
+                    'Update stopped before downtime: ' + str(slot['path']) + ' has '
+                    + str(available) + ' bytes free; estimated requirement is '
+                    + str(slot['required']) + ' bytes including image layers and rollback copies'
+                )
     def state_save(self):
         tmp = self.state_path.with_suffix('.tmp')
         tmp.write_text(json.dumps(self.state, indent=2) + '\n')
         tmp.replace(self.state_path)
+
+    def backup_directory(self, create=False):
+        candidate = self.work / 'backups'
+        if candidate.is_symlink():
+            raise ValueError('Updater backup directory must not be a symlink')
+        if create:
+            candidate.mkdir(parents=True, exist_ok=True)
+        resolved = candidate.resolve()
+        if resolved.parent != self.work:
+            raise ValueError('Updater backup directory must be directly under the work directory')
+        return resolved
+
+    def backup_artifact(self, backup_dir, stamp, suffix):
+        if not isinstance(stamp, str) or not BACKUP_STAMP.fullmatch(stamp):
+            raise ValueError('Invalid updater backup timestamp')
+        safe_dir = self.backup_directory()
+        requested_dir = pathlib.Path(backup_dir).resolve()
+        if requested_dir != safe_dir:
+            raise ValueError('Backup path is outside the updater backup directory')
+        name = stamp + suffix
+        candidate = safe_dir / name
+        if candidate.is_symlink():
+            raise ValueError('Updater backup artifacts must not be symlinks')
+        resolved = candidate.resolve()
+        if resolved.parent != safe_dir or resolved.name != name:
+            raise ValueError('Updater backup artifact resolved outside its backup directory')
+        return resolved
+
+    def validate_rollback_set_schema(self, entry):
+        if not isinstance(entry, dict) or entry.get('status') != 'successful':
+            raise ValueError('Rollback set is not marked as a successful update')
+        stamp = entry.get('stamp')
+        if not isinstance(stamp, str) or not BACKUP_STAMP.fullmatch(stamp):
+            raise ValueError('Rollback set has an invalid timestamp')
+        if entry.get('containerName') != self.config['container'] + '-backup-' + stamp:
+            raise ValueError('Rollback set container name is not an exact Aether backup name')
+        if not re.fullmatch(r'[a-f0-9]{64}', str(entry.get('containerId', ''))):
+            raise ValueError('Rollback set has an invalid container ID')
+        if not re.fullmatch(r'sha256:[a-f0-9]{64}', str(entry.get('imageId', ''))):
+            raise ValueError('Rollback set has an invalid image ID')
+        version(entry.get('previousVersion'))
+        version(entry.get('installedVersion'))
+
+    def legacy_rollback_set(self):
+        """Import only the last known successful set from the pre-retention state shape."""
+        container_name = self.state.get('backupContainer')
+        backup_file = self.state.get('backupFile')
+        if not isinstance(container_name, str) or not isinstance(backup_file, str):
+            return None
+        prefix = self.config['container'] + '-backup-'
+        if not container_name.startswith(prefix):
+            return None
+        stamp = container_name[len(prefix):]
+        if not BACKUP_STAMP.fullmatch(stamp):
+            return None
+        backup_dir = self.backup_directory()
+        backup = self.backup_artifact(backup_dir, stamp, '-userdata.tar.gz')
+        try:
+            if pathlib.Path(backup_file).resolve() != backup:
+                return None
+            metadata_path = self.backup_artifact(backup_dir, stamp, '-container.json')
+            metadata = json.loads(metadata_path.read_text())
+            previous = image_version(metadata)
+            entry = {
+                'status': 'successful', 'stamp': stamp, 'containerName': container_name,
+                'containerId': metadata['Id'], 'imageId': metadata['Image'],
+                'previousVersion': previous, 'installedVersion': self.state.get('installedVersion')
+            }
+            self.validate_rollback_set_schema(entry)
+            return entry if self.complete_rollback_set(entry, backup_dir) is not None else None
+        except (OSError, KeyError, TypeError, ValueError, RuntimeError, json.JSONDecodeError):
+            return None
+
+    def known_rollback_sets(self):
+        entries = self.state.get('rollbackSets')
+        if entries is None or entries == []:
+            entries = []
+            legacy = self.legacy_rollback_set()
+            if legacy is not None:
+                entries.append(legacy)
+            return entries
+        if not isinstance(entries, list):
+            raise ValueError('Updater rollbackSets must be a JSON array')
+        for entry in entries:
+            self.validate_rollback_set_schema(entry)
+        return list(entries)
+
+    def complete_rollback_set(self, entry, backup_dir):
+        """Return exact artifacts only when a recorded successful set is still complete."""
+        try:
+            self.validate_rollback_set_schema(entry)
+            backup = self.backup_artifact(backup_dir, entry['stamp'], '-userdata.tar.gz')
+            metadata_path = self.backup_artifact(backup_dir, entry['stamp'], '-container.json')
+            for path in (backup, metadata_path):
+                if path.is_symlink() or not path.is_file() or path.stat().st_size <= 0:
+                    return None
+            if metadata_path.stat().st_size > 4 * 1024 * 1024:
+                return None
+            metadata = json.loads(metadata_path.read_text())
+            if metadata.get('Id') != entry['containerId'] or metadata.get('Image') != entry['imageId']:
+                return None
+            if image_version(metadata) != entry['previousVersion']:
+                return None
+            with tarfile.open(backup, 'r:gz') as archive:
+                root = archive.getmember('userdata')
+                if not root.isdir():
+                    return None
+            info = maybe_inspect(entry['containerName'])
+            if info is None or info.get('Id') != entry['containerId'] or info.get('Image') != entry['imageId']:
+                return None
+            if info.get('Name', '').lstrip('/') != entry['containerName'] or info.get('State', {}).get('Running'):
+                return None
+            mounts = info.get('Mounts') or []
+            if (len(mounts) != 1 or mounts[0].get('Type') != 'volume'
+                    or mounts[0].get('Name') != self.config['volume']
+                    or mounts[0].get('Destination') != '/app/userdata'):
+                return None
+            if image_version(info) != entry['previousVersion']:
+                return None
+            return {'container': info, 'userdata': backup, 'metadata': metadata_path}
+        except (OSError, KeyError, TypeError, ValueError, RuntimeError, tarfile.TarError, json.JSONDecodeError):
+            return None
+
+    def prune_rollback_sets(self):
+        """Prune only exact, complete successful sets after the replacement is healthy."""
+        backup_dir = self.backup_directory()
+        entries = self.state.get('rollbackSets', [])
+        complete = []
+        for entry in entries:
+            artifacts = self.complete_rollback_set(entry, backup_dir)
+            if artifacts is not None:
+                complete.append((entry, artifacts))
+        complete.sort(key=lambda pair: pair[0]['stamp'])
+        stale = complete[:-self.rollback_retention]
+        removed = set()
+        for entry, artifacts in stale:
+            try:
+                # No --force and no -v: only the previously inspected, stopped container is removed.
+                docker('rm', artifacts['container']['Id'])
+                artifacts['userdata'].unlink()
+                artifacts['metadata'].unlink()
+                removed.add(entry['stamp'])
+                log('Pruned successful rollback set ' + entry['containerName'])
+            except Exception as error:
+                log('Rollback retention left a set for manual review: ' + entry['containerName'] + ': ' + str(error))
+        if removed:
+            self.state['rollbackSets'] = [entry for entry in entries if entry['stamp'] not in removed]
+            self.state_save()
 
     def validate_container(self, info):
         host, conf = info['HostConfig'], self.config
@@ -240,7 +511,16 @@ class Updater:
             log('Preflight cleanup needs review: ' + str(error))
 
     def restore_userdata(self, backup, volume_path, backup_dir, stamp):
-        staging = backup_dir / (stamp + '-restore')
+        safe_dir = self.backup_directory()
+        if pathlib.Path(backup_dir).resolve() != safe_dir:
+            raise ValueError('Userdata restore directory is outside the updater backup directory')
+        backup_dir = safe_dir
+        expected_backup = self.backup_artifact(backup_dir, stamp, '-userdata.tar.gz')
+        if pathlib.Path(backup).resolve() != expected_backup:
+            raise ValueError('Userdata archive is outside the updater backup directory')
+        backup = expected_backup
+        staging = self.backup_artifact(backup_dir, stamp, '-restore')
+        failed_data = self.backup_artifact(backup_dir, stamp, '-failed-userdata')
         staging.mkdir()
         try:
             # Finish validation and extraction before touching any live userdata.
@@ -256,7 +536,6 @@ class Updater:
             if not restored.is_dir():
                 raise RuntimeError('Userdata backup has no root directory')
             # Preserve the unsuccessful image's files too, in case restoring later fails.
-            failed_data = backup_dir / (stamp + '-failed-userdata')
             shutil.copytree(volume_path,failed_data,symlinks=True)
             for child in volume_path.iterdir():
                 if child.is_dir() and not child.is_symlink():
@@ -298,9 +577,14 @@ class Updater:
         if version(expected) <= version(image_version(old)):
             log('No update needed: installed ' + image_version(old) + ', release ' + expected)
             return False
+        if not old.get('Mounts'):
+            raise ValueError('Managed container has no mounted userdata volume for safe rollback')
+        volume_path = pathlib.Path(old['Mounts'][0]['Source'])
+        rollback_sets = self.known_rollback_sets()
+        self.require_update_space(path, volume_path)
         docker('load','-i',path,timeout=900)
         loaded = json.loads(docker('image','inspect',tag))[0]
-        if loaded['Id'] != manifest['imageId'] or loaded['Os'] != 'linux' or loaded['Architecture'] != 'amd64' or loaded['Config']['Labels'].get(VERSION_LABEL) != expected:
+        if loaded['Os'] != 'linux' or loaded['Architecture'] != 'amd64' or (loaded['Config'].get('Labels') or {}).get(VERSION_LABEL) != expected or not loaded_image_id_matches_archive(path, manifest, loaded['Id']):
             raise ValueError('Loaded image does not match release manifest')
         preflight = name + '-update-preflight-' + uuid.uuid4().hex[:16]
         try:
@@ -322,13 +606,15 @@ class Updater:
         if fresh['Id'] != old['Id'] or not fresh['State']['Running']:
             raise RuntimeError('Managed container changed or stopped during preflight')
         self.validate_container(fresh)
+        self.require_update_space(path, volume_path, include_image=False)
         stamp = datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+        if any(entry['stamp'] == stamp for entry in rollback_sets):
+            raise ValueError('Updater generated a duplicate rollback backup timestamp')
         backup_name = name + '-backup-' + stamp
-        backup_dir = self.work / 'backups'
-        backup_dir.mkdir(exist_ok=True)
-        (backup_dir / (stamp + '-container.json')).write_text(json.dumps(old,indent=2))
-        volume_path = pathlib.Path(old['Mounts'][0]['Source'])
-        backup = backup_dir / (stamp + '-userdata.tar.gz')
+        backup_dir = self.backup_directory(create=True)
+        metadata_path = self.backup_artifact(backup_dir, stamp, '-container.json')
+        metadata_path.write_text(json.dumps(old,indent=2))
+        backup = self.backup_artifact(backup_dir, stamp, '-userdata.tar.gz')
         self.state['transaction'] = {'targetVersion':expected,'oldContainerId':old['Id'],'backupContainer':backup_name,'backupFile':str(backup),'newImageId':loaded['Id'],'phase':'stopping'}
         self.state_save()
         # Stop writes for a consistent data snapshot, then switch names and preserve the volume.
@@ -368,8 +654,17 @@ class Updater:
             raise
         self.state.pop('transaction',None)
         self.state.pop('rollbackRequired',None)
-        self.state.update(installedVersion=expected, installedAt=stamp, backupContainer=backup_name, backupFile=str(backup), failedVersion=None)
+        rollback_sets.append({
+            'status':'successful', 'stamp':stamp, 'containerName':backup_name,
+            'containerId':old['Id'], 'imageId':old['Image'],
+            'previousVersion':image_version(old), 'installedVersion':expected
+        })
+        self.state.update(installedVersion=expected, installedAt=stamp, backupContainer=backup_name, backupFile=str(backup), rollbackSets=rollback_sets, failedVersion=None)
         self.state_save()
+        try:
+            self.prune_rollback_sets()
+        except Exception as error:
+            log('Rollback retention was skipped; active image is healthy and all existing sets were left untouched: ' + str(error))
         log('Installed ' + expected + '; retained rollback container ' + backup_name)
         return True
 

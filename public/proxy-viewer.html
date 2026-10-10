@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="no-referrer">
+  <title>Aether Browser</title>
+  <link rel="stylesheet" href="/proxy-viewer.css">
+  <script src="/aether-proxy-config.js"></script>
+  <script defer src="/proxy-viewer.js"></script>
+</head>
+<body>
+  <iframe id="targetFrame" title="Proxied website" allow="fullscreen; autoplay; clipboard-read; clipboard-write; gamepad" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-pointer-lock"></iframe>
+  <section id="status" role="status" aria-live="polite"><span class="orbit" aria-hidden="true"></span><h1 id="statusTitle">Preparing the browser</h1><p id="statusDetail">Starting a secure, separate browsing session.</p></section>
+</body>
+</html>
