@@ -1,7 +1,8 @@
-param([string]$NotesFile = 'docs/RELEASE-5.0.0.md')
+param([string]$NotesFile = '')
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)
 $releaseVersion = (Get-Content package.json -Raw | ConvertFrom-Json).version
+if (-not $NotesFile) { $NotesFile = "docs/RELEASE-$releaseVersion.md" }
 if ($releaseVersion -notmatch '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$') { throw 'Only stable x.y.z versions can be published.' }
 if (git status --porcelain) { throw 'Commit the release source before publishing an image.' }
 $releaseOutput = Join-Path (Get-Location) "outputs/v$releaseVersion"

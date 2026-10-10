@@ -1,4 +1,4 @@
-/* Aether 5.0.0: one shell, a fast library, and explicit save acknowledgements. */
+/* Aether 5.1.0: one shell, a fast library, and explicit save acknowledgements. */
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
@@ -150,10 +150,12 @@ function renderApps() { const result = apps.filter(a => (!appFilter.query || a.s
 function refreshActivePage() { if (currentPage === 'home') renderHome(); else if (currentPage === 'games') renderGames(); else if (currentPage === 'apps') renderApps(); else if (currentPage === 'focus') renderFocus(); else if (currentPage === 'profile') renderProfile(); }
 function go(page,updateHash = true) {
   if (!PAGE_META[page]) page = 'home'; const changed = currentPage !== page; currentPage = page;
+  document.body.dataset.page = page;
   $$('.page').forEach(el => el.classList.toggle('active',el.id === `page-${page}`)); $$('.nav-item').forEach(el => { const chosen = el.dataset.page === page; el.classList.toggle('active',chosen); if (chosen) el.setAttribute('aria-current','page'); else el.removeAttribute('aria-current'); });
   put('pageTitle',PAGE_META[page][0]); put('pageSubtitle',PAGE_META[page][1]); if (updateHash && location.hash !== `#${page}`) history.pushState(null,'',`#${page}`);
   refreshActivePage(); if (page === 'multiplayer') refreshRooms(); if (page === 'settings') renderSettings();
   if (changed) window.scrollTo({top:0,left:0,behavior:'instant'});
+  if (typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('aether:page',{detail:{page,changed}}));
 }
 function syncInert() { const app = document.querySelector('.app'); if (app) app.inert = Boolean(!$('overlay')?.hidden || !$('palette')?.hidden); }
 function trapFocus(event) { if (event.key !== 'Tab') return; const modal = !$('palette')?.hidden ? $('palette') : !$('overlay')?.hidden ? $('overlay') : null; if (!modal) return; const buttons = [...modal.querySelectorAll('button,input,textarea,select,iframe,[tabindex="0"]')].filter(el => !el.hidden && !el.disabled && el.getClientRects().length); if (!buttons.length) return; const first = buttons[0], last = buttons[buttons.length - 1]; if (event.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }
@@ -193,6 +195,8 @@ async function launch(item,options = {}) {
   if (!options.same && (options.newTab ?? settings.newTab)) { if (openShell(item,engine,url)) recordRecent(item); return; }
   closePalette(); overlayInvoker = document.activeElement; const serial = ++launchSerial; clearTimeout(frameTimer);
   active = {serial,item:item || {name:'Web session',url},engine,url,loaded:false,started:false};
+  if ($('overlay')) $('overlay').dataset.engine = engine;
+  put('overlayEngine',({local:'Aether Original',direct:'Direct site',uv:'Ultraviolet',scramjet:'Scramjet',rammer:'Rammerhead'}[engine] || 'Web session'));
   visible('overlay',true); syncInert(); document.body.classList.add('overlay-open'); put('overlayTitle',item?.name || ({uv:'Ultraviolet',scramjet:'Scramjet',rammer:'Rammerhead'}[engine] || 'Web session')); put('overlayUrl',url); put('saveStatus',item?.local ? 'Aether save ready' : 'Site saves depend on the game');
   if ($('overlayLogo')) { $('overlayLogo').hidden = false; $('overlayLogo').src = item?.logo ? artwork(item) : '/assets/aether-mark.webp'; $('overlayLogo').alt = ''; }
   const frame = $('gameFrame'); frame.src = 'about:blank'; frame.removeAttribute('credentialless'); loading(`Opening ${item?.name || 'your site'}`,engine === 'local' ? 'Ready here. No proxy needed.' : engine === 'direct' ? 'Connecting to the original creator.' : 'Starting the browser engine.'); $('overlayBack')?.focus();
@@ -261,6 +265,8 @@ function updateTimer(force = false) {
   put('timerMode',timer.mode === 'focus' ? 'Switch to a 5 minute break' : 'Switch to focus');
   if ($('focusStatus')) $('focusStatus').innerHTML = `<span class="online-dot"></span> ${timer.running ? 'You are in your stretch' : remaining === 0 ? 'A stretch well spent' : 'Ready when you are'}`;
   visible('timerNav',timer.running); put('timerNav',display);
+  $('focusTimerPanel')?.classList.toggle('is-running',timer.running);
+  document.body.dataset.timer = timer.running ? 'running' : 'idle';
 }
 function toggleTimer() { if (timer.running) { timer.remaining = timerSeconds(); timer.running = false; timer.endAt = 0; } else { if (timer.remaining <= 0) timer.remaining = timer.total; timer.running = true; timer.endAt = Date.now() + timer.remaining * 1000; } persistTimer(); updateTimer(true); }
 function resetTimer(mode = timer.mode) { timer = {mode,running:false,total:mode === 'break' ? 300 : settings.timerLen * 60,remaining:mode === 'break' ? 300 : settings.timerLen * 60,endAt:0}; persistTimer(); updateTimer(true); }
@@ -271,7 +277,7 @@ function renderTodos() {
 function renderFocus() { updateTimer(true); renderTodos(); const reward = [...recents.map(r => byId.get(r.id)).filter(Boolean),...games.filter(g => g.local)]; const seen = new Set(); const choices = reward.filter(g => !seen.has(g.id) && seen.add(g.id)).slice(0,3); if ($('quickLaunch')) $('quickLaunch').innerHTML = choices.map(g => `<button class="quick-game" data-launch="${esc(g.id)}">${g.logo ? `<img src="${esc(artwork(g))}" width="44" height="44" alt="" loading="lazy">` : icon('play')}<span>${esc(g.name)}<small>${esc(g.category)}</small></span>${icon('arrow')}</button>`).join(''); }
 function toggleFocus() { if (currentPage === 'focus') { focusMode = false; document.body.classList.remove('focus-mode'); go('home'); } else { focusMode = true; document.body.classList.add('focus-mode'); go('focus'); } }
 function validateSettings() { settings.motion = ['system','full','reduced'].includes(settings.motion) ? settings.motion : 'system'; settings.density = ['comfortable','compact'].includes(settings.density) ? settings.density : 'comfortable'; settings.timerLen = [15,25,40,50].includes(Number(settings.timerLen)) ? Number(settings.timerLen) : 25; for (const key of ['newTab','focusDefault','confirmLeave']) settings[key] = Boolean(settings[key]); }
-function applySettings() { validateSettings(); const reduced = settings.motion === 'reduced' || (settings.motion === 'system' && matchMedia('(prefers-reduced-motion: reduce)').matches); for (const el of [document.documentElement,document.body]) { el.dataset.motion = reduced ? 'reduced' : 'full'; el.dataset.density = settings.density; } document.body.classList.toggle('reduce-motion',reduced); document.body.classList.toggle('compact',settings.density === 'compact'); if ($('proxyNewTab')) $('proxyNewTab').checked = settings.newTab; writeLocal('aether_v5_settings',settings); renderSettings(); }
+function applySettings() { validateSettings(); const reduced = settings.motion === 'reduced' || (settings.motion === 'system' && matchMedia('(prefers-reduced-motion: reduce)').matches); for (const el of [document.documentElement,document.body]) { el.dataset.motion = reduced ? 'reduced' : 'full'; el.dataset.motionPreference = settings.motion; el.dataset.density = settings.density; } document.body.classList.toggle('reduce-motion',reduced); document.body.classList.toggle('compact',settings.density === 'compact'); if ($('proxyNewTab')) $('proxyNewTab').checked = settings.newTab; writeLocal('aether_v5_settings',settings); renderSettings(); if (typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('aether:settings')); }
 const SHORTCUTS = [['Ctrl / ⌘ + K','Find a game, app, or page'],['Esc','Close the current overlay'],['/','Search this collection'],['G then H','Home'],['G then G','Games'],['G then A','Apps'],['G then P','Party'],['G then X','Proxies'],['G then R','Profile'],['G then S','Settings'],['F','Enter Focus']];
 function renderSettings() { if ($('setMotion')) $('setMotion').value = settings.motion; if ($('setDensity')) $('setDensity').value = settings.density; if ($('setTimerLen')) $('setTimerLen').value = String(settings.timerLen); for (const [id,key] of [['setNewTab','newTab'],['setFocusDefault','focusDefault'],['setConfirmLeave','confirmLeave']]) if ($(id)) $(id).checked = settings[key]; if ($('shortcutsList')) $('shortcutsList').innerHTML = SHORTCUTS.map(([keys,label]) => `<div class="shortcut-row"><span>${esc(label)}</span><kbd>${esc(keys)}</kbd></div>`).join(''); }
 async function copy(text,message) { if (!text) { toast('Nothing to copy yet.'); return; } try { await navigator.clipboard.writeText(text); toast(message || 'Copied'); } catch { toast('Your browser could not copy this. Select and copy the value instead.'); } }
@@ -431,12 +437,12 @@ function bindUI() {
   if (!window.isSecureContext || !navigator.serviceWorker) { visible('proxyContextNotice',true); put('proxyContextNotice','Ultraviolet and Scramjet need HTTPS or localhost. Try your HTTPS Aether address for these engines. Local games and direct play are available here.'); }
 }
 async function loadCatalog() {
-  try { const data = await api('/api/games?v=5.0.0'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
+  try { const data = await api('/api/games?v=5.1.0'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
   catch (error) { visible('catalogNotice',true); put('catalogNoticeText',`The library could not refresh. ${error.message}`); }
 }
 async function boot() {
   bindUI(); applySettings(); updateTimer(true);
-  const [catalogResult,userResult] = await Promise.allSettled([api('/api/games?v=5.0.0'),api('/api/user')]);
+  const [catalogResult,userResult] = await Promise.allSettled([api('/api/games?v=5.1.0'),api('/api/user')]);
   if (catalogResult.status === 'fulfilled') { indexCatalog(catalogResult.value); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(catalogResult.value)); } catch {} }
   else { let cached; try { cached = JSON.parse(sessionStorage.getItem('aether_catalog_v5')); } catch {} if (cached) indexCatalog(cached); visible('catalogNotice',true); put('catalogNoticeText',`${cached ? 'Showing the library from this tab. ' : ''}${catalogResult.reason.message}`); }
   if (userResult.status === 'fulfilled') { user = {...userResult.value,saves:userResult.value.saves || {}}; profileReady = true; adoptOfflineMetadata(); }
@@ -445,7 +451,7 @@ async function boot() {
   const parameters = new URLSearchParams(location.search), requestedGame = parameters.get('aether_game'), requestedEngine = parameters.get('aether_proxy'), requestedURL = parameters.get('aether_url');
   const requestedPage = location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'); go(requestedPage,false);
   if (requestedGame || requestedEngine || requestedURL) { parameters.delete('aether_game'); parameters.delete('aether_proxy'); parameters.delete('aether_url'); history.replaceState(null,'',`${location.pathname}${parameters.size ? `?${parameters}` : ''}${location.hash}`); if (requestedGame) { const item = resolveItem(requestedGame); if (item) launch(item,{same:true,engine:['uv','scramjet','rammer'].includes(requestedEngine) ? requestedEngine : undefined}); else toast('That game is no longer in the library.'); } else if (requestedURL && ['uv','scramjet','rammer'].includes(requestedEngine)) { try { launch(null,{url:normalizeTarget(requestedURL),engine:requestedEngine,same:true}); } catch (error) { toast(error.message); } } }
-  window.Aether = {version:'5.0.0',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
+  window.Aether = {version:'5.1.0',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
 }
 window.openGame = (url,name) => launch(resolveItem(url) || {name:name || 'Game',url:decode(url),launch:'proxy'});
 window.openApp = window.openGame;
