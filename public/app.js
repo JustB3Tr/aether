@@ -1,4 +1,4 @@
-/* Aether 5.4.1: isolated browser routes, visible recovery, and explicit save acknowledgements. */
+/* Aether 5.4.2: isolated browser routes, visible recovery, and explicit save acknowledgements. */
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
@@ -556,7 +556,7 @@ function bindUI() {
   if (!window.isSecureContext || !navigator.serviceWorker) { visible('proxyContextNotice',true); put('proxyContextNotice','Ultraviolet and Scramjet need HTTPS or localhost. Try your HTTPS Aether address for these engines. Local games and direct play are available here.'); }
 }
 async function loadCatalog() {
-  try { const data = await api('/api/games?v=5.4.1'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
+  try { const data = await api('/api/games?v=5.4.2'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
   catch (error) { visible('catalogNotice',true); put('catalogNoticeText',`The library could not refresh. ${error.message}`); }
 }
 async function boot() {
@@ -564,7 +564,7 @@ async function boot() {
   for(const page of ['page-focus','page-profile','page-settings']) {$(page).inert=true;$(page).setAttribute('aria-busy','true');}
   go(location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'),false);
   let settleProfile;profileGate=new Promise(resolve=>{settleProfile=resolve;});
-  const catalogRequest=api('/api/games?v=5.4.1').then(data=>{indexCatalog(data);refreshActivePage();return data;});
+  const catalogRequest=api('/api/games?v=5.4.2').then(data=>{indexCatalog(data);refreshActivePage();return data;});
   const [catalogResult,userResult] = await Promise.allSettled([catalogRequest,api('/api/user')]);
   if (catalogResult.status === 'fulfilled') { indexCatalog(catalogResult.value); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(catalogResult.value)); } catch {} }
   else { let cached; try { cached = JSON.parse(sessionStorage.getItem('aether_catalog_v5')); } catch {} if (cached) indexCatalog(cached); visible('catalogNotice',true); put('catalogNoticeText',`${cached ? 'Showing the library from this tab. ' : ''}${catalogResult.reason.message}`); }
@@ -575,7 +575,7 @@ async function boot() {
   const parameters = new URLSearchParams(location.search), requestedGame = parameters.get('aether_game'), requestedEngine = parameters.get('aether_proxy'), requestedURL = parameters.get('aether_url'), requestedTransport = parameters.get('aether_transport') === 'epoxy' ? 'epoxy' : 'libcurl';
   const requestedPage = location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'); go(requestedPage,false);
   if (requestedGame || requestedEngine || requestedURL) { parameters.delete('aether_game'); parameters.delete('aether_proxy'); parameters.delete('aether_url'); parameters.delete('aether_transport'); history.replaceState(null,'',`${location.pathname}${parameters.size ? `?${parameters}` : ''}${location.hash}`); if (requestedGame) { const item = resolveItem(requestedGame); if (item) launch(item,{same:true,transport:requestedTransport,engine:['direct','uv','scramjet','rammer'].includes(requestedEngine) ? requestedEngine : undefined}); else toast('That game is no longer in the library.'); } else if (requestedURL && ['direct','uv','scramjet','rammer'].includes(requestedEngine)) { try { launch(null,{url:normalizeTarget(requestedURL),engine:requestedEngine,transport:requestedTransport,same:true}); } catch (error) { toast(error.message); } } }
-  window.Aether = {version:'5.4.1',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
+  window.Aether = {version:'5.4.2',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
 }
 window.openGame = (url,name) => launch(resolveItem(url) || {name:name || 'Game',url:decode(url),launch:'proxy'});
 window.openApp = window.openGame;

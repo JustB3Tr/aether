@@ -2,7 +2,7 @@ import {
   ARENA, ROUND_SECONDS, WEAPONS, advanceRound, arenaRadius, clamp, confine,
   createRound, damageRound, movePlayer, nearestTarget, pulseHits, restoreShield,
   rewardKill, seededRandom, segmentHit, shotAngles, waveForTime,
-} from './pulse-arena-core.js?v=5.4.1';
+} from './pulse-arena-core.js?v=5.4.2';
 
 const el = (tag, className, text) => {
   const node = document.createElement(tag);

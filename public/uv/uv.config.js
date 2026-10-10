@@ -1,4 +1,4 @@
-const build = '5.4.1';
+const build = '5.4.2';
 self.__uv$config = {
   prefix: '/service/',
   encodeUrl: Ultraviolet.codec.xor.encode,

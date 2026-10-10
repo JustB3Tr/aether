@@ -32,3 +32,18 @@ for (const patch of patches) {
 }
 
 console.log('Rammerhead destination TLS verification enforced for testcafe-hammerhead 31.7.8.');
+
+// Wisp 0.5 stores streams in an object, but its enabled per-host limiter
+// iterates that object directly. The first permitted stream then never starts.
+const wispRoot = dirname(dirname(require.resolve('@mercuryworkshop/wisp-js')));
+const wispManifest = JSON.parse(await readFile(join(wispRoot, 'package.json'), 'utf8'));
+if (wispManifest.version !== '0.5.0') throw new Error('Review Wisp stream limiter patch before upgrading');
+const filterPath = join(wispRoot, 'src/server/filter.mjs');
+const filterSource = await readFile(filterPath, 'utf8');
+const broken = 'for (let stream of connection.streams) {';
+const fixed = 'for (let stream of Object.values(connection.streams)) {';
+if (!filterSource.includes(fixed)) {
+  if (filterSource.split(broken).length !== 2) throw new Error('Wisp limiter marker changed');
+  await writeFile(filterPath, filterSource.replace(broken, fixed));
+}
+console.log('Wisp 0.5 per-host stream limiter supports its stream object.');

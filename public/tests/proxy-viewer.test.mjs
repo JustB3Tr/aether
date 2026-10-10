@@ -18,7 +18,7 @@ function fixture({loadOnGo=true,scriptLoads=true,engine='scramjet'}={}) {
     fetch:async()=>({ok:true,text:async()=>'a'.repeat(32)}),
     document:{getElementById:id=>nodes[id],body:{dataset:{}},createElement:()=>{const node={remove(){this.removed=true;}};scripts.push(node);return node;},head:{append(script){if(scriptLoads)queueMicrotask(()=>script.onload?.());}}},
   };
-  context.window=context;context.isSecureContext=true;context.AETHER_PROXY_CONFIG={appOrigin:'https://app.example',version:'5.4.1'};
+  context.window=context;context.isSecureContext=true;context.AETHER_PROXY_CONFIG={appOrigin:'https://app.example',version:'5.4.2'};
   context.$scramjetController=api;context.LibcurlTransport={LibcurlClient:class{}};
   context.__uv$config={sw:'/sw.js',prefix:'/service/',encodeUrl:value=>encodeURIComponent(value)};
   context.BareMux={BareMuxConnection:class{setTransport(){return Promise.resolve();}}};
