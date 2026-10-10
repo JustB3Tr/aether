@@ -612,7 +612,7 @@
       "category": "FPS",
       "featured": true,
       "sourceUrl": "https://veck.io/",
-      "launch": "direct",
+      "launch": "rammer",
       "id": "veck-io",
       "description": "Join a fast browser shooter and challenge other players.",
       "source": "Veck.io official site",
@@ -623,7 +623,7 @@
       "access": "Free browser play",
       "checkedAt": "2026-10-08",
       "httpStatus": 200,
-      "launchNotes": "Recommended direct launch for WebGL and real-time networking. Aether cannot proxy browser-native WebRTC peer traffic; use Try another engine if the official game page does not load.",
+      "launchNotes": "Rammerhead is recommended based on a user-reported successful load. Initial loading can still take time; Ultraviolet was reported to stall at 51%. Use Try another engine if needed. Gameplay compatibility has not been independently verified.",
       "logoSource": "Legacy v4 local asset; original provenance not recorded"
     },
     {

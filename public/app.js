@@ -1,4 +1,4 @@
-/* Aether 5.4.0: isolated browser routes, visible recovery, and explicit save acknowledgements. */
+/* Aether 5.4.1: isolated browser routes, visible recovery, and explicit save acknowledgements. */
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
@@ -22,7 +22,7 @@ const timeout = (promise, ms, message) => new Promise((resolve, reject) => { con
 async function api(path, method = 'GET', body, ms = 15000) {
   const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), ms);
   try {
-    const response = await fetch(path, { method, credentials: 'same-origin', signal: controller.signal, headers: body === undefined ? {} : {'Content-Type':'application/json'}, body: body === undefined ? undefined : JSON.stringify(body) });
+    const response = await fetch(path, { method, credentials: 'same-origin', signal: controller.signal, headers: {'X-Aether-Request':'1',...(body === undefined ? {} : {'Content-Type':'application/json'})}, body: body === undefined ? undefined : JSON.stringify(body) });
     let result; try { result = await response.json(); } catch { throw new Error(`Unexpected response (${response.status})`); }
     if (!response.ok || result?.ok === false) throw new Error(result?.error || result?.message || `Request failed (${response.status})`);
     return result;
@@ -36,7 +36,7 @@ const defaults = {scramjetTransport:'libcurl',motion:'system',density:'comfortab
 const legacySettings = readLocal('aether_settings',{});
 let settings = {...defaults,...legacySettings,newTab:Boolean(legacySettings.newTab ?? legacySettings.aboutBlank),...readLocal('aether_v5_settings',{})};
 let games = [], apps = [], items = [], byId = new Map(), canonical = new Map();
-function cookieProfileUUID() { const value = (document.cookie || '').split(';').map(part => part.trim()).find(part => part.startsWith('gp_uid='))?.slice(7) || ''; return /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(value) ? value : ''; }
+function cookieProfileUUID() { const value = (document.cookie || '').split(';').map(part => part.trim()).find(part => part.startsWith('gp_uid='))?.slice(7) || readLocal('aether_v5_active_profile',''); return /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(value) ? value : ''; }
 let user = {uuid:cookieProfileUUID(),saves:{}}, favorites = new Set(), recents = [], notes = '', todos = [], profileReady = false;
 let currentPage = '', active = null, launchSerial = 0, frameTimer, overlayInvoker, paletteInvoker;
 let profileGate = Promise.resolve();
@@ -66,7 +66,7 @@ function normalizeItem(raw, kind, index) {
     if (!['http:','https:'].includes(target.protocol)) return null;
     const local = raw.launch === 'local' && target.origin === location.origin && target.pathname.startsWith('/arcade/');
     const id = String(raw.id || `${kind}-${index}-${raw.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`);
-    const item = {...raw,id,kind,local,launch:local ? 'local' : raw.launch === 'direct' ? 'direct' : 'proxy',category:raw.category || raw.cat || 'Other',description:raw.description || '',tags:Array.isArray(raw.tags) ? raw.tags.map(String) : []};
+    const item = {...raw,id,kind,local,launch:local ? 'local' : launchHealth.ROUTES.includes(raw.launch) ? raw.launch : 'proxy',category:raw.category || raw.cat || 'Other',description:raw.description || '',tags:Array.isArray(raw.tags) ? raw.tags.map(String) : []};
     item.search = `${item.name} ${item.category} ${item.description} ${item.tags.join(' ')}`.toLowerCase();
     return item;
   } catch { return null; }
@@ -80,7 +80,7 @@ function indexCatalog(data) {
 }
 function metadata(name, fallback) { return jsonValue(user.saves?.[`__meta__:${name}`], fallback); }
 function scopedCache() { return {favorites:[...favorites],recents,notes,todos,settings}; }
-function cacheProfile() { writeLocal(profileKey(),scopedCache()); }
+function cacheProfile() { if (user.uuid) writeLocal('aether_v5_active_profile',user.uuid);writeLocal(profileKey(),scopedCache()); }
 function hydrateProfile() {
   const cache = readLocal(profileKey(),{});
   const pending = pendingMetadata();
@@ -190,7 +190,7 @@ function renderLaunchOptions() {
   visible('rememberRoute',canRemember); if ($('rememberRoute')) $('rememberRoute').disabled=Boolean(active.confirmed);
   put('rememberRoute',active.confirmed ? 'Route remembered' : 'This works · remember route');
   visible('forgetRoute',Boolean(launchHealth.savedRoute(active.item,routePreferences)));
-  visible('proxyAuthTab',Boolean(active.isolatedProxy && !active.loaded));
+  visible('proxyAuthTab',Boolean(AETHER_CONFIG.accessEnabled && active.isolatedProxy && !active.loaded));
   visible('launchNotes',Boolean(active.item.launchNotes || active.item.frameBlocked));
   put('launchNotes',active.item.frameBlocked ? 'This creator blocks direct embedding. Its original website is also available from the toolbar.' : active.item.launchNotes || '');
 }
@@ -292,8 +292,8 @@ async function launch(item,options = {}) {
       active.started = true;
       active.viewerUrl = proxyViewerURL(engine,url,transport,active.launchId);
       frame.src = active.viewerUrl;
-      // This outer page can be held at Access before its own status arrives.
-      frameTimer=setTimeout(()=>{if(active?.serial===serial&&!active.loaded)launchError(new Error('The browser page did not respond. Open a separate Aether tab to complete Access sign-in, or retry.'),serial);},65000);
+      // The separate proxy host must respond before its own status arrives.
+      frameTimer=setTimeout(()=>{if(active?.serial===serial&&!active.loaded)launchError(new Error('The browser page did not respond. Check the proxy hostname connection, then retry.'),serial);},65000);
       return;
     }
     if (engine === 'local') { await profileGate;if (active?.serial !== serial) return; prepareOriginal(item); active.started = true; startNavigation(serial);const localURL=new URL(url,location.origin);localURL.searchParams.set('launchId',active.launchId);frame.src = localURL.href; }
@@ -556,7 +556,7 @@ function bindUI() {
   if (!window.isSecureContext || !navigator.serviceWorker) { visible('proxyContextNotice',true); put('proxyContextNotice','Ultraviolet and Scramjet need HTTPS or localhost. Try your HTTPS Aether address for these engines. Local games and direct play are available here.'); }
 }
 async function loadCatalog() {
-  try { const data = await api('/api/games?v=5.4.0'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
+  try { const data = await api('/api/games?v=5.4.1'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
   catch (error) { visible('catalogNotice',true); put('catalogNoticeText',`The library could not refresh. ${error.message}`); }
 }
 async function boot() {
@@ -564,7 +564,7 @@ async function boot() {
   for(const page of ['page-focus','page-profile','page-settings']) {$(page).inert=true;$(page).setAttribute('aria-busy','true');}
   go(location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'),false);
   let settleProfile;profileGate=new Promise(resolve=>{settleProfile=resolve;});
-  const catalogRequest=api('/api/games?v=5.4.0').then(data=>{indexCatalog(data);refreshActivePage();return data;});
+  const catalogRequest=api('/api/games?v=5.4.1').then(data=>{indexCatalog(data);refreshActivePage();return data;});
   const [catalogResult,userResult] = await Promise.allSettled([catalogRequest,api('/api/user')]);
   if (catalogResult.status === 'fulfilled') { indexCatalog(catalogResult.value); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(catalogResult.value)); } catch {} }
   else { let cached; try { cached = JSON.parse(sessionStorage.getItem('aether_catalog_v5')); } catch {} if (cached) indexCatalog(cached); visible('catalogNotice',true); put('catalogNoticeText',`${cached ? 'Showing the library from this tab. ' : ''}${catalogResult.reason.message}`); }
@@ -575,7 +575,7 @@ async function boot() {
   const parameters = new URLSearchParams(location.search), requestedGame = parameters.get('aether_game'), requestedEngine = parameters.get('aether_proxy'), requestedURL = parameters.get('aether_url'), requestedTransport = parameters.get('aether_transport') === 'epoxy' ? 'epoxy' : 'libcurl';
   const requestedPage = location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'); go(requestedPage,false);
   if (requestedGame || requestedEngine || requestedURL) { parameters.delete('aether_game'); parameters.delete('aether_proxy'); parameters.delete('aether_url'); parameters.delete('aether_transport'); history.replaceState(null,'',`${location.pathname}${parameters.size ? `?${parameters}` : ''}${location.hash}`); if (requestedGame) { const item = resolveItem(requestedGame); if (item) launch(item,{same:true,transport:requestedTransport,engine:['direct','uv','scramjet','rammer'].includes(requestedEngine) ? requestedEngine : undefined}); else toast('That game is no longer in the library.'); } else if (requestedURL && ['direct','uv','scramjet','rammer'].includes(requestedEngine)) { try { launch(null,{url:normalizeTarget(requestedURL),engine:requestedEngine,transport:requestedTransport,same:true}); } catch (error) { toast(error.message); } } }
-  window.Aether = {version:'5.4.0',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
+  window.Aether = {version:'5.4.1',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
 }
 window.openGame = (url,name) => launch(resolveItem(url) || {name:name || 'Game',url:decode(url),launch:'proxy'});
 window.openApp = window.openGame;

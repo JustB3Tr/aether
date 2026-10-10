@@ -1,5 +1,5 @@
-# Aether 5.4.0
-A graphite, teal, and violet home for browser games, useful apps, three web proxy engines, and a quiet Focus workspace. Production browser engines run on a separate Cloudflare Access protected origin.
+# Aether 5.4.1
+A graphite, teal, and violet home for browser games, useful apps, three web proxy engines, and a quiet Focus workspace. Production browser engines run on a separate public HTTPS origin. No Access login is required.
 
 ## Requirements
 - Node.js 22 LTS and npm for a source preview.
@@ -20,13 +20,13 @@ Do not set `NODE_TLS_REJECT_UNAUTHORIZED=0` in the shell. The install hook appli
 
 ## Build and run Docker
 ```powershell
-docker build --platform linux/amd64 --build-arg AETHER_VERSION=5.4.0 -t aether:5.4.0 .
-docker run -d --name aether-v54-preview --restart unless-stopped -e NODE_ENV=development -p 127.0.0.1:15007:3000 -v aether-v54-preview-data:/app/userdata aether:5.4.0
+docker build --platform linux/amd64 --build-arg AETHER_VERSION=5.4.1 -t aether:5.4.1 .
+docker run -d --name aether-v541-preview --restart unless-stopped -e NODE_ENV=development -p 127.0.0.1:15010:3000 -v aether-v541-preview-data:/app/userdata aether:5.4.1
 ```
-Open [Docker preview](http://127.0.0.1:15007/). Inspect startup with `docker logs aether-v54-preview`.
+Open [Docker preview](http://127.0.0.1:15010/). Inspect startup with `docker logs aether-v541-preview`.
 The preview overrides the image's production default so it can run locally without Cloudflare. Keep it bound to loopback. The example assumes the container name and port are available. Identify an existing preview before replacing it, and preserve its data volume.
 
-The production image starts in `NODE_ENV=production` and refuses to start without distinct HTTPS app and proxy origins plus Cloudflare Access audiences for both. Configure the existing Aether hostname and the isolated proxy hostname before deploying. Follow [security and origin setup](docs/SECURITY-AND-ORIGINS.md); do not expose a development-mode container to the Internet.
+The production image starts in `NODE_ENV=production` and requires distinct HTTPS app and proxy origins. Public mode is the default; Cloudflare Access is optional. Configure the existing Aether hostname and the isolated proxy hostname before deploying. Follow [security and origin setup](docs/SECURITY-AND-ORIGINS.md); do not expose a development-mode container to the Internet.
 
 ## What is included
 - Eight distinct page designs: editorial Home and Games, a creator/music Apps shelf, Focus observatory, Party rendezvous, Browser gateway, Profile passport, and Settings with a live appearance preview.
@@ -51,7 +51,9 @@ Remote sites can change or block embedding/proxying. Source reachability checks 
 | RAMMERHEAD_SESSIONS_DIR | USERS_DIR/rammerhead-sessions | Optional separate session directory |
 | AETHER_APP_ORIGIN | none in local development | Exact HTTPS shell/profile origin; required in production |
 | AETHER_PROXY_ORIGIN | none in local development | Distinct HTTPS proxy viewer/engine origin; required in production |
-| AETHER_ACCESS_TEAM_DOMAIN | none in local development | Cloudflare Access team hostname, without scheme; required in production |
+| AETHER_ACCESS_MODE | public | Public visitors by default; access enables optional Cloudflare login protection |
+| AETHER_TRUSTED_PROXY_IPS | loopback only | Exact connector peer IPs, comma separated |
+| AETHER_ACCESS_TEAM_DOMAIN | none | Cloudflare Access team hostname, required only in access mode |
 | AETHER_APP_ACCESS_AUDIENCE | none in local development | Audience tag from the app Access application |
 | AETHER_PROXY_ACCESS_AUDIENCE | none in local development | Audience tag from the proxy Access application |
 
@@ -59,9 +61,9 @@ Existing v4 profiles are read in place; encoded favorites and repaired catalog U
 
 ## Export
 ```powershell
-New-Item -ItemType Directory -Force -Path outputs\v5.4.0
-docker save --output outputs\v5.4.0\aether-image-linux-amd64.tar aether:5.4.0
-python tools/archive-image.py outputs/v5.4.0/aether-image-linux-amd64.tar --tag aether:5.4.0
+New-Item -ItemType Directory -Force -Path outputs\v5.4.1
+docker save --output outputs\v5.4.1\aether-image-linux-amd64.tar aether:5.4.1
+python tools/archive-image.py outputs/v5.4.1/aether-image-linux-amd64.tar --tag aether:5.4.1
 ```
 This exports a real image, not a build context. See [build/deployment](BUILD-AND-DEPLOY.md) for transfer and rollback steps.
 
@@ -80,7 +82,7 @@ This exports a real image, not a build context. See [build/deployment](BUILD-AND
 - `.Codex/audit-tmp/`: local audit evidence, excluded from images.
 
 ## Documentation
-[v5.4 build notes](docs/RELEASE-5.4.0.md) · [Previous v5.3 build notes](docs/RELEASE-5.3.0.md) · [Security and origins](docs/SECURITY-AND-ORIGINS.md) · [Game sources](docs/GAME-SOURCES.md) · [Arcade](docs/ARCADE.md) · [Performance](docs/PERFORMANCE.md) · [Brand](docs/BRAND.md) · [Restart updates](docs/AUTO-UPDATES.md)
+[v5.4 build notes](docs/RELEASE-5.4.1.md) · [Previous v5.3 build notes](docs/RELEASE-5.3.0.md) · [Security and origins](docs/SECURITY-AND-ORIGINS.md) · [Game sources](docs/GAME-SOURCES.md) · [Arcade](docs/ARCADE.md) · [Performance](docs/PERFORMANCE.md) · [Brand](docs/BRAND.md) · [Restart updates](docs/AUTO-UPDATES.md)
 
 ## Local checks
 ```powershell
@@ -90,7 +92,7 @@ node --test public/arcade/tests/*.test.mjs public/tests/*.test.mjs
 python tools/test-updater.py
 node tools/measure-transfer.mjs http://127.0.0.1:15000
 ```
-The v5.4 local run passed 59 JavaScript checks and 30 updater checks. JavaScript checks include Original rules and renderer fixtures, launcher/profile races, route persistence, and viewer message/timer behavior. Representative browser launches and phone layouts were also checked; full game wins, all remote games, and production Cloudflare Access remain separate checks. See [v5.4 build notes](docs/RELEASE-5.4.0.md) for exact evidence and limits. Historical v5.1 deployment evidence remains in [deployment validation](docs/DEPLOYMENT.md); it does not establish a v5.4 NAS deployment.
+The v5.4.1 local run passed 67 JavaScript checks and 30 updater checks. Checks cover Original rules and renderer fixtures, launcher/profile races, route persistence, viewer behavior, destination guards and signed profile sessions. Live Linux image checks cover profile operations, origin separation and proxy destination rejection. See [v5.4.1 build notes](docs/RELEASE-5.4.1.md) for exact evidence and remote game compatibility limits. Historical v5.1 deployment evidence remains in [deployment validation](docs/DEPLOYMENT.md).
 
 ## Restart updates
 A separate host supervisor checks stable GitHub releases at container startup and NAS boot. It verifies the Linux AMD64 image and backs up userdata before replacement, with health checks and rollback. See [automatic updates](docs/AUTO-UPDATES.md). The Focus timer is device state; notes, tasks, favorites and settings belong to your profile.

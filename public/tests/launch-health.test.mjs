@@ -18,6 +18,8 @@ test('route defaults and explicit transport override saved preferences', () => {
   assert.equal(rules.chooseRoute(game,{engine:'scramjet',transport:'libcurl'},'epoxy',saved),'scramjet-libcurl');
   assert.equal(rules.chooseRoute({...game,local:true},{engine:'uv'}),'local');
   assert.equal(rules.chooseRoute({...game,launch:'direct'}),'direct');
+  assert.equal(rules.chooseRoute({...game,launch:'rammer'}),'rammer');
+  assert.equal(rules.chooseRoute({...game,launch:'rammer'},{engine:'uv'}),'uv');
 });
 test('changed catalog URLs and blocked frames cannot reuse stale routes', () => {
   const saved = {[game.id]:{route:'direct',url:game.url,at:1}};
@@ -44,9 +46,9 @@ test('stale viewer status is ignored across launches', () => {
   assert.equal(rules.statusMatches(session,{type:'aether-proxy-status',launchId:'new-launch',stage:'document-loaded'}),true);
   assert.equal(rules.statusMatches(session,{type:'gp-save',launchId:'new-launch'}),false);
 });
-test('diagnosis separates engine startup, transport, and Access hints', () => {
+test('diagnosis separates engine startup, transport, and proxy connection hints', () => {
   assert.match(rules.diagnosis('The Wisp transport did not respond'),/connection layer/);
   assert.match(rules.diagnosis('The browser worker failed'),/worker/);
-  assert.match(rules.diagnosis('Timeout',true,false),/Access/);
+  assert.match(rules.diagnosis('Timeout',true,false),/proxy hostname/);
   assert.doesNotMatch(rules.diagnosis('Timeout',true,true),/Access/);
 });

@@ -22,6 +22,8 @@ import { WebSocketServer } from 'ws';
 import rammerhead from '@rubynetwork/rammerhead';
 import rammerheadConfig from '@rubynetwork/rh/src/config.js';
 import { verifyAccessAssertion } from './security/cloudflare-access.js';
+import { PublicDestinations, TokenBuckets, installRammerheadGuard, rammerheadSessionPath } from './security/public-guard.js';
+import { profileSessions, validUUID } from './security/profile-session.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -49,14 +51,53 @@ const ACCESS_TEAM_DOMAIN = String(process.env.AETHER_ACCESS_TEAM_DOMAIN || '').r
 const APP_ACCESS_AUDIENCE = process.env.AETHER_APP_ACCESS_AUDIENCE || '';
 const PROXY_ACCESS_AUDIENCE = process.env.AETHER_PROXY_ACCESS_AUDIENCE || '';
 if (ACCESS_TEAM_DOMAIN && !/^[a-z0-9.-]+$/i.test(ACCESS_TEAM_DOMAIN)) throw new Error('AETHER_ACCESS_TEAM_DOMAIN must be a hostname only.');
-if (production && (!APP_ORIGIN || !PROXY_ORIGIN || APP_ORIGIN === PROXY_ORIGIN || !ACCESS_TEAM_DOMAIN || !APP_ACCESS_AUDIENCE || !PROXY_ACCESS_AUDIENCE)) {
-  throw new Error('Production requires distinct HTTPS app/proxy origins and Cloudflare Access team and audience values for both origins.');
+const ACCESS_MODE = process.env.AETHER_ACCESS_MODE || 'public';
+if (!['public','access'].includes(ACCESS_MODE)) throw new Error('AETHER_ACCESS_MODE must be public or access');
+const ACCESS_ENABLED = ACCESS_MODE === 'access';
+if (ACCESS_ENABLED && (!ACCESS_TEAM_DOMAIN || !APP_ACCESS_AUDIENCE || !PROXY_ACCESS_AUDIENCE)) {
+  throw new Error('Access mode requires a Cloudflare team domain and both audience values');
+}
+if (production && (!APP_ORIGIN || !PROXY_ORIGIN || APP_ORIGIN === PROXY_ORIGIN)) {
+  throw new Error('Production requires distinct HTTPS app and proxy origins. Cloudflare Access is optional.');
 }
 if ((APP_ORIGIN || PROXY_ORIGIN) && (!APP_ORIGIN || !PROXY_ORIGIN || APP_ORIGIN === PROXY_ORIGIN)) {
   throw new Error('Configure both AETHER_APP_ORIGIN and AETHER_PROXY_ORIGIN as distinct origins.');
 }
 const gzipAsync = promisify(gzip);
 const brotliAsync = promisify(brotliCompress);
+const normalizeIP = value => String(value || '').replace(/^::ffff:/,'');
+const trustedProxyIPs = new Set(['127.0.0.1','::1',...(process.env.AETHER_TRUSTED_PROXY_IPS || '').split(',').filter(Boolean)].map(normalizeIP));
+for (const address of trustedProxyIPs) if (!isIP(address)) throw new Error('AETHER_TRUSTED_PROXY_IPS must contain exact IP addresses');
+const trustedPeer = req => trustedProxyIPs.has(normalizeIP(req.socket.remoteAddress));
+const clientIP = req => trustedPeer(req) && isIP(String(req.headers['cf-connecting-ip'] || ''))
+  ? normalizeIP(req.headers['cf-connecting-ip']) : normalizeIP(req.socket.remoteAddress);
+const destinations = new PublicDestinations({excludedHosts:[APP_ORIGIN,PROXY_ORIGIN].filter(Boolean).map(origin => new URL(origin).hostname)});
+const requestLimits = new TokenBuckets({capacity:400,perSecond:20});
+const globalRequests = new TokenBuckets({capacity:2000,perSecond:200,maxKeys:1});
+const writeLimits = new TokenBuckets({capacity:30,perSecond:1});
+const importLimits = new TokenBuckets({capacity:3,perSecond:5/60});
+const profileLimits = new TokenBuckets({capacity:6,perSecond:10/60});
+const sessionLimits = new TokenBuckets({capacity:6,perSecond:10/60});
+const globalSessions = new TokenBuckets({capacity:30,perSecond:100/60,maxKeys:1});
+const upgradeLimits = new TokenBuckets({capacity:10,perSecond:20/60});
+const outboundBytes=new TokenBuckets({capacity:32*1024*1024,perSecond:10*1024*1024});
+const globalOutboundBytes=new TokenBuckets({capacity:128*1024*1024,perSecond:50*1024*1024,maxKeys:1});
+const inboundBytes=new TokenBuckets({capacity:16*1024*1024,perSecond:4*1024*1024});
+const proxyConnections = new Map();let proxyConnectionCount=0;
+function countOutbound(ip,chunk,encoding) {
+  const bytes=typeof chunk === 'string' ? Buffer.byteLength(chunk,typeof encoding === 'string' ? encoding : undefined) : chunk?.byteLength || 0;
+  return outboundBytes.take(ip,bytes) && globalOutboundBytes.take('all',bytes);
+}
+function boundProxyResponse(req,res) {
+  const ip=clientIP(req);
+  for (const method of ['write','end']) {
+    const original=res[method];
+    res[method]=function(chunk,encoding,...args) {
+      if (!countOutbound(ip,chunk,encoding)) {res.destroy();return method === 'write' ? false : res;}
+      return original.call(this,chunk,encoding,...args);
+    };
+  }
+}
 
 // RH 1.2.76 hides its own listener methods in the cross-window storage proxy,
 // then calls addChangeEventListener during startup. Adapt the served client only.
@@ -78,13 +119,28 @@ const rammerheadClientBodies = {
 
 mkdirSync(USERS_DIR, { recursive: true });
 mkdirSync(RAMMERHEAD_SESSIONS_DIR, { recursive: true });
+const sessions = profileSessions(USERS_DIR);
 rammerheadConfig.fileCacheSessionConfig.saveDirectory = RAMMERHEAD_SESSIONS_DIR;
+rammerheadConfig.fileCacheSessionConfig.staleCleanupOptions={staleTimeout:24*60*60*1000,maxToLive:7*24*60*60*1000,staleCheckInterval:60*60*1000};
+let sessionDiskScan=null,sessionDiskExpires=0,sessionDiskCount=0,sessionDiskBytes=0;
+async function roomForRammerheadSession() {
+  if (Date.now() >= sessionDiskExpires && !sessionDiskScan) {
+    sessionDiskScan=(async () => {
+      const files=(await readdir(RAMMERHEAD_SESSIONS_DIR)).filter(file => file.endsWith('.rhfsession'));
+      let bytes=0;for (const file of files) {try {bytes+=(await stat(join(RAMMERHEAD_SESSIONS_DIR,file))).size;}catch(error){if(error.code !== 'ENOENT')throw error;}}
+      sessionDiskCount=files.length;sessionDiskBytes=bytes;sessionDiskExpires=Date.now()+60_000;
+    })().finally(() => {sessionDiskScan=null;});
+  }
+  if (sessionDiskScan) await sessionDiskScan;
+  if (sessionDiskCount >= 5000 || sessionDiskBytes >= 1024*1024*1024) return false;
+  sessionDiskCount++;return true;
+}
 
 function requestOrigin(req) {
   const host = req.headers.host;
   if (!host || /[\s\\/?#]/.test(host)) throw new Error('Invalid request host');
   const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
-  const protocol = forwardedProto === 'https' || req.socket.encrypted ? 'https:' : 'http:';
+  const protocol = (trustedPeer(req) && forwardedProto === 'https') || req.socket.encrypted ? 'https:' : 'http:';
   return new URL(`${protocol}//${host}`);
 }
 
@@ -99,13 +155,14 @@ function requestRole(req) {
 }
 
 function proxyRouteAllowed(pathname) {
+  if (rammerheadPaths.has(pathname)) return true;
   return pathname === '/proxy-viewer' || pathname === '/proxy-viewer.js' || pathname === '/proxy-viewer.css' ||
     pathname === '/aether-proxy-config.js' || pathname === '/rammerhead.js' || pathname === '/scramjet-sw.js' ||
     pathname === '/newsession' || pathname === '/wisp' || pathname.startsWith('/wisp/') ||
     pathname === '/bare' || pathname.startsWith('/bare/') || pathname.startsWith('/uv/') ||
     pathname.startsWith('/baremux/') || pathname.startsWith('/epoxy/') || pathname.startsWith('/epoxy-v3/') || pathname.startsWith('/scramjet/') ||
     pathname.startsWith('/controller/') || pathname.startsWith('/utils/') || pathname.startsWith('/libcurl/') ||
-    pathname.startsWith('/service/') || pathname.startsWith('/service-sj/') || /^\/[a-f0-9]{32}(?:\/|$)/i.test(pathname);
+    pathname.startsWith('/service/') || pathname.startsWith('/service-sj/') || rammerheadSessionPath(pathname);
 }
 
 function proxyOnlyPath(pathname) {
@@ -113,12 +170,13 @@ function proxyOnlyPath(pathname) {
 }
 
 function isProxyEnginePath(pathname) {
+  if (rammerheadPaths.has(pathname)) return true;
   return pathname === '/rammerhead.js' || pathname === '/scramjet-sw.js' || pathname === '/newsession' ||
     pathname === '/wisp' || pathname.startsWith('/wisp/') || pathname === '/bare' || pathname.startsWith('/bare/') ||
     pathname.startsWith('/uv/') || pathname.startsWith('/baremux/') || pathname.startsWith('/epoxy/') || pathname.startsWith('/epoxy-v3/') ||
     pathname.startsWith('/scramjet/') || pathname.startsWith('/controller/') || pathname.startsWith('/utils/') ||
     pathname.startsWith('/libcurl/') || pathname.startsWith('/service/') || pathname.startsWith('/service-sj/') ||
-    /^\/[a-f0-9]{32}(?:\/|$)/i.test(pathname);
+    rammerheadSessionPath(pathname);
 }
 
 function localHealthRequest(req, pathname) {
@@ -136,12 +194,25 @@ async function authorizeRequest(req, res) {
   if (role === 'unknown') { res.statusCode = 421; res.end('Unknown Aether origin'); return false; }
   if (role === 'proxy' && !proxyRouteAllowed(pathname)) { res.statusCode = 404; res.end(); return false; }
   if (role === 'app' && PROXY_ORIGIN && (isProxyEnginePath(pathname) || proxyOnlyPath(pathname))) { res.statusCode = 404; res.end(); return false; }
-  if (production || (ACCESS_TEAM_DOMAIN && APP_ACCESS_AUDIENCE && PROXY_ACCESS_AUDIENCE)) {
+  if (ACCESS_ENABLED) {
     const audience = role === 'proxy' ? PROXY_ACCESS_AUDIENCE : role === 'app' ? APP_ACCESS_AUDIENCE : '';
     const assertion = req.headers['cf-access-jwt-assertion'];
     if (!await verifyAccessAssertion(assertion, { teamDomain: ACCESS_TEAM_DOMAIN, audience })) {
       res.statusCode = 401; res.setHeader('Cache-Control', 'no-store'); res.end('Cloudflare Access authorization required'); return false;
     }
+  }
+  if (!req.aetherRateChecked) {
+    const ip=clientIP(req);
+    let allowed=requestLimits.take(ip) && globalRequests.take('all');
+    if (pathname === '/newsession') allowed=allowed && sessionLimits.take(ip) && globalSessions.take('all');
+    if (pathname === '/newsession' && allowed && !await roomForRammerheadSession()) {
+      res.statusCode=503;res.end('Proxy session storage is full. Try again later.');return false;
+    }
+    if (pathname === '/editsession' && new URL(req.url,'http://localhost').searchParams.has('httpProxy')) {
+      res.statusCode=403;res.end('External proxy chaining is disabled');return false;
+    }
+    if (!allowed) { res.statusCode=429;res.setHeader('Retry-After','10');res.end('Request limit reached. Try again shortly.');return false; }
+    req.aetherRateChecked=true;
   }
   return true;
 }
@@ -163,6 +234,16 @@ rammerheadConfig.getServerInfo = (req) => {
     protocol: origin.protocol
   };
 };
+const rammerheadPaths=new Set(['/rammerhead.js','/hammerhead.js','/transport-worker.js','/task.js','/iframe-task.js','/worker-hammerhead.js','/messaging','/sessionexists','/deletesession','/newsession','/editsession','/needpassword','/syncLocalStorage','/api/shuffleDict','/mainport']);
+rammerheadConfig.getIP = clientIP;
+rammerheadConfig.getIPProxy = clientIP;
+if (require('testcafe-hammerhead/package.json').version !== '31.7.8') throw new Error('Review the destination guard before upgrading Hammerhead');
+installRammerheadGuard(require('testcafe-hammerhead/lib/request-pipeline/destination-request'),destinations);
+Object.assign(wisp.options, {
+  port_whitelist:[80,443],allow_direct_ip:false,allow_private_ips:false,allow_loopback_ips:false,
+  allow_udp_streams:false,stream_limit_per_host:16,stream_limit_total:64,dns_ttl:0,
+  dns_method:async host => (await destinations.addresses(host))[0].address,parse_real_ip:false,
+});
 
 // Rammerhead's default disk rewrite cache performs synchronous file I/O.
 // Keep only a bounded cache of rewritten scripts; session persistence is unaffected.
@@ -216,6 +297,7 @@ rammerheadConfig.rewriteServerHeaders['cross-origin-embedder-policy'] = () => 'r
 const rammerheadServer = rammerhead.createRammerhead({
   logLevel: process.env.RAMMERHEAD_LOG_LEVEL || 'warn',
   reverseProxy: true,
+  disableHttp2: true,
 });
 
 // ═══════════════ USER STORAGE ═══════════════
@@ -228,6 +310,12 @@ const userCache = new Map();
 const userReads = new Map();
 const userWrites = new Map();
 let userCacheBytes = 0;
+const profileSizes=new Map();let profileStorageBytes=0;
+for (const filename of await readdir(USERS_DIR)) {
+  if (!validUUID(filename.replace(/\.json$/,'')) || !filename.endsWith('.json')) continue;
+  const info=await stat(join(USERS_DIR,filename));profileSizes.set(filename.slice(0,-5),info.size);profileStorageBytes+=info.size;
+}
+let storageQueue=Promise.resolve();
 
 function apiError(status, message) {
   return Object.assign(new Error(message), { status, expose: true });
@@ -296,16 +384,21 @@ async function loadUser(uuid) {
   return readUser(uuid);
 }
 
-async function persistUser(user) {
+async function persistUserUnlocked(user) {
   if (Object.keys(user.saves).length > MAX_SAVE_KEYS) throw apiError(413, 'Profile exceeds the 2,000 save key limit');
   user.updated = new Date().toISOString();
   const json = JSON.stringify(user, null, 2);
   const bytes = Buffer.byteLength(json);
   if (bytes > MAX_PROFILE_BYTES) throw apiError(413, 'Profile exceeds the 8 MiB storage limit');
+  const priorBytes=profileSizes.get(user.uuid) || 0;
+  if ((!profileSizes.has(user.uuid) && profileSizes.size >= 10_000) || profileStorageBytes-priorBytes+bytes > 512*1024*1024) {
+    throw apiError(507,'Profile storage is full. Existing saves remain intact.');
+  }
   const temporary = `${userFile(user.uuid)}.${randomUUID()}.tmp`;
   try {
     await writeFile(temporary, json, { encoding: 'utf-8', mode: 0o600 });
     await rename(temporary, userFile(user.uuid));
+    profileStorageBytes+=bytes-priorBytes;profileSizes.set(user.uuid,bytes);
     cacheUser(user, bytes);
     userCountCache.expires = 0;
   } catch (error) {
@@ -313,6 +406,10 @@ async function persistUser(user) {
     console.error('[userdata] Unable to persist a profile:', error.code || error.message);
     throw apiError(503, 'Save could not be written. Please try again.');
   }
+}
+function persistUser(user) {
+  const operation=storageQueue.catch(() => {}).then(() => persistUserUnlocked(user));
+  storageQueue=operation;return operation;
 }
 
 async function updateUser(uuid, change) {
@@ -356,9 +453,13 @@ function getCookie(req, name) {
   }
   return null;
 }
-const isUUID = (s) =>
-  typeof s === 'string' &&
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+const isUUID = validUUID;
+function setProfileCookies(req,res,uid) {
+  const secure=requestOrigin(req).protocol === 'https:';
+  const options={maxAge:365*24*60*60*1000,httpOnly:true,sameSite:'strict',path:'/',secure};
+  res.cookie(secure ? '__Host-aether_session' : 'aether_session',sessions.sign(uid),options);
+  res.cookie('gp_uid',uid,options);
+}
 
 // Compress only local, text-like static files. Proxy response streams bypass Express.
 const assetCache = new Map();
@@ -648,7 +749,7 @@ app.use((req, res, next) => {
 });
 app.get('/aether-config.js', (_req, res) => {
   res.setHeader('Cache-Control', 'no-store');
-  res.type('application/javascript').send(`window.AETHER_CONFIG=${JSON.stringify({ appOrigin: APP_ORIGIN, proxyOrigin: PROXY_ORIGIN, version: VERSION })};`);
+  res.type('application/javascript').send(`window.AETHER_CONFIG=${JSON.stringify({ appOrigin: APP_ORIGIN, proxyOrigin: PROXY_ORIGIN, version: VERSION, accessEnabled:ACCESS_ENABLED })};`);
 });
 app.get('/proxy-viewer', (_req, res) => {
   res.setHeader('Cache-Control', 'no-store');
@@ -680,15 +781,20 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  let uid = getCookie(req, 'gp_uid');
   const usesProfile = req.path.startsWith('/api/') && !['/api/games', '/api/rooms', '/api/artwork'].includes(req.path);
-  if (!isUUID(uid) && usesProfile) {
-    uid = randomUUID();
-    res.cookie('gp_uid', uid, {
-      maxAge: 1000 * 60 * 60 * 24 * 365,
-      httpOnly: false, sameSite: 'lax', path: '/', secure: requestOrigin(req).protocol === 'https:'
-    });
+  if (!usesProfile) return next();
+  const secure=requestOrigin(req).protocol === 'https:';
+  const signed=getCookie(req,secure ? '__Host-aether_session' : 'aether_session');
+  let uid=sessions.verify(signed);
+  if (!uid && !signed) {
+    const legacy=getCookie(req,'gp_uid');
+    if (isUUID(legacy) && profileSizes.has(legacy)) uid=legacy;
   }
+  if (!uid) {
+    if (!profileLimits.take(clientIP(req))) return res.status(429).json({error:'Profile creation limit reached. Try again shortly.'});
+    uid=randomUUID();
+  }
+  if (!signed || !sessions.verify(signed)) setProfileCookies(req,res,uid);
   req.uid = uid;
   next();
 });
@@ -696,13 +802,18 @@ app.use((req, res, next) => {
 app.use('/api', (req, res, next) => {
   res.setHeader('Cache-Control', 'no-store');
   if (!isSameOrigin(req)) return res.status(403).json({ error: 'API requests must come from this Aether origin' });
+  if (req.headers['sec-fetch-site'] === 'cross-site') return res.status(403).json({error:'Cross-site API requests are blocked'});
+  if (!['GET','HEAD','OPTIONS'].includes(req.method)) {
+    if (req.headers['x-aether-request'] !== '1') return res.status(403).json({error:'Aether request header is required'});
+    if (!writeLimits.take(clientIP(req)) || (req.path === '/import' && !importLimits.take(clientIP(req)))) return res.status(429).json({error:'Save request limit reached. Try again shortly.'});
+  }
   if (req.headers.origin) {
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.vary('Origin');
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,X-Aether-Request');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 }, express.json({ limit: '9mb' }));
@@ -725,7 +836,8 @@ app.get('/api/games', (req, res) => {
 const asyncRoute = (handler) => (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
 function requestedUID(value, fallback) {
   if (value !== undefined && !isUUID(value)) throw apiError(400, 'Invalid profile UUID');
-  return value || fallback;
+  if (value && value !== fallback) throw apiError(403,'This request cannot access another profile. Use your private recovery key to restore it.');
+  return fallback;
 }
 
 app.get('/api/artwork', asyncRoute(async (req, res) => {
@@ -829,17 +941,10 @@ app.post('/api/import', asyncRoute(async (req, res) => {
   const target = req.body?.uuid;
   if (!isUUID(target)) throw apiError(400, 'Invalid profile UUID');
   await withUserLock(target, async () => {
-    const user = await readUser(target);
-    try { await stat(userFile(target)); }
-    catch (error) {
-      if (error.code !== 'ENOENT') throw error;
-      await persistUser(user);
-    }
+    if (!profileSizes.has(target)) throw apiError(404,'Profile recovery key was not found');
+    await readUser(target);
   });
-  res.cookie('gp_uid', target, {
-    maxAge: 1000 * 60 * 60 * 24 * 365,
-    httpOnly: false, sameSite: 'lax', path: '/', secure: requestOrigin(req).protocol === 'https:'
-  });
+  setProfileCookies(req,res,target);
   res.json({ ok: true, uuid: target });
 }));
 
@@ -867,7 +972,11 @@ app.get('/health', asyncRoute(async (_req, res) => {
 }));
 
 // ═══════════════ PROXIES ═══════════════
-const bare = createBareServer('/bare/');
+const bare = createBareServer('/bare/',{
+  filterRemote:async url => { await destinations.validate(url); },lookup:destinations.nodeLookup,
+  connectionLimiter:{maxConnectionsPerIP:64,windowDuration:60,blockDuration:60},
+});
+const wispWSS=new WebSocketServer({noServer:true,maxPayload:1024*1024,perMessageDeflate:false});
 app.use('/uv/', (req, res, next) => {
   if (req.path === '/sw.js') res.setHeader('Service-Worker-Allowed', '/');
   next();
@@ -915,7 +1024,7 @@ app.use((error, _req, res, next) => {
   if (res.headersSent) return next(error);
   const status = Number(error.status) || 500;
   let message = error.expose ? error.message : 'The request could not be completed';
-  if (error.type === 'entity.too.large') message = 'Request body exceeds the 4 MiB limit';
+  if (error.type === 'entity.too.large') message = 'Request body exceeds the 9 MiB limit';
   if (error.type === 'entity.parse.failed') message = 'Request body must contain valid JSON';
   if (status >= 500 && !error.expose) console.error('[request]', error.code || error.message);
   res.status(status >= 400 && status < 600 ? status : 500).json({ error: message });
@@ -925,6 +1034,7 @@ app.use((error, _req, res, next) => {
 const server = createServer((req, res) => {
   void (async () => {
     if (!await authorizeRequest(req, res)) return;
+    if (isProxyEnginePath(new URL(req.url,'http://localhost').pathname)) boundProxyResponse(req,res);
     if (['GET','HEAD'].includes(req.method) && req.url.split('?')[0] === '/rammerhead.js') return app(req, res);
     if (bare.shouldRoute(req)) return bare.routeRequest(req, res);
     if (rammerhead.shouldRouteRh(req)) {
@@ -1100,7 +1210,25 @@ server.on('upgrade', (req, socket, head) => {
   };
   void authorizeRequest(req, gateResponse).then(allowed => {
     if (!allowed) return;
-    if (req.url && req.url.startsWith('/wisp/')) return wisp.routeRequest(req, socket, head);
+    const ip=clientIP(req);
+    if (!upgradeLimits.take(ip) || (proxyConnections.get(ip) || 0) >= 16 || proxyConnectionCount >= 256) {
+      gateResponse.statusCode=429;gateResponse.end('Connection limit reached');return;
+    }
+    proxyConnections.set(ip,(proxyConnections.get(ip) || 0)+1);proxyConnectionCount++;
+    socket.on('data',chunk => {if(!inboundBytes.take(ip,chunk.length))socket.destroy();});
+    const write=socket.write;socket.write=function(chunk,encoding,...args) {
+      if(!countOutbound(ip,chunk,encoding)){socket.destroy();return false;}return write.call(this,chunk,encoding,...args);
+    };
+    const lifetime=setTimeout(() => socket.destroy(),60*60*1000);lifetime.unref();socket.setTimeout(5*60*1000,() => socket.destroy());
+    socket.once('close',() => {clearTimeout(lifetime);proxyConnectionCount--;const count=proxyConnections.get(ip)-1;if(count)proxyConnections.set(ip,count);else proxyConnections.delete(ip);});
+    if (req.url && req.url.startsWith('/wisp/')) {
+      if (req.url !== '/wisp/' || !isSameOrigin(req)) return socket.destroy();
+      return wispWSS.handleUpgrade(req,socket,head,async ws => {
+        ws.binaryType='arraybuffer';
+        try { const connection=new wisp.ServerConnection(ws,'/wisp/',{wisp_version:req.headers['sec-websocket-protocol'] ? 2 : 1});await connection.setup();await connection.run(); }
+        catch { ws.close(); }
+      });
+    }
     if (bare.shouldRoute(req)) return bare.routeUpgrade(req, socket, head);
     if (rammerhead.shouldRouteRh(req)) return rammerhead.routeRhUpgrade(rammerheadServer, req, socket, head);
     let pathname;

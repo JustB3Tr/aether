@@ -39,7 +39,8 @@
       const explicit = routeId(options.engine, options.transport || transport);
       return ROUTES.includes(explicit) ? explicit : 'uv';
     }
-    return savedRoute(item, preferences) || (item?.launch === 'direct' && !item.frameBlocked ? 'direct' : 'uv');
+    const preferred = routesFor(item).includes(item?.launch) ? item.launch : 'uv';
+    return savedRoute(item, preferences) || preferred;
   }
   function nextRoute(item, current) {
     const routes = routesFor(item);
@@ -51,7 +52,7 @@
     if (/transport|wisp|websocket|libcurl|epoxy/i.test(text)) return 'The connection layer did not start. Try another Scramjet connection or browser route.';
     if (/worker|activate|install/i.test(text)) return 'The browser worker did not start. Reload Aether, then retry this route.';
     if (/engine file|wasm|export|initialize/i.test(text)) return 'A browser engine asset failed to load. Retry or choose another route.';
-    if (isolated && !loaded) return 'The proxy page did not respond. A first launch may need Access sign-in in a separate Aether tab.';
+    if (isolated && !loaded) return 'The proxy page did not respond. Check the proxy hostname connection, then retry or choose another route.';
     return text || 'The site did not respond. Try a different route or its original website.';
   }
   function progress(session) {
