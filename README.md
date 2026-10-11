@@ -1,4 +1,4 @@
-# Aether 5.4.2
+# Aether 5.5.0
 A graphite, teal, and violet home for browser games, useful apps, three web proxy engines, and a quiet Focus workspace. Production browser engines run on a separate public HTTPS origin. No Access login is required.
 
 ## Requirements
@@ -20,10 +20,10 @@ Do not set `NODE_TLS_REJECT_UNAUTHORIZED=0` in the shell. The install hook appli
 
 ## Build and run Docker
 ```powershell
-docker build --platform linux/amd64 --build-arg AETHER_VERSION=5.4.2 -t aether:5.4.2 .
-docker run -d --name aether-v542-preview --restart unless-stopped -e NODE_ENV=development -p 127.0.0.1:15010:3000 -v aether-v542-preview-data:/app/userdata aether:5.4.2
+docker build --platform linux/amd64 --build-arg AETHER_VERSION=5.5.0 -t aether:5.5.0 .
+docker run -d --name aether-v550-preview --restart unless-stopped -e NODE_ENV=development -p 127.0.0.1:15016:3000 -v aether-v550-preview-data:/app/userdata aether:5.5.0
 ```
-Open [Docker preview](http://127.0.0.1:15010/). Inspect startup with `docker logs aether-v542-preview`.
+Open [Docker preview](http://127.0.0.1:15016/). Inspect startup with `docker logs aether-v550-preview`.
 The preview overrides the image's production default so it can run locally without Cloudflare. Keep it bound to loopback. The example assumes the container name and port are available. Identify an existing preview before replacing it, and preserve its data volume.
 
 The production image starts in `NODE_ENV=production` and requires distinct HTTPS app and proxy origins. Public mode is the default; Cloudflare Access is optional. Configure the existing Aether hostname and the isolated proxy hostname before deploying. Follow [security and origin setup](docs/SECURITY-AND-ORIGINS.md); do not expose a development-mode container to the Internet.
@@ -31,17 +31,18 @@ The production image starts in `NODE_ENV=production` and requires distinct HTTPS
 ## What is included
 - Eight distinct page designs: editorial Home and Games, a creator/music Apps shelf, Focus observatory, Party rendezvous, Browser gateway, Profile passport, and Settings with a live appearance preview.
 - Self-hosted brand artwork and typography, responsive layouts, and motion preferences without additional runtime packages.
-- 228 catalog entries: 23 original local games and 205 remote entries, including two portals and two join-code companions.
-- 41 helpful apps, including browser based code, diagram, and image tools.
+- 231 catalog entries: 26 original local games and 205 remote entries, including two portals and two join-code companions.
+- 44 helpful apps, including three local Aether tools, including browser based code, diagram, and image tools.
 - Original games with keyboard/touch controls, personal bests, pause, restart, and optional sound. Driftline adds three ordered laps, tire slip, handbrake drifts and banked combos; Pulse Arena adds three weapons, five waves, Blink and a shrinking arena. Breachline and Overdrive remain available. All Original renderer families load only when selected.
-- Search, categories, favorites, recent history, incremental library loading, and a keyboard command palette.
+- Search, collections, categories, favorites, recent history, incremental library loading, and a keyboard command palette. Per-page scroll positions and filters survive route changes. A mobile More menu keeps all destinations reachable.
+- Study Deck, Sketchpad and Number Lab open locally, with their own profile save keys. Rail Rush, Ricochet Relay and Skybound add three new replayable Originals.
 - In-page game/browser launches by default; optional separate tabs still open through the Aether shell. Remote launches also offer an explicit Original site link for editors or multiplayer games that need their own top-level page.
 - Manual route selection between Direct site, Ultraviolet, either Scramjet transport, and Rammerhead. Loading help separates page receipt from working gameplay; only your explicit confirmation remembers a route on this browser for the exact catalog entry and URL. Aether never switches routes automatically.
 - Ultraviolet, Scramjet with selectable Libcurl or Epoxy 3/Wisp, and Rammerhead. Production isolates their viewer, service workers, HTTP transports, and WebSocket routes from the shell and profile API.
 - Focus timer, notes, tasks, motion preferences, and profile backup/restore.
 - Public temporary party rooms with chat and shared game/score cards. Sharing a game does not add multiplayer to a single-player title.
 
-Remote sites can change or block embedding/proxying. Source reachability checks are not proof that every remote game works. Realtime WebGL shooters now prefer direct launch because browser-native WebRTC peer traffic is not carried by Aether's HTTP proxy transport; a working HTML response still does not prove a match started. Only Aether Originals implement Aether's profile save bridge. Third-party storage remains on the isolated proxy origin or the game's own origin, not in the Aether profile. Direct external games use credentialless frames where supported, so their storage is temporary and they do not receive your browser cookies.
+Remote sites can change or block embedding/proxying. Source reachability checks are not proof that every remote game works. Realtime WebGL shooters now prefer direct launch because browser-native WebRTC peer traffic is not carried by Aether's HTTP proxy transport; a working HTML response still does not prove a match started. Aether Originals and local Aether tools implement Aether's profile save bridge. Third-party storage remains on the isolated proxy origin or the game's own origin, not in the Aether profile. Direct external games use credentialless frames where supported, so their storage is temporary and they do not receive your browser cookies.
 
 ## Environment
 | Variable | Default | Meaning |
@@ -61,9 +62,9 @@ Existing v4 profiles are read in place; encoded favorites and repaired catalog U
 
 ## Export
 ```powershell
-New-Item -ItemType Directory -Force -Path outputs\v5.4.2
-docker save --output outputs\v5.4.2\aether-image-linux-amd64.tar aether:5.4.2
-python tools/archive-image.py outputs/v5.4.2/aether-image-linux-amd64.tar --tag aether:5.4.2
+New-Item -ItemType Directory -Force -Path outputs\v5.5.0
+docker save --output outputs\v5.5.0\aether-image-linux-amd64.tar aether:5.5.0
+python tools/archive-image.py outputs/v5.5.0/aether-image-linux-amd64.tar --tag aether:5.5.0
 ```
 This exports a real image, not a build context. See [build/deployment](BUILD-AND-DEPLOY.md) for transfer and rollback steps.
 
@@ -72,7 +73,8 @@ This exports a real image, not a build context. See [build/deployment](BUILD-AND
 - `public/index.html`, `public/styles.css`, `public/app.js`: integrated shell, baseline visual system, controller.
 - `public/experience.css`, `public/experience.js`: shared shell and optional motion layer.
 - `public/discovery.css`, `public/spaces.css`, `public/utility.css`: page-specific compositions.
-- `public/arcade/`: 23 local games, shared runtime, lazy family loader, and original SVG cover art.
+- `public/tools/`: flashcards, drawing and a restricted expression calculator with conversions.
+- `public/arcade/`: 26 local games, shared runtime, lazy family loader, and original SVG cover art.
 - `public/launch-health.js`, `public/proxy-viewer.js`: remembered route rules and launch diagnostics for the shell and isolated viewer.
 - `public/uv/`: Ultraviolet worker configuration; Scramjet worker and package assets are served by `server.js`.
 - `data/games.json`: combined game and app catalog.
@@ -82,7 +84,7 @@ This exports a real image, not a build context. See [build/deployment](BUILD-AND
 - `.Codex/audit-tmp/`: local audit evidence, excluded from images.
 
 ## Documentation
-[v5.4 build notes](docs/RELEASE-5.4.2.md) · [Previous v5.3 build notes](docs/RELEASE-5.3.0.md) · [Security and origins](docs/SECURITY-AND-ORIGINS.md) · [Game sources](docs/GAME-SOURCES.md) · [Arcade](docs/ARCADE.md) · [Performance](docs/PERFORMANCE.md) · [Brand](docs/BRAND.md) · [Restart updates](docs/AUTO-UPDATES.md)
+[v5.5 build notes](docs/RELEASE-5.5.0.md) · [v5.4 build notes](docs/RELEASE-5.4.2.md) · [Previous v5.3 build notes](docs/RELEASE-5.3.0.md) · [Security and origins](docs/SECURITY-AND-ORIGINS.md) · [Game sources](docs/GAME-SOURCES.md) · [Arcade](docs/ARCADE.md) · [Performance](docs/PERFORMANCE.md) · [Brand](docs/BRAND.md) · [Restart updates](docs/AUTO-UPDATES.md)
 
 ## Local checks
 ```powershell
@@ -92,7 +94,7 @@ node --test public/arcade/tests/*.test.mjs public/tests/*.test.mjs
 python tools/test-updater.py
 node tools/measure-transfer.mjs http://127.0.0.1:15000
 ```
-The v5.4.2 local run passed 68 JavaScript checks and 30 updater checks. Checks cover Original rules and renderer fixtures, launcher/profile races, route persistence, viewer behavior, destination guards, signed profile sessions and Wisp stream limits. Live Linux image checks cover profile operations, origin separation and proxy destination rejection. See [v5.4.2 build notes](docs/RELEASE-5.4.2.md) for exact evidence and remote game compatibility limits. Historical v5.1 deployment evidence remains in [deployment validation](docs/DEPLOYMENT.md).
+Current v5.5 manual verification and incomplete checks are recorded in [v5.5 notes](docs/RELEASE-5.5.0.md). The previous v5.4.2 local run passed 68 JavaScript checks and 30 updater checks. Checks cover Original rules and renderer fixtures, launcher/profile races, route persistence, viewer behavior, destination guards, signed profile sessions and Wisp stream limits. Live Linux image checks cover profile operations, origin separation and proxy destination rejection. See [v5.4.2 build notes](docs/RELEASE-5.4.2.md) for exact evidence and remote game compatibility limits. Historical v5.1 deployment evidence remains in [deployment validation](docs/DEPLOYMENT.md).
 
 ## Restart updates
 A separate host supervisor checks stable GitHub releases at container startup and NAS boot. It verifies the Linux AMD64 image and backs up userdata before replacement, with health checks and rollback. See [automatic updates](docs/AUTO-UPDATES.md). The Focus timer is device state; notes, tasks, favorites and settings belong to your profile.

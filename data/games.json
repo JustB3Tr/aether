@@ -1,6 +1,88 @@
 {
   "games": [
     {
+      "id": "aether-railrush",
+      "name": "Rail Rush",
+      "url": "/arcade/index.html?game=railrush",
+      "logo": "/arcade/covers/railrush.svg",
+      "category": "Runner",
+      "description": "Three lanes, jump and slide gates, and one clean escape.",
+      "tags": [
+        "runner",
+        "action",
+        "touch",
+        "keyboard",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": true,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-10",
+      "devices": [
+        "Desktop",
+        "Touch"
+      ],
+      "logoSource": "Original Aether cover artwork"
+    },
+    {
+      "id": "aether-ricochet",
+      "name": "Ricochet Relay",
+      "url": "/arcade/index.html?game=ricochet",
+      "logo": "/arcade/covers/ricochet.svg",
+      "category": "Skill",
+      "description": "Bank shots off walls, multiply points, and keep your streak.",
+      "tags": [
+        "aim",
+        "arcade",
+        "shooter",
+        "touch",
+        "keyboard",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": true,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-10",
+      "devices": [
+        "Desktop",
+        "Touch"
+      ],
+      "logoSource": "Original Aether cover artwork"
+    },
+    {
+      "id": "aether-skybound",
+      "name": "Skybound",
+      "url": "/arcade/index.html?game=skybound",
+      "logo": "/arcade/covers/skybound.svg",
+      "category": "Platformer",
+      "description": "Bounce from spring to crumbling platform and climb into the sky.",
+      "tags": [
+        "platformer",
+        "arcade",
+        "touch",
+        "keyboard",
+        "offline"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Originals",
+      "featured": true,
+      "sourceUrl": "/arcade/",
+      "access": "Instant local play",
+      "checkedAt": "2026-10-10",
+      "devices": [
+        "Desktop",
+        "Touch"
+      ],
+      "logoSource": "Original Aether cover artwork"
+    },
+    {
       "id": "aether-driftline",
       "name": "Driftline",
       "url": "/arcade/index.html?game=driftline",
@@ -5332,6 +5414,72 @@
     }
   ],
   "apps": [
+    {
+      "id": "aether-tool-deck",
+      "name": "Study Deck",
+      "url": "/tools/index.html?tool=deck",
+      "logo": "/tools/covers/deck.svg",
+      "category": "Learning",
+      "description": "Build a flashcard deck and practice one card at a time.",
+      "tags": [
+        "study",
+        "flashcards",
+        "learning",
+        "local"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Tools",
+      "sourceUrl": "/tools/",
+      "access": "Free local tool",
+      "checkedAt": "2026-10-10",
+      "featured": true,
+      "logoSource": "Original Aether cover artwork"
+    },
+    {
+      "id": "aether-tool-sketch",
+      "name": "Sketchpad",
+      "url": "/tools/index.html?tool=sketch",
+      "logo": "/tools/covers/sketch.svg",
+      "category": "Creative",
+      "description": "Draw, undo, and export your ideas as a PNG.",
+      "tags": [
+        "drawing",
+        "design",
+        "creative",
+        "local"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Tools",
+      "sourceUrl": "/tools/",
+      "access": "Free local tool",
+      "checkedAt": "2026-10-10",
+      "featured": true,
+      "logoSource": "Original Aether cover artwork"
+    },
+    {
+      "id": "aether-tool-numbers",
+      "name": "Number Lab",
+      "url": "/tools/index.html?tool=numbers",
+      "logo": "/tools/covers/numbers.svg",
+      "category": "Learning",
+      "description": "A safe expression calculator and everyday unit conversions.",
+      "tags": [
+        "math",
+        "calculator",
+        "study",
+        "local"
+      ],
+      "launch": "local",
+      "local": true,
+      "source": "Aether Tools",
+      "sourceUrl": "/tools/",
+      "access": "Free local tool",
+      "checkedAt": "2026-10-10",
+      "featured": true,
+      "logoSource": "Original Aether cover artwork"
+    },
     {
       "name": "YouTube",
       "url": "https://www.youtube.com",

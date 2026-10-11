@@ -70,7 +70,7 @@
     if (!api?.Controller) throw new Error('Scramjet could not initialize.');
     const activeWorker = await worker('/scramjet-sw.js', '/service-sj/');
     const version = encodeURIComponent(config.version || 'dev');
-    Object.assign(api.config, { prefix: '/service-sj/', scramjetPath: `/scramjet/scramjet.js?v=${version}`, injectPath: `/controller/controller.inject.js?v=${version}`, wasmPath: `/scramjet/scramjet.wasm?v=${version}` });
+    Object.assign(api.config, { prefix: '/service-sj/', scramjetPath: `/scramjet/scramjet.js?v=5.5.0&build=55b`, injectPath: `/controller/controller.inject.js?v=5.5.0&build=55b`, wasmPath: `/scramjet/scramjet.wasm?v=${version}` });
     const transportChoice = query.get('transport') || 'libcurl';
     const wisp = `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/wisp/`;
     let transport;

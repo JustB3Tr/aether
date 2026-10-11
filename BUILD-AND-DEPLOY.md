@@ -1,37 +1,37 @@
-# Aether 5.4.2 build and deployment
+# Aether 5.5.0 build and deployment
 
 Build on Windows with Docker Desktop's Linux container engine. All three proxy engines launch in Aether's isolated viewer by default. Check **Open in a new tab** for a separate tab containing the Aether shell and its viewer.
 
 ## Local build and preview
 
 ```powershell
-docker build --platform linux/amd64 --build-arg AETHER_VERSION=5.4.2 -t aether:5.4.2 .
-docker run -d --name aether-v542-preview --restart unless-stopped -e NODE_ENV=development -p 127.0.0.1:15010:3000 -v aether-v542-preview-data:/app/userdata aether:5.4.2
+docker build --platform linux/amd64 --build-arg AETHER_VERSION=5.5.0 -t aether:5.5.0 .
+docker run -d --name aether-v550-preview --restart unless-stopped -e NODE_ENV=development -p 127.0.0.1:15016:3000 -v aether-v550-preview-data:/app/userdata aether:5.5.0
 ```
 
-Open [Aether](http://127.0.0.1:15010/) and [health](http://127.0.0.1:15010/health). The image should report `version: "5.4.2"`; read the actual response after startup. The preview uses local development mode and must remain bound to loopback. The image uses Node 22 Alpine and locked production dependencies. The application listens on `0.0.0.0` inside the container.
+Open [Aether](http://127.0.0.1:15016/) and [health](http://127.0.0.1:15016/health). The image should report `version: "5.5.0"`; read the actual response after startup. The preview uses local development mode and must remain bound to loopback. The image uses Node 22 Alpine and locked production dependencies. The application listens on `0.0.0.0` inside the container.
 
 The example assumes the preview container name and port are available. Identify an existing preview before replacement and preserve its data. Source, a built image, and a deployed container are distinct states; see [deployment validation](docs/DEPLOYMENT.md) for the release owner's actual evidence.
 
 ## Export a verified image
 
 ```powershell
-New-Item -ItemType Directory -Force -Path outputs/v5.4.2
-docker save --output outputs/v5.4.2/aether-image-linux-amd64.tar aether:5.4.2
-python tools/archive-image.py outputs/v5.4.2/aether-image-linux-amd64.tar --tag aether:5.4.2
+New-Item -ItemType Directory -Force -Path outputs/v5.5.0
+docker save --output outputs/v5.5.0/aether-image-linux-amd64.tar aether:5.5.0
+python tools/archive-image.py outputs/v5.5.0/aether-image-linux-amd64.tar --tag aether:5.5.0
 ```
 
 The helper verifies the real Docker image config, platform and version label, compresses the archive, and writes `IMAGE-MANIFEST.json` and a SHA-256 file. Keep these three files together. The gzip is an image archive, not a build context.
 
-The release archive is `outputs/v5.4.2/aether-image-linux-amd64.tar.gz`. Its exact size, SHA-256 and image identity are recorded in the accompanying `IMAGE-MANIFEST.json`. See [v5.4.2 build notes](docs/RELEASE-5.4.2.md) for validation and deployment evidence.
+The release archive is `outputs/v5.5.0/aether-image-linux-amd64.tar.gz`. Its exact size, SHA-256 and image identity are recorded in the accompanying `IMAGE-MANIFEST.json`. See [v5.5.0 build notes](docs/RELEASE-5.5.0.md) for validation and deployment evidence.
 
 ## Manual NAS transfer
 
 Substitute your NAS address and SSH user. Use a persistent staging directory you can write to.
 
 ```powershell
-scp outputs/v5.4.2/aether-image-linux-amd64.tar.gz user@NAS:/path/to/staging/
-scp outputs/v5.4.2/aether-image-linux-amd64.tar.gz.sha256 user@NAS:/path/to/staging/
+scp outputs/v5.5.0/aether-image-linux-amd64.tar.gz user@NAS:/path/to/staging/
+scp outputs/v5.5.0/aether-image-linux-amd64.tar.gz.sha256 user@NAS:/path/to/staging/
 ssh user@NAS
 ```
 
@@ -52,7 +52,7 @@ sudo docker run -d --name aether --restart unless-stopped \
   -e AETHER_PROXY_ORIGIN=https://aether-proxy.thetrademaster.trade \
   -e AETHER_ACCESS_MODE=public \
   -e AETHER_TRUSTED_PROXY_IPS=192.168.1.200 \
-  -p 3000:3000 -v aether-data:/app/userdata aether:5.4.2
+  -p 3000:3000 -v aether-data:/app/userdata aether:5.5.0
 curl -fsS http://127.0.0.1:3000/health
 ```
 
@@ -66,4 +66,4 @@ Before enabling future automatic replacements, add the production environment va
 
 Aether is public by default and requires no Cloudflare Access plan. Route both hostnames through the existing Tunnel to this container; the proxy hostname must not serve the shell or profile API. See [security and origins](docs/SECURITY-AND-ORIGINS.md) for limits, profile recovery and optional private Access mode.
 
-[v5.4 release notes](docs/RELEASE-5.4.2.md) · [Previous v5.3 release notes](docs/RELEASE-5.3.0.md) · [Next independent audit/visionary brief](docs/NEXT-AUDIT-BRIEF.md)
+[v5.5 release notes](docs/RELEASE-5.5.0.md) · [Previous v5.3 release notes](docs/RELEASE-5.3.0.md) · [Next independent audit/visionary brief](docs/NEXT-AUDIT-BRIEF.md)

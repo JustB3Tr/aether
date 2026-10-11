@@ -44,8 +44,27 @@ let profileHydrated = false;
 const routePreferenceKey = 'aether_v54_routes';
 let routePreferences = launchHealth.validatePreferences(readLocal(routePreferenceKey,{}));
 let focusMode = false, profileRevealed = false;
-const library = {query:'',category:'all',favorites:false,availability:'all',sort:'recommended',limit:48};
-const appFilter = {query:'',category:'all',favorites:false};
+const library = {query:'',category:'all',collection:'all',favorites:false,availability:'all',sort:'recommended',limit:48};
+const appFilter = {query:'',category:'all',collection:'all',favorites:false};
+const pagePositions = new Map();
+const toolIds = new Set(['deck','sketch','numbers']);
+const collections = {
+  games:[['all','Everything','games'],['instant','Instant play','bolt'],['action','Action & aim','play'],['racing','Driving & racing','shuffle'],['puzzle','Brain break','apps'],['favorites','Favorites','star'],['recent','Recently played','refresh']],
+  apps:[['all','All apps','apps'],['instant','Built in Aether','bolt'],['make','Make something','plus'],['learn','Learn & study','focus'],['favorites','Favorites','star']]
+};
+function inCollection(item,collection) {
+  if (collection === 'instant') return item.local;
+  if (collection === 'favorites') return favorites.has(item.id);
+  if (collection === 'recent') return recents.some(entry=>entry.id===item.id);
+  const text=`${item.category} ${item.tags.join(' ')}`.toLowerCase();
+  const patterns={action:/action|fps|shooter|survival/,racing:/driving|racing|drift/,puzzle:/puzzle|board|word|strategy|memory/,make:/design|dev|creative|drawing|music/,learn:/learning|reference|study|math/};
+  return !patterns[collection] || patterns[collection].test(text);
+}
+function renderCollections(kind) {
+  const source=kind==='games'?games:apps, state=kind==='games'?library:appFilter;
+  const target=$(kind+'Collections');if(!target)return;
+  target.innerHTML=collections[kind].map(([id,name,glyph])=>`<button class="collection-pill ${state.collection===id?'selected':''}" data-preset="${id}" data-collection-kind="${kind}" aria-pressed="${state.collection===id}">${icon(glyph)}<span>${esc(name)}</span><small>${source.filter(item=>inCollection(item,id)).length}</small></button>`).join('');
+}
 const metadataTimers = new Map(), metadataPending = new Set();
 const profileKey = () => `aether_v5_profile_${user.uuid || 'offline'}`;
 const pendingKey = () => `${profileKey()}_pending`;
@@ -64,7 +83,7 @@ function normalizeItem(raw, kind, index) {
   try {
     const target = new URL(raw.url, location.origin);
     if (!['http:','https:'].includes(target.protocol)) return null;
-    const local = raw.launch === 'local' && target.origin === location.origin && target.pathname.startsWith('/arcade/');
+    const local = raw.launch === 'local' && target.origin === location.origin && (target.pathname.startsWith('/arcade/') || (target.pathname === '/tools/index.html' && toolIds.has(target.searchParams.get('tool'))));
     const id = String(raw.id || `${kind}-${index}-${raw.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`);
     const item = {...raw,id,kind,local,launch:local ? 'local' : launchHealth.ROUTES.includes(raw.launch) ? raw.launch : 'proxy',category:raw.category || raw.cat || 'Other',description:raw.description || '',tags:Array.isArray(raw.tags) ? raw.tags.map(String) : []};
     item.search = `${item.name} ${item.category} ${item.description} ${item.tags.join(' ')}`.toLowerCase();
@@ -131,7 +150,8 @@ function accessLabel(item) { return /portal/i.test(item.access || '') ? 'Game po
 function card(item,index = 0) {
   const title = esc(item.name), selected = favorites.has(item.id), src = artwork(item), initials = item.name.split(/\s+/).slice(0,2).map(w => w[0] || '').join('');
   let hue = 0; for (const char of item.category) hue = (hue * 31 + char.charCodeAt(0)) % 360;
-  return `<article class="game-card" style="--card-hue:${hue};--i:${Math.min(index,12)}"><div class="card-cover"><span class="card-fallback" aria-hidden="true">${esc(initials)}</span>${src ? `<img src="${esc(src)}" alt="" loading="lazy" decoding="async" width="400" height="400">` : ''}<button class="card-play" data-launch="${esc(item.id)}" aria-label="Play ${title}"><span class="play-indicator">${icon('play')}</span></button><span class="card-badge ${item.local ? 'local-badge' : ''}">${item.local ? 'Aether Original' : esc(item.category)}</span><button class="favorite-btn ${selected ? 'is-favorite' : ''}" data-favorite="${esc(item.id)}" aria-label="${selected ? 'Remove' : 'Add'} ${title} ${selected ? 'from' : 'to'} favorites" aria-pressed="${selected}">${icon('star')}</button></div><div class="card-body"><button class="card-title" data-launch="${esc(item.id)}" aria-label="Play ${title}">${title}</button><div class="card-meta"><span>${esc(item.category)}</span><span title="${esc(item.launchNotes || '')}">${esc(accessLabel(item))}</span></div></div></article>`;
+  const action=item.kind==='app'?'Open':'Play';
+  return `<article class="game-card" style="--card-hue:${hue};--i:${Math.min(index,8)}"><div class="card-cover"><span class="card-fallback" aria-hidden="true">${esc(initials)}</span>${src ? `<img src="${esc(src)}" alt="" loading="lazy" decoding="async" width="400" height="300">` : ''}<button class="card-play" data-launch="${esc(item.id)}" aria-label="${action} ${title}"><span class="play-indicator">${icon('play')}</span></button><span class="card-badge ${item.local ? 'local-badge' : ''}">${item.local ? item.kind==='app'?'Aether tool':'Aether Original' : esc(item.category)}</span><button class="favorite-btn ${selected ? 'is-favorite' : ''}" data-favorite="${esc(item.id)}" aria-label="${selected ? 'Remove' : 'Add'} ${title} ${selected ? 'from' : 'to'} favorites" aria-pressed="${selected}">${icon('star')}</button></div><div class="card-body"><button class="card-title" data-launch="${esc(item.id)}" aria-label="${action} ${title}">${title}</button><div class="card-meta"><span>${esc(item.category)}</span><span title="${esc(item.launchNotes || '')}">${esc(accessLabel(item))}</span></div></div></article>`;
 }
 function renderCards(id,list,append = false) { const el = $(id); if (!el) return; const html = list.map(card).join(''); if (append) el.insertAdjacentHTML('beforeend',html); else el.innerHTML = html; }
 function renderHome() {
@@ -141,33 +161,41 @@ function renderHome() {
 }
 function chips(id,source,selected) { const categories = [...new Set(source.map(i => i.category))].sort((a,b) => a.localeCompare(b)); if ($(id)) $(id).innerHTML = ['all',...categories].map(category => `<button type="button" class="chip ${category === selected ? 'active' : ''}" data-category="${esc(category)}" data-collection="${id === 'gameChips' ? 'games' : 'apps'}" aria-pressed="${category === selected}">${category === 'all' ? 'All' : esc(category)}</button>`).join(''); }
 function filteredGames() {
-  const query = library.query.toLowerCase(); const result = games.filter(g => (!query || g.search.includes(query)) && (library.category === 'all' || g.category === library.category) && (!library.favorites || favorites.has(g.id)) && (library.availability !== 'local' || g.local));
+  const query = library.query.toLowerCase(); const result = games.filter(g => inCollection(g,library.collection) && (!query || g.search.includes(query)) && (library.category === 'all' || g.category === library.category) && (!library.favorites || favorites.has(g.id)) && (library.availability !== 'local' || g.local));
   if (library.sort === 'name') result.sort((a,b) => a.name.localeCompare(b.name));
-  else if (library.sort === 'recent') { const order = new Map(recents.map((r,i) => [r.id,i])); result.sort((a,b) => (order.get(a.id) ?? 100000) - (order.get(b.id) ?? 100000) || a.name.localeCompare(b.name)); }
+  else if (library.sort === 'recent' || library.collection === 'recent') { const order = new Map(recents.map((r,i) => [r.id,i])); result.sort((a,b) => (order.get(a.id) ?? 100000) - (order.get(b.id) ?? 100000) || a.name.localeCompare(b.name)); }
   else result.sort((a,b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)) || Number(b.local) - Number(a.local));
   return result;
 }
 function renderGames(append = false) {
+  renderCollections('games');
   const result = filteredGames(), start = append ? Math.max(0,library.limit - 48) : 0; renderCards('gamesGrid',result.slice(start,library.limit),append); chips('gameChips',games,library.category);
   put('gamesResultCount',`${result.length} ${result.length === 1 ? 'entry' : 'entries'}`); put('gamesLoadedCount',`Showing ${Math.min(library.limit,result.length)} of ${result.length}`);
-  visible('gamesLoadMore',result.length > library.limit); visible('gamesEmpty',result.length === 0); visible('resetGameFilters',Boolean(library.query || library.category !== 'all' || library.favorites || library.availability !== 'all' || library.sort !== 'recommended'));
+  visible('gamesLoadMore',result.length > library.limit); visible('gamesEmpty',result.length === 0); visible('resetGameFilters',Boolean(library.query || library.category !== 'all' || library.collection!=='all' || library.favorites || library.availability !== 'all' || library.sort !== 'recommended'));
   $('gamesFavorites')?.setAttribute('aria-pressed',String(library.favorites)); $('gamesFavorites')?.classList.toggle('active',library.favorites);
 }
-function resetGames() { Object.assign(library,{query:'',category:'all',favorites:false,availability:'all',sort:'recommended',limit:48}); if ($('gameSearch')) $('gameSearch').value = ''; if ($('gameAvailability')) $('gameAvailability').value = 'all'; if ($('gameSort')) $('gameSort').value = 'recommended'; renderGames(); }
-function renderApps() { const result = apps.filter(a => (!appFilter.query || a.search.includes(appFilter.query.toLowerCase())) && (appFilter.category === 'all' || a.category === appFilter.category) && (!appFilter.favorites || favorites.has(a.id))); renderCards('appsGrid',result); chips('appChips',apps,appFilter.category); put('appsResultCount',`${result.length} apps`); visible('appsEmpty',!result.length); $('appsFavorites')?.setAttribute('aria-pressed',String(appFilter.favorites)); $('appsFavorites')?.classList.toggle('active',appFilter.favorites); }
+function resetGames() { Object.assign(library,{query:'',category:'all',collection:'all',favorites:false,availability:'all',sort:'recommended',limit:48}); if ($('gameSearch')) $('gameSearch').value = ''; if ($('gameAvailability')) $('gameAvailability').value = 'all'; if ($('gameSort')) $('gameSort').value = 'recommended'; renderGames(); }
+function renderApps() { renderCollections('apps');const result = apps.filter(a => inCollection(a,appFilter.collection) && (!appFilter.query || a.search.includes(appFilter.query.toLowerCase())) && (appFilter.category === 'all' || a.category === appFilter.category) && (!appFilter.favorites || favorites.has(a.id))); renderCards('appsGrid',result); chips('appChips',apps,appFilter.category); put('appsResultCount',`${result.length} apps`); visible('appsEmpty',!result.length);visible('resetAppFilters',Boolean(appFilter.query||appFilter.category!=='all'||appFilter.collection!=='all'||appFilter.favorites)); $('appsFavorites')?.setAttribute('aria-pressed',String(appFilter.favorites)); $('appsFavorites')?.classList.toggle('active',appFilter.favorites); }
+function resetApps(){Object.assign(appFilter,{query:'',category:'all',collection:'all',favorites:false});if($('appSearch'))$('appSearch').value='';renderApps();}
 function refreshActivePage() { if (currentPage === 'home') renderHome(); else if (currentPage === 'games') renderGames(); else if (currentPage === 'apps') renderApps(); else if (currentPage === 'focus') renderFocus(); else if (currentPage === 'profile') renderProfile(); }
+let moreInvoker;
+function openMore(){moreInvoker=document.activeElement;visible('moreMenu',true);$('navMore')?.setAttribute('aria-expanded','true');syncInert();$('moreMenu')?.querySelector('button[data-page]')?.focus();}
+function closeMore(){if(!$('moreMenu')||$('moreMenu').hidden)return;visible('moreMenu',false);$('navMore')?.setAttribute('aria-expanded','false');syncInert();moreInvoker?.focus?.();}
 function go(page,updateHash = true) {
-  if (!PAGE_META[page]) page = 'home'; const changed = currentPage !== page; currentPage = page;
+  if (!PAGE_META[page]) page = 'home'; const changed = currentPage !== page;
+  if(changed && currentPage)pagePositions.set(currentPage,window.scrollY||0);
+  currentPage = page; closeMore();
   focusMode = page === 'focus'; document.body.classList.toggle('focus-mode',focusMode);
   document.body.dataset.page = page;
   $$('.page').forEach(el => el.classList.toggle('active',el.id === `page-${page}`)); $$('.nav-item').forEach(el => { const chosen = el.dataset.page === page; el.classList.toggle('active',chosen); if (chosen) el.setAttribute('aria-current','page'); else el.removeAttribute('aria-current'); });
+  const secondary=!['home','games','apps','proxies'].includes(page);$('navMore')?.classList.toggle('active',secondary);$('navMore')?.setAttribute('aria-label',secondary?`More destinations, current page ${PAGE_META[page][0]}`:'More destinations');
   put('pageTitle',PAGE_META[page][0]); put('pageSubtitle',PAGE_META[page][1]); $('focusToggle')?.setAttribute('aria-label',focusMode ? 'Exit Focus' : 'Open Focus'); $('focusToggle')?.setAttribute('aria-pressed',String(focusMode)); if (updateHash && location.hash !== `#${page}`) history.pushState(null,'',`#${page}`);
   refreshActivePage(); if (page === 'multiplayer') refreshRooms(); if (page === 'settings') renderSettings();
-  if (changed) window.scrollTo({top:0,left:0,behavior:'instant'});
+  if (changed) {window.scrollTo({top:pagePositions.get(page)||0,left:0,behavior:'instant'});$('pageTitle')?.setAttribute('tabindex','-1');$('pageTitle')?.focus?.({preventScroll:true});}
   if (typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('aether:page',{detail:{page,changed}}));
 }
-function syncInert() { const app = document.querySelector('.app'); if (app) app.inert = Boolean(!$('overlay')?.hidden || !$('palette')?.hidden); }
-function trapFocus(event) { if (event.key !== 'Tab') return; const modal = !$('palette')?.hidden ? $('palette') : !$('overlay')?.hidden ? $('overlay') : null; if (!modal) return; const buttons = [...modal.querySelectorAll('button,a[href],input,textarea,select,iframe,[tabindex="0"]')].filter(el => !el.hidden && !el.disabled && el.getClientRects().length); if (!buttons.length) return; const first = buttons[0], last = buttons[buttons.length - 1]; if (event.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }
+function syncInert() { const app = document.querySelector('.app'); if (app) app.inert = Boolean(!$('overlay')?.hidden || !$('palette')?.hidden || ($('moreMenu')&&!$('moreMenu').hidden)); }
+function trapFocus(event) { if (event.key !== 'Tab') return; const modal = !$('palette')?.hidden ? $('palette') : !$('overlay')?.hidden ? $('overlay') : $('moreMenu')&&!$('moreMenu').hidden ? $('moreMenu') : null; if (!modal) return; const buttons = [...modal.querySelectorAll('button,a[href],input,textarea,select,iframe,[tabindex="0"]')].filter(el => !el.hidden && !el.disabled && el.getClientRects().length); if (!buttons.length) return; const first = buttons[0], last = buttons[buttons.length - 1]; if (event.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }
 function normalizeTarget(raw) { const value = String(raw).trim(); if (!value) throw new Error('Enter a website or search first.'); if (/^https?:\/\//i.test(value)) return new URL(value).href; if (/^[a-z][a-z0-9+.-]*:/i.test(value) && !/^[^\s/:]+:\d+(\/|$)/.test(value)) throw new Error('Use an HTTP or HTTPS website.'); if (/^(localhost|[a-z0-9-]+(?:\.[a-z0-9-]+)+)(:\d+)?([/?#].*)?$/i.test(value)) return new URL(`https://${value}`).href; return `https://duckduckgo.com/?q=${encodeURIComponent(value)}`; }
 function shellURL(item,engine,url,transport = settings.scramjetTransport) { const target = new URL(location.pathname,location.origin); if (item?.id && byId.has(item.id)) { target.searchParams.set('aether_game',item.id); if (['direct','uv','scramjet','rammer'].includes(engine)) target.searchParams.set('aether_proxy',engine); } else { target.searchParams.set('aether_proxy',engine || 'uv'); target.searchParams.set('aether_url',url); } if (engine === 'scramjet') target.searchParams.set('aether_transport',transport === 'epoxy' ? 'epoxy' : 'libcurl'); target.hash = item?.kind === 'app' ? 'apps' : item?.id ? 'games' : 'proxies'; return target.href; }
 function openShell(item,engine,url,transport = settings.scramjetTransport) { const tab = window.open(shellURL(item,engine,url,transport),'_blank'); if (!tab) { toast('Your browser blocked the new tab. Allow popups for Aether.'); return false; } try { tab.opener = null; } catch {} return true; }
@@ -216,7 +244,7 @@ const scripts = new Map(), scramjetTransports = new Map(); let uvPromise, scramj
 function loadScript(src) { if (scripts.has(src)) return scripts.get(src); const promise = new Promise((resolve,reject) => { const script=document.createElement('script');let timer; const finish=(error)=>{clearTimeout(timer);script.onload=null;script.onerror=null;if(error){script.remove();reject(error);}else resolve();};script.src=src;script.onload=()=>finish();script.onerror=()=>finish(new Error('A browser engine file could not load.'));timer=setTimeout(()=>finish(new Error('A browser engine file took too long to load.')),18000);document.head.appendChild(script); }).catch(error => { scripts.delete(src); throw error; }); scripts.set(src,promise); return promise; }
 async function activatedWorker(path,scope) { const registration = await navigator.serviceWorker.register(path,{scope}); const worker = registration.active || registration.installing || registration.waiting; if (!worker) throw new Error('The browser engine did not install.'); if (worker.state === 'activated') return worker; await timeout(new Promise((resolve,reject) => { worker.addEventListener('statechange',() => { if (worker.state === 'activated') resolve(); if (worker.state === 'redundant') reject(new Error('The browser engine failed to activate.')); }); }),18000,'The browser engine took too long to start.'); return registration.active || worker; }
 function secureProxy() { if (!window.isSecureContext || !navigator.serviceWorker) throw new Error('This proxy needs HTTPS or localhost. Aether Originals and direct games work here; open your HTTPS Aether address for proxies.'); }
-function originalStorage(item) { if (!item?.local) return null; const game = new URL(item.url,location.origin).searchParams.get('game'); return {key:`aether.arcade.${game}`,owner:`aether_v5_arcade_owner_${game}`,cache:`aether_v5_arcade_${user.uuid || 'offline'}_${game}`,game}; }
+function originalStorage(item) { if (!item?.local) return null; const url=new URL(item.url,location.origin), tool=url.pathname==='/tools/index.html'?url.searchParams.get('tool'):null;const game=tool?`tool-${tool}`:url.searchParams.get('game'); if(tool&&!toolIds.has(tool))return null;return {key:tool?`aether.tools.${tool}`:`aether.arcade.${game}`,owner:`aether_v5_arcade_owner_${game}`,cache:`aether_v5_arcade_${user.uuid || 'offline'}_${game}`,game}; }
 function prepareOriginal(item) {
   const storage = originalStorage(item); if (!storage) return;
   const currentOwner = user.uuid || 'offline', previousOwner = readLocal(storage.owner,null);
@@ -273,10 +301,10 @@ async function launch(item,options = {}) {
   const route = launchHealth.chooseRoute(item,options,settings.scramjetTransport,routePreferences);
   const {engine,transport} = launchHealth.routeOptions(route);
   if (!options.same && (options.newTab ?? settings.newTab)) { if (openShell(item,engine,url,transport)) recordRecent(item); return; }
-  closePalette(); overlayInvoker = document.activeElement; const serial = ++launchSerial; clearTimeout(frameTimer); active?.recoveryCleanup?.();
+  closeMore(); closePalette(); overlayInvoker = document.activeElement; const serial = ++launchSerial; clearTimeout(frameTimer); active?.recoveryCleanup?.();
   active = {serial,launchId:launchHealth.createLaunchId(),openedAt:performance.now(),item:item || {name:'Web session',url},engine,transport,url,loaded:false,started:false,stage:'preparing',isolatedProxy:Boolean(isolatedProxyOrigin && ['uv','scramjet','rammer'].includes(engine))};
   if ($('overlay')) $('overlay').dataset.engine = engine;
-  put('overlayEngine',launchHealth.routeLabel(route));
+  put('overlayEngine',item?.local && item.kind === 'app' ? 'Aether tool' : launchHealth.routeLabel(route));
   visible('overlay',true); syncInert(); document.body.classList.add('overlay-open'); put('overlayTitle',item?.name || ({uv:'Ultraviolet',scramjet:'Scramjet',rammer:'Rammerhead'}[engine] || 'Web session')); put('overlayUrl',url); put('saveStatus',item?.local ? 'Aether save ready' : item?.kind === 'app' ? 'Export work from the app' : 'Site saves depend on the game');
   if ($('overlayLogo')) { $('overlayLogo').hidden = false; $('overlayLogo').src = item?.logo ? artwork(item) : '/assets/aether-mark.webp'; $('overlayLogo').alt = ''; }
   const originalLink = $('overlayOriginal'); if (originalLink) { const originalURL = new URL(url,location.origin); originalLink.hidden = engine === 'local'; originalLink.href = ['http:','https:'].includes(originalURL.protocol) ? originalURL.href : '#'; originalLink.setAttribute('aria-label',`Open ${item?.name || 'this site'} on its original website in a new tab`); }
@@ -309,17 +337,17 @@ function frameLoaded() {
   if (!active?.started || active.isolatedProxy) return; try { if ($('gameFrame').contentWindow.location.href === 'about:blank') return; } catch {}
   clearTimeout(frameTimer); active.loaded = true; active.loadedAt=performance.now();active.stage = 'document-loaded'; visible('frameLoading',false);
   if(active.gameError){launchError(new Error(active.gameError),active.serial);return;}
-  active.issue=null;hideLaunchOptions(); put('saveStatus',active.engine === 'local' ? active.gameReady ? 'Aether Original ready' : 'Loading game code' : 'Page received'); sendGameInit();renderLaunchOptions();
+  active.issue=null;hideLaunchOptions(); put('saveStatus',active.engine === 'local' ? active.gameReady ? active.item.kind === 'app' ? 'Aether tool ready' : 'Aether Original ready' : active.item.kind === 'app' ? 'Loading tool' : 'Loading game code' : 'Page received'); sendGameInit();renderLaunchOptions();
   // A document load is not a game-ready signal. Keep route controls available
   // without guessing readiness from a timer or cross-origin input events.
 }
 function sendGameInit() {
   if (!active?.item?.local || active.engine !== 'local') return;
   const saves = {};
-  const key = `aether.arcade.${new URL(active.url,location.origin).searchParams.get('game')}`; if (Object.hasOwn(user.saves,key)) saves[key] = user.saves[key];
+  const key = originalStorage(active.item)?.key; if (key && Object.hasOwn(user.saves,key)) saves[key] = user.saves[key];
   $('gameFrame').contentWindow?.postMessage({type:'gp-init',launchId:active.launchId,saves,settings:{motion:settings.motion}},location.origin);
 }
-function allowedGameKey(key,session) { if (typeof key !== 'string' || key.length > 512 || key.startsWith('__meta__:') || !session.item.local || session.engine !== 'local') return false; return key === `aether.arcade.${new URL(session.url,location.origin).searchParams.get('game')}`; }
+function allowedGameKey(key,session) { if (typeof key !== 'string' || key.length > 512 || key.startsWith('__meta__:') || !session.item.local || session.engine !== 'local') return false; return key === originalStorage(session.item)?.key; }
 async function gameMessage(event) {
   const session = active; if (!session || event.source !== $('gameFrame').contentWindow || !event.data || typeof event.data !== 'object') return;
   const data = event.data;
@@ -336,9 +364,9 @@ async function gameMessage(event) {
   if (event.origin !== location.origin || (session.item.local && data.launchId!==session.launchId)) return;
   const profileAtRequest = user.uuid;
   if (data.type === 'gp-ready') { sendGameInit(); return; }
-  if (data.type === 'aether-arcade-ready' && session.item.local) {active.gameReady=true;put('saveStatus','Aether Original ready');return;}
+  if (['aether-arcade-ready','aether-tool-ready'].includes(data.type) && session.item.local) {active.gameReady=true;put('saveStatus',session.item.kind==='app'?'Aether tool ready':'Aether Original ready');return;}
   if (data.type === 'aether-arcade-error' && session.item.local) {active.gameError='The local game code did not load. Retry this Original.';launchError(new Error(active.gameError),session.serial);return;}
-  if (data.type === 'aether-arcade-exit' && session.item.local) { closeOverlay(true); go('games'); return; }
+  if (['aether-arcade-exit','aether-tool-exit'].includes(data.type) && session.item.local) { closeOverlay(true); go(session.item.kind==='app'?'apps':'games'); return; }
   if (data.type === 'aether-arcade-result' && session.item.local) { const gameId = new URL(session.url,location.origin).searchParams.get('game'); if (data.game === gameId && Number.isFinite(data.score) && data.score >= 0) { recordRecent(session.item,data.score); put('saveStatus',`Score: ${data.score}`); } return; }
   if (!['gp-save','gp-delete','gp-save-batch'].includes(data.type)) return;
   const ack = {type:data.type === 'gp-delete' ? 'gp-delete-result' : 'gp-save-result',requestId:data.requestId};
@@ -395,7 +423,7 @@ function renderSettings() { if ($('setMotion')) $('setMotion').value = settings.
 async function copy(text,message) { if (!text) { toast('Nothing to copy yet.'); return; } try { await navigator.clipboard.writeText(text); toast(message || 'Copied'); } catch { toast('Your browser could not copy this. Select and copy the value instead.'); } }
 function saveGroups() {
   const groups = new Map();
-  for (const [key,value] of Object.entries(user.saves || {})) { if (key.startsWith('__meta__:')) continue; const localId = key.startsWith('aether.arcade.') ? key.slice('aether.arcade.'.length) : null; const group = localId ? `local:${localId}` : key.includes(':') ? `remote:${key.slice(0,key.indexOf(':'))}` : 'other'; if (!groups.has(group)) groups.set(group,{group,keys:[],values:[]}); const entry = groups.get(group); entry.keys.push(key); entry.values.push(value); }
+  for (const [key,value] of Object.entries(user.saves || {})) { if (key.startsWith('__meta__:')) continue; const localId = key.startsWith('aether.arcade.') ? key.slice('aether.arcade.'.length) : key.startsWith('aether.tools.') ? 'tool-'+key.slice('aether.tools.'.length) : null; const group = localId ? `local:${localId}` : key.includes(':') ? `remote:${key.slice(0,key.indexOf(':'))}` : 'other'; if (!groups.has(group)) groups.set(group,{group,keys:[],values:[]}); const entry = groups.get(group); entry.keys.push(key); entry.values.push(value); }
   return [...groups.values()].map(entry => { const id = entry.group.startsWith('local:') ? `aether-${entry.group.slice(6)}` : null; const item = id ? byId.get(id) : items.find(i => { try { return `remote:${new URL(i.url,location.origin).hostname}` === entry.group; } catch { return false; } }); return {...entry,item,name:item?.name || (entry.group === 'other' ? 'Other game progress' : entry.group.slice(7))}; });
 }
 function renderProfile() {
@@ -465,7 +493,7 @@ function joinParty(room = '') {
 }
 function shareGame() { if (!partyCode || partySocket?.readyState !== WebSocket.OPEN) { toast('Join a party first.'); return; } if (sharePending) return; const item = active?.item?.id && byId.get(active.item.id) || byId.get(recents[0]?.id); if (!item) { toast('Play a game first, then share it.'); return; } const recent = recents.find(r => r.id === item.id); const state = {gameId:item.id,game:{id:item.id,name:item.name},score:Number.isFinite(recent?.score) ? recent.score : undefined,sharedBy:$('mpName')?.value.trim().slice(0,24) || 'Guest',at:Date.now()}; if ($('mpShareBtn')) $('mpShareBtn').disabled = true; sharePending = {state,timer:setTimeout(() => endShare('Sharing was not acknowledged. Try again.'),8000)}; try { partySocket.send(JSON.stringify({type:'state',state})); } catch { endShare('The game could not be shared.'); } }
 let paletteChoices = [], paletteIndex = 0;
-function openPalette() { paletteInvoker = document.activeElement; visible('palette',true); syncInert(); if ($('paletteInput')) { $('paletteInput').value = ''; $('paletteInput').focus(); } renderPalette(); }
+function openPalette() { closeMore(); paletteInvoker = document.activeElement; visible('palette',true); syncInert(); if ($('paletteInput')) { $('paletteInput').value = ''; $('paletteInput').focus(); } renderPalette(); }
 function closePalette() { if (!$('palette') || $('palette').hidden) return; visible('palette',false); syncInert(); paletteInvoker?.focus?.(); }
 function renderPalette() {
   const query = $('paletteInput')?.value.trim().toLowerCase() || '';
@@ -483,7 +511,7 @@ let shortcutPrefix = 0;
 function keyboard(event) {
   trapFocus(event);
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); !$('palette')?.hidden ? closePalette() : openPalette(); return; }
-  if (event.key === 'Escape') { if (!$('palette')?.hidden) closePalette();else if(!$('overlayRecovery')?.hidden)hideLaunchOptions();else closeOverlay();return; }
+  if (event.key === 'Escape') { if ($('moreMenu')&&!$('moreMenu').hidden)closeMore();else if (!$('palette')?.hidden) closePalette();else if(!$('overlayRecovery')?.hidden)hideLaunchOptions();else closeOverlay();return; }
   if (event.target.closest('input,textarea,select,[contenteditable="true"]') || event.ctrlKey || event.metaKey || event.altKey || !$('overlay')?.hidden) return;
   const key = event.key.toLowerCase(); if (key === '/') { event.preventDefault(); focusSearch(); return; }
   if (key === '?') { go('settings'); return; } if (key === 'f') { toggleFocus(); return; }
@@ -493,6 +521,8 @@ function keyboard(event) {
 function bindUI() {
   document.addEventListener('click',event => {
     const button = event.target.closest('button,[data-page]'); if (!button || button.disabled) return;
+    if(button.dataset.preset){const kind=button.dataset.collectionKind,state=kind==='games'?library:appFilter;state.collection=button.dataset.preset;state.category='all';if(kind==='games')library.limit=48;kind==='games'?renderGames():renderApps();$(kind+'Collections')?.querySelector('[data-preset='+state.collection+']')?.focus({preventScroll:true});return;}
+    if(button.dataset.browse){const kind=button.dataset.browse;if(kind==='games')resetGames();else{appFilter.query='';appFilter.favorites=false;if($('appSearch'))$('appSearch').value='';}const state=kind==='games'?library:appFilter;state.collection=button.dataset.browseCollection||'all';state.category='all';go(kind);document.querySelector(`#page-${kind} .discovery-library`)?.scrollIntoView({block:'start',behavior:document.body.dataset.motion==='reduced'?'instant':'smooth'});return;}
     if (button.dataset.page) { go(button.dataset.page); return; }
     if (button.dataset.favorite) { favorite(byId.get(button.dataset.favorite)); return; }
     if (button.dataset.launch) { launch(byId.get(button.dataset.launch)); return; }
@@ -519,6 +549,9 @@ function bindUI() {
   for (const id of ['clearRecentsBtn','settingsClearRecents']) on(id,'click',clearRecents);
   for (const id of ['paletteBtn','sidebarSearch']) on(id,'click',openPalette);
   on('paletteClose','click',closePalette); on('palette','click',event => { if (event.target === $('palette')) closePalette(); });
+  for(const id of ['resetAppFilters','emptyResetApps'])on(id,'click',resetApps);
+  on('navMore','click',()=>{$('moreMenu')?.hidden?openMore():closeMore();});
+  on('moreClose','click',closeMore);on('moreMenu','click',event=>{if(event.target===$('moreMenu'))closeMore();});
   on('paletteInput','input',delay(() => { paletteIndex = 0; renderPalette(); },80)); on('paletteInput','keydown',paletteKeys);
   on('focusToggle','click',toggleFocus); on('timerStart','click',toggleTimer); on('timerReset','click',() => resetTimer()); on('timerMode','click',() => resetTimer(timer.mode === 'focus' ? 'break' : 'focus'));
   on('focusNotes','input',() => { notes = $('focusNotes').value.slice(0,8000); saveMetadata('focus_notes',notes,650); });
@@ -575,7 +608,8 @@ async function boot() {
   const parameters = new URLSearchParams(location.search), requestedGame = parameters.get('aether_game'), requestedEngine = parameters.get('aether_proxy'), requestedURL = parameters.get('aether_url'), requestedTransport = parameters.get('aether_transport') === 'epoxy' ? 'epoxy' : 'libcurl';
   const requestedPage = location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'); go(requestedPage,false);
   if (requestedGame || requestedEngine || requestedURL) { parameters.delete('aether_game'); parameters.delete('aether_proxy'); parameters.delete('aether_url'); parameters.delete('aether_transport'); history.replaceState(null,'',`${location.pathname}${parameters.size ? `?${parameters}` : ''}${location.hash}`); if (requestedGame) { const item = resolveItem(requestedGame); if (item) launch(item,{same:true,transport:requestedTransport,engine:['direct','uv','scramjet','rammer'].includes(requestedEngine) ? requestedEngine : undefined}); else toast('That game is no longer in the library.'); } else if (requestedURL && ['direct','uv','scramjet','rammer'].includes(requestedEngine)) { try { launch(null,{url:normalizeTarget(requestedURL),engine:requestedEngine,transport:requestedTransport,same:true}); } catch (error) { toast(error.message); } } }
-  window.Aether = {version:'5.4.2',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
+  if ('scrollRestoration' in history) history.scrollRestoration='manual';
+  window.Aether = {version:'5.5.0',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
 }
 window.openGame = (url,name) => launch(resolveItem(url) || {name:name || 'Game',url:decode(url),launch:'proxy'});
 window.openApp = window.openGame;

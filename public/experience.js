@@ -5,6 +5,23 @@
   const reducePreference = matchMedia('(prefers-reduced-motion: reduce)');
   const motionAllowed = () => document.body.dataset.motionPreference === 'full' || (document.body.dataset.motion !== 'reduced' && !reducePreference.matches);
   let frame = 0, surface = null, pendingPoint = null;
+  const nav = document.querySelector('.sidebar nav');
+  const marker = document.createElement('span');
+  marker.className = 'nav-marker'; marker.setAttribute('aria-hidden','true');
+  nav?.prepend(marker);
+  let navFrame=0;
+  function alignNavigation() {
+    if(navFrame) cancelAnimationFrame(navFrame);
+    navFrame=requestAnimationFrame(()=>{
+      navFrame=0; const active=nav?.querySelector('.nav-item.active');
+      if(!active || !active.offsetWidth)return;
+      marker.style.width=active.offsetWidth+'px';marker.style.height=active.offsetHeight+'px';
+      marker.style.transform=`translate(${active.offsetLeft}px,${active.offsetTop}px)`;
+    });
+  }
+  if(nav && 'ResizeObserver' in window)new ResizeObserver(alignNavigation).observe(nav);
+  document.addEventListener('aether:page',alignNavigation);
+  alignNavigation();
   const resetDepth = () => {
     if (frame) cancelAnimationFrame(frame);
     frame = 0; pendingPoint = null;
@@ -49,7 +66,7 @@
       const parent = art.closest('.hero, .orbit-hero, .focus-observatory');
       if (parent) { parent.dataset.depth = ''; art.classList.add('depth-art'); }
     }
-    if (observer) for (const section of page.querySelectorAll('.library-section, .discovery-strips, .focus-layout > section, .party-layout > section, .settings-grid > section')) if (!seen.has(section)) observer.observe(section);
+    if (observer) for (const section of page.querySelectorAll('.library-section, .local-tools-shelf, .discovery-strips, .focus-layout > section, .party-layout > section, .settings-grid > section')) if (!seen.has(section)) observer.observe(section);
   }
   document.addEventListener('aether:page', preparePage);
   document.addEventListener('aether:settings', () => { if (!motionAllowed()) resetDepth(); });

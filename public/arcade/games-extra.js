@@ -6,7 +6,7 @@ import {
   lockStackPiece,
   clearStackLines,
   typingStats,
-} from './extra-core.js?v=5.4.2';
+} from './extra-core.js?v=5.5.0&build=55b';
 
 
 const palettes = {

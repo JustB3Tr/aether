@@ -1,6 +1,6 @@
 # Aether Originals
 
-Aether 5.4 includes 23 original browser games bundled with the app. They use a shared graphite and teal shell and have no external runtime libraries, asset hosts, ads, or network calls for gameplay. Covers are original local SVG drawings. Sound is off until a player enables it. The games remain playable when an external proxy destination is unavailable.
+Aether 5.5 includes 26 original browser games bundled with the app. They use a shared graphite and teal shell and have no external runtime libraries, asset hosts, ads, or network calls for gameplay. Covers are original local SVG drawings. Sound is off until a player enables it. The games remain playable when an external proxy destination is unavailable.
 
 ## Catalog and launch URLs
 
@@ -8,6 +8,9 @@ The integration-ready catalog is `public/arcade/catalog.json`. Every entry uses 
 
 | Game | URL | Controls and mechanics |
 | --- | --- | --- |
+| Rail Rush | `/arcade/index.html?game=railrush` | Three lanes, jump/slide gates, coins, three lives and 75-second runs |
+| Ricochet Relay | `/arcade/index.html?game=ricochet` | Fixed launcher, pointer/touch or keyboard aiming, reflective walls and block, bounce multipliers and 90-second rounds |
+| Skybound | `/arcade/index.html?game=skybound` | Automatic jumping, steering, springs, crumbling platforms, camera climb and signal pickups |
 | Neon Serpent | `/arcade/index.html?game=snake` | Snake with food, accelerating movement, wall/body collisions, arrows/WASD, direction pad and swipes |
 | Signal Merge | `/arcade/index.html?game=merge` | 2048 with legal single merges, win/loss detection, arrows/WASD, swipes and direction pad |
 | Prism Break | `/arcade/index.html?game=breakout` | 36-prism Breakout board, paddle angles, three lives, arrows/A/D, touch drag and serve button |
