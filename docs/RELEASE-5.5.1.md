@@ -30,4 +30,8 @@ Built locally with Docker Desktop for Linux AMD64. The final preview container i
 - Image config identity: `sha256:04c9e82e7fe466b7564b92da3a88ddb9410bf1db468749a903718a41061d2870`.
 - Image tag and platform: `aether:5.5.1`, `linux/amd64`.
 
-Final NAS installation evidence follows after publication and the restart updater finish.
+Published [v5.5.1](https://github.com/JustB3Tr/aether/releases/tag/v5.5.1) from source commit `c66fc34d1305b768052eec0d1a2f703f9ef4c9f1`. GitHub reports all three assets uploaded; its archive digest matches the local checksum above.
+
+Restarting the existing NAS container triggered the host updater. It downloaded at **2026-10-11 21:56:21 UTC** and installed at **21:56:32 UTC**. Docker now reports `aether:5.5.1 healthy`; public HTTPS health reports version 5.5.1. The three deployed motion files match local source SHA-256 values exactly. The public Home page shows V5.5.1, active motion and no observed horizontal overflow or console errors.
+
+All four existing profiles matched their stopped-write backup byte for byte immediately after installation. The original `aether-data` volume remains, failed version is null and three successful rollback sets remain. The new rollback container is `aether-backup-20261011T215629332070Z`. No host reboot or forced failure recovery was exercised.

@@ -1,4 +1,8 @@
-# Current deployment: Aether 5.5.0
+# Current deployment: Aether 5.5.1
+
+Verified 2026-10-11: the motion release is installed through the existing restart updater, and Docker reports `aether:5.5.1 healthy`. Public Home displays V5.5.1 with active motion; deployed motion scripts/styles match source. All four profiles survived the update and three rollback sets remain. [v5.5.1 release evidence](RELEASE-5.5.1.md) records checks, archive identity and installation times.
+
+## Previous deployment: Aether 5.5.0
 
 Verified 2026-10-11: the existing standalone NAS container is `aether:5.5.0`, running and healthy. Its restart watcher downloaded and installed the public stable release, preserving `aether-data` and four existing profiles. Three successful rollback sets remain. Public HTTPS startup and a local tool's Enter calculation/profile save were exercised.
 
