@@ -1,4 +1,4 @@
-import { gameDefinitions, startGame } from './game-loader.js?v=5.5.0&build=55b';
+import { gameDefinitions, startGame } from './game-loader.js?v=5.5.1&build=551a';
 
 const $=id=>document.getElementById(id);
 const query=new URLSearchParams(location.search);

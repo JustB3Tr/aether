@@ -1,7 +1,7 @@
 import {
   clamp, seededRandom, moveInArena, segmentCircleHit, segmentRectHit,
   breachWave, createRacer, stepRacer, roadCenter, roadSlope, passingEvent,
-} from './action-core.js?v=5.5.0&build=55b';
+} from './action-core.js?v=5.5.1&build=551a';
 
 const element = (tag, className, text) => {
   const item = document.createElement(tag);

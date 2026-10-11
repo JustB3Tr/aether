@@ -10,7 +10,8 @@ const engineAsset = path => `${path}?v=${encodeURIComponent(AETHER_CONFIG.versio
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
 const put = (id, text) => { if ($(id)) $(id).textContent = text; };
-const visible = (id, yes) => { if ($(id)) $(id).hidden = !yes; };
+const motionEvent = (name, detail) => { if (typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent(name,{detail})); };
+const visible = (id, yes) => { const el = $(id); if (!el || el.hidden === !yes) return; el.hidden = !yes; if (['palette','moreMenu','overlay'].includes(id)) el.inert = !yes; motionEvent('aether:visibility',{id,visible:yes}); };
 const on = (id, type, fn) => $(id)?.addEventListener(type, fn);
 const readLocal = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
 const readText = (key, fallback = '') => { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } };
@@ -153,7 +154,7 @@ function card(item,index = 0) {
   const action=item.kind==='app'?'Open':'Play';
   return `<article class="game-card" style="--card-hue:${hue};--i:${Math.min(index,8)}"><div class="card-cover"><span class="card-fallback" aria-hidden="true">${esc(initials)}</span>${src ? `<img src="${esc(src)}" alt="" loading="lazy" decoding="async" width="400" height="300">` : ''}<button class="card-play" data-launch="${esc(item.id)}" aria-label="${action} ${title}"><span class="play-indicator">${icon('play')}</span></button><span class="card-badge ${item.local ? 'local-badge' : ''}">${item.local ? item.kind==='app'?'Aether tool':'Aether Original' : esc(item.category)}</span><button class="favorite-btn ${selected ? 'is-favorite' : ''}" data-favorite="${esc(item.id)}" aria-label="${selected ? 'Remove' : 'Add'} ${title} ${selected ? 'from' : 'to'} favorites" aria-pressed="${selected}">${icon('star')}</button></div><div class="card-body"><button class="card-title" data-launch="${esc(item.id)}" aria-label="${action} ${title}">${title}</button><div class="card-meta"><span>${esc(item.category)}</span><span title="${esc(item.launchNotes || '')}">${esc(accessLabel(item))}</span></div></div></article>`;
 }
-function renderCards(id,list,append = false) { const el = $(id); if (!el) return; const html = list.map(card).join(''); if (append) el.insertAdjacentHTML('beforeend',html); else el.innerHTML = html; }
+function renderCards(id,list,append = false) { const el = $(id); if (!el) return; const html = list.map(card).join(''); if (append) el.insertAdjacentHTML('beforeend',html); else el.innerHTML = html; motionEvent('aether:cards',{id}); }
 function renderHome() {
   renderCards('originalsGrid',games.filter(g => g.local).slice(0,6)); renderCards('featuredGrid',[...games.filter(g => !g.local && g.featured),...games.filter(g => !g.local && !g.featured)].slice(0,6));
   const recentItems = recents.map(r => byId.get(r.id)).filter(Boolean); visible('recentSection',recentItems.length > 0); renderCards('recentGrid',recentItems.slice(0,6));
@@ -182,7 +183,7 @@ let moreInvoker;
 function openMore(){moreInvoker=document.activeElement;visible('moreMenu',true);$('navMore')?.setAttribute('aria-expanded','true');syncInert();$('moreMenu')?.querySelector('button[data-page]')?.focus();}
 function closeMore(){if(!$('moreMenu')||$('moreMenu').hidden)return;visible('moreMenu',false);$('navMore')?.setAttribute('aria-expanded','false');syncInert();moreInvoker?.focus?.();}
 function go(page,updateHash = true) {
-  if (!PAGE_META[page]) page = 'home'; const changed = currentPage !== page;
+  if (!PAGE_META[page]) page = 'home'; const previous = currentPage, changed = currentPage !== page;
   if(changed && currentPage)pagePositions.set(currentPage,window.scrollY||0);
   currentPage = page; closeMore();
   focusMode = page === 'focus'; document.body.classList.toggle('focus-mode',focusMode);
@@ -192,7 +193,7 @@ function go(page,updateHash = true) {
   put('pageTitle',PAGE_META[page][0]); put('pageSubtitle',PAGE_META[page][1]); $('focusToggle')?.setAttribute('aria-label',focusMode ? 'Exit Focus' : 'Open Focus'); $('focusToggle')?.setAttribute('aria-pressed',String(focusMode)); if (updateHash && location.hash !== `#${page}`) history.pushState(null,'',`#${page}`);
   refreshActivePage(); if (page === 'multiplayer') refreshRooms(); if (page === 'settings') renderSettings();
   if (changed) {window.scrollTo({top:pagePositions.get(page)||0,left:0,behavior:'instant'});$('pageTitle')?.setAttribute('tabindex','-1');$('pageTitle')?.focus?.({preventScroll:true});}
-  if (typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('aether:page',{detail:{page,changed}}));
+  if (typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('aether:page',{detail:{page,previous,changed}}));
 }
 function syncInert() { const app = document.querySelector('.app'); if (app) app.inert = Boolean(!$('overlay')?.hidden || !$('palette')?.hidden || ($('moreMenu')&&!$('moreMenu').hidden)); }
 function trapFocus(event) { if (event.key !== 'Tab') return; const modal = !$('palette')?.hidden ? $('palette') : !$('overlay')?.hidden ? $('overlay') : $('moreMenu')&&!$('moreMenu').hidden ? $('moreMenu') : null; if (!modal) return; const buttons = [...modal.querySelectorAll('button,a[href],input,textarea,select,iframe,[tabindex="0"]')].filter(el => !el.hidden && !el.disabled && el.getClientRects().length); if (!buttons.length) return; const first = buttons[0], last = buttons[buttons.length - 1]; if (event.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }
@@ -589,7 +590,7 @@ function bindUI() {
   if (!window.isSecureContext || !navigator.serviceWorker) { visible('proxyContextNotice',true); put('proxyContextNotice','Ultraviolet and Scramjet need HTTPS or localhost. Try your HTTPS Aether address for these engines. Local games and direct play are available here.'); }
 }
 async function loadCatalog() {
-  try { const data = await api('/api/games?v=5.4.2'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
+  try { const data = await api('/api/games?v=5.5.1'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
   catch (error) { visible('catalogNotice',true); put('catalogNoticeText',`The library could not refresh. ${error.message}`); }
 }
 async function boot() {
@@ -597,7 +598,7 @@ async function boot() {
   for(const page of ['page-focus','page-profile','page-settings']) {$(page).inert=true;$(page).setAttribute('aria-busy','true');}
   go(location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'),false);
   let settleProfile;profileGate=new Promise(resolve=>{settleProfile=resolve;});
-  const catalogRequest=api('/api/games?v=5.4.2').then(data=>{indexCatalog(data);refreshActivePage();return data;});
+  const catalogRequest=api('/api/games?v=5.5.1').then(data=>{indexCatalog(data);refreshActivePage();return data;});
   const [catalogResult,userResult] = await Promise.allSettled([catalogRequest,api('/api/user')]);
   if (catalogResult.status === 'fulfilled') { indexCatalog(catalogResult.value); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(catalogResult.value)); } catch {} }
   else { let cached; try { cached = JSON.parse(sessionStorage.getItem('aether_catalog_v5')); } catch {} if (cached) indexCatalog(cached); visible('catalogNotice',true); put('catalogNoticeText',`${cached ? 'Showing the library from this tab. ' : ''}${catalogResult.reason.message}`); }
@@ -609,7 +610,7 @@ async function boot() {
   const requestedPage = location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'); go(requestedPage,false);
   if (requestedGame || requestedEngine || requestedURL) { parameters.delete('aether_game'); parameters.delete('aether_proxy'); parameters.delete('aether_url'); parameters.delete('aether_transport'); history.replaceState(null,'',`${location.pathname}${parameters.size ? `?${parameters}` : ''}${location.hash}`); if (requestedGame) { const item = resolveItem(requestedGame); if (item) launch(item,{same:true,transport:requestedTransport,engine:['direct','uv','scramjet','rammer'].includes(requestedEngine) ? requestedEngine : undefined}); else toast('That game is no longer in the library.'); } else if (requestedURL && ['direct','uv','scramjet','rammer'].includes(requestedEngine)) { try { launch(null,{url:normalizeTarget(requestedURL),engine:requestedEngine,transport:requestedTransport,same:true}); } catch (error) { toast(error.message); } } }
   if ('scrollRestoration' in history) history.scrollRestoration='manual';
-  window.Aether = {version:'5.5.0',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
+  window.Aether = {version:'5.5.1',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
 }
 window.openGame = (url,name) => launch(resolveItem(url) || {name:name || 'Game',url:decode(url),launch:'proxy'});
 window.openApp = window.openGame;

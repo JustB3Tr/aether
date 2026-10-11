@@ -1,4 +1,4 @@
-# Aether 5.5.0
+# Aether 5.5.1
 A graphite, teal, and violet home for browser games, useful apps, three web proxy engines, and a quiet Focus workspace. Production browser engines run on a separate public HTTPS origin. No Access login is required.
 
 ## Requirements
@@ -20,10 +20,10 @@ Do not set `NODE_TLS_REJECT_UNAUTHORIZED=0` in the shell. The install hook appli
 
 ## Build and run Docker
 ```powershell
-docker build --platform linux/amd64 --build-arg AETHER_VERSION=5.5.0 -t aether:5.5.0 .
-docker run -d --name aether-v550-preview --restart unless-stopped -e NODE_ENV=development -p 127.0.0.1:15016:3000 -v aether-v550-preview-data:/app/userdata aether:5.5.0
+docker build --platform linux/amd64 --build-arg AETHER_VERSION=5.5.1 -t aether:5.5.1 .
+docker run -d --name aether-v551-preview --restart unless-stopped -e NODE_ENV=development -p 127.0.0.1:15017:3000 -v aether-v551-preview-data:/app/userdata aether:5.5.1
 ```
-Open [Docker preview](http://127.0.0.1:15016/). Inspect startup with `docker logs aether-v550-preview`.
+Open [Docker preview](http://127.0.0.1:15017/). Inspect startup with `docker logs aether-v551-preview`.
 The preview overrides the image's production default so it can run locally without Cloudflare. Keep it bound to loopback. The example assumes the container name and port are available. Identify an existing preview before replacing it, and preserve its data volume.
 
 The production image starts in `NODE_ENV=production` and requires distinct HTTPS app and proxy origins. Public mode is the default; Cloudflare Access is optional. Configure the existing Aether hostname and the isolated proxy hostname before deploying. Follow [security and origin setup](docs/SECURITY-AND-ORIGINS.md); do not expose a development-mode container to the Internet.
@@ -62,9 +62,9 @@ Existing v4 profiles are read in place; encoded favorites and repaired catalog U
 
 ## Export
 ```powershell
-New-Item -ItemType Directory -Force -Path outputs\v5.5.0
-docker save --output outputs\v5.5.0\aether-image-linux-amd64.tar aether:5.5.0
-python tools/archive-image.py outputs/v5.5.0/aether-image-linux-amd64.tar --tag aether:5.5.0
+New-Item -ItemType Directory -Force -Path outputs\v5.5.1
+docker save --output outputs\v5.5.1\aether-image-linux-amd64.tar aether:5.5.1
+python tools/archive-image.py outputs/v5.5.1/aether-image-linux-amd64.tar --tag aether:5.5.1
 ```
 This exports a real image, not a build context. See [build/deployment](BUILD-AND-DEPLOY.md) for transfer and rollback steps.
 
@@ -84,7 +84,7 @@ This exports a real image, not a build context. See [build/deployment](BUILD-AND
 - `.Codex/audit-tmp/`: local audit evidence, excluded from images.
 
 ## Documentation
-[v5.5 build notes](docs/RELEASE-5.5.0.md) · [v5.4 build notes](docs/RELEASE-5.4.2.md) · [Previous v5.3 build notes](docs/RELEASE-5.3.0.md) · [Security and origins](docs/SECURITY-AND-ORIGINS.md) · [Game sources](docs/GAME-SOURCES.md) · [Arcade](docs/ARCADE.md) · [Performance](docs/PERFORMANCE.md) · [Brand](docs/BRAND.md) · [Restart updates](docs/AUTO-UPDATES.md)
+[v5.5 build notes](docs/RELEASE-5.5.1.md) · [v5.4 build notes](docs/RELEASE-5.4.2.md) · [Previous v5.3 build notes](docs/RELEASE-5.3.0.md) · [Security and origins](docs/SECURITY-AND-ORIGINS.md) · [Game sources](docs/GAME-SOURCES.md) · [Arcade](docs/ARCADE.md) · [Performance](docs/PERFORMANCE.md) · [Brand](docs/BRAND.md) · [Restart updates](docs/AUTO-UPDATES.md)
 
 ## Local checks
 ```powershell
@@ -94,7 +94,7 @@ node --test public/arcade/tests/*.test.mjs public/tests/*.test.mjs
 python tools/test-updater.py
 node tools/measure-transfer.mjs http://127.0.0.1:15000
 ```
-Current v5.5 manual verification and incomplete checks are recorded in [v5.5 notes](docs/RELEASE-5.5.0.md). The previous v5.4.2 local run passed 68 JavaScript checks and 30 updater checks. Checks cover Original rules and renderer fixtures, launcher/profile races, route persistence, viewer behavior, destination guards, signed profile sessions and Wisp stream limits. Live Linux image checks cover profile operations, origin separation and proxy destination rejection. See [v5.4.2 build notes](docs/RELEASE-5.4.2.md) for exact evidence and remote game compatibility limits. Historical v5.1 deployment evidence remains in [deployment validation](docs/DEPLOYMENT.md).
+Current v5.5 manual verification and incomplete checks are recorded in [v5.5 notes](docs/RELEASE-5.5.1.md). The previous v5.4.2 local run passed 68 JavaScript checks and 30 updater checks. Checks cover Original rules and renderer fixtures, launcher/profile races, route persistence, viewer behavior, destination guards, signed profile sessions and Wisp stream limits. Live Linux image checks cover profile operations, origin separation and proxy destination rejection. See [v5.4.2 build notes](docs/RELEASE-5.4.2.md) for exact evidence and remote game compatibility limits. Historical v5.1 deployment evidence remains in [deployment validation](docs/DEPLOYMENT.md).
 
 ## Restart updates
 A separate host supervisor checks stable GitHub releases at container startup and NAS boot. It verifies the Linux AMD64 image and backs up userdata before replacement, with health checks and rollback. See [automatic updates](docs/AUTO-UPDATES.md). The Focus timer is device state; notes, tasks, favorites and settings belong to your profile.

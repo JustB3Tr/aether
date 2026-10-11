@@ -1,4 +1,4 @@
-importScripts('/uv/uv.bundle.js?v=5.5.0&build=55b', '/uv/uv.config.js?v=5.5.0&build=55b', '/uv/uv.sw.js?v=5.5.0&build=55b');
+importScripts('/uv/uv.bundle.js?v=5.5.1&build=551a', '/uv/uv.config.js?v=5.5.1&build=551a', '/uv/uv.sw.js?v=5.5.1&build=551a');
 
 const ultraviolet = new UVServiceWorker();
 self.addEventListener('fetch', (event) => {
