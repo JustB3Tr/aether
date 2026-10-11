@@ -37,7 +37,19 @@ The packaged Study Deck saved a card, cancelled an edit without changing its sav
 - Image config identity: `sha256:2fbd1ab4c2cb776c8b687642052aab8202ad057b1f571a44b637ee8b8fdc0e8d`.
 - Platform: `linux/amd64`.
 
-Publication and NAS replacement evidence will be recorded after the external operations finish.
+## Publication and NAS update
+
+Published stable release [v5.5.0](https://github.com/JustB3Tr/aether/releases/tag/v5.5.0) from source commit `8f227a6d1defb7372218f4d706b2470b297cfc8b`. GitHub's uploaded archive digest matches the local SHA-256 above; the release includes the archive, checksum file and image manifest.
+
+Restarting the existing NAS container triggered the existing host updater. Its log records download at **2026-10-11 17:03:55 UTC** and successful installation at **17:04:06 UTC**. Current Docker inspection reports `aether:5.5.0 healthy`; public HTTPS `/health` reports version 5.5.0. The public Apps page renders all three local tools, and Number Lab calculated `12 * 8 = 96` on Enter and reported a successful profile save.
+
+The original `aether-data` volume remains mounted. Immediately after installation, all four existing profile files matched the stopped-write backup byte for byte, before browser verification changed session data. Updater state has no failed version and retains three successful rollback sets, including `aether-backup-20261011T170403596219Z`. Its userdata snapshot is `20261011T170403596219Z-userdata.tar.gz` in the updater's backups directory.
+
+No forced failure rollback or NAS reboot was tested. Aether remains a standalone Docker container, rather than a TrueNAS Apps-managed deployment. Public access still depends on the existing PC-hosted Cloudflare tunnel. No DNS, Access enrollment or NAS network settings were changed for this release. Veck defaults to Rammerhead based on the user's successful load; universal remote-game compatibility is not claimed.
+
+Number Lab also reopened with its saved history, and the toolbar's optional new-tab action opened it within a separate Aether shell tab with that same profile history.
+
+Public app filtering selected the Built in Aether collection; an unmatched search produced zero results and an explicit reset action. Reset cleared both the search and collection, restoring all 44 apps.
 
 ## Tool limits
 

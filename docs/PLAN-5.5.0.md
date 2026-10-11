@@ -14,3 +14,18 @@ Preserve the current visual theme, proxy origin isolation and profile ownership 
 ## Evidence required
 
 Inspect the rendered desktop and phone navigation, filtering, keyboard access, reduced-motion behavior and history restoration. Launch each new game and exercise its controls, score changes and restart. Create/reopen tool data, practice cards, draw/undo/export, and calculate/convert actual inputs. Record implementation and any incomplete validation honestly. External release and NAS replacement follow only after the new version is ready.
+
+## Completion evidence
+
+Completed as v5.5.0. [Release evidence](RELEASE-5.5.0.md) records the concrete manual observations and coverage limits.
+
+| Requirement | Implementation and evidence |
+| --- | --- |
+| Three playable Originals | Kinetic renderer and catalog entries; each launched, accepted controls, changed score, ended a round and restarted; best scores saved. |
+| Three useful local tools | Study Deck saved/reopened/practiced and cancelled edits; Sketchpad drew/undid/exported a real PNG; Number Lab calculated on Enter and converted units. Public tool reopened profile history in its optional separate Aether shell tab. |
+| Faster library navigation | Collections and header shortcuts; Racing selected 18 entries and jumped to its library; route return preserved filters and scroll. App collections and clear filters are implemented. |
+| Reachable phone and desktop routes | Rendered desktop sidebar and five-entry phone dock; four secondary destinations available in More; focus trapping and Settings navigation exercised. |
+| Motion and theme | Existing theme retained in rendered pages; bounded marker/sheet/reveal motion; reduced-motion route duration zero; no continuous marker animation loop. |
+| Safe persistence and deployment | Existing tool-key bridge validation retained; packaged scripts matched source; real AMD64 image saved/reloaded; stable release digest matched; NAS healthy with four profiles preserved and three rollback sets. |
+
+This completion covers the scoped additions and navigation work above. It does not assert compatibility of every remote game or exhaustive mechanics/device testing.

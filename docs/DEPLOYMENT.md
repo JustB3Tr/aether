@@ -1,3 +1,11 @@
+# Current deployment: Aether 5.5.0
+
+Verified 2026-10-11: the existing standalone NAS container is `aether:5.5.0`, running and healthy. Its restart watcher downloaded and installed the public stable release, preserving `aether-data` and four existing profiles. Three successful rollback sets remain. Public HTTPS startup and a local tool's Enter calculation/profile save were exercised.
+
+See [v5.5.0 release evidence](RELEASE-5.5.0.md) for the image identity, archive checksum, manual browser checks and limitations. The image archive is 85,605,640 bytes. This is a Docker deployment; it does not appear as an Apps-managed entry in TrueNAS. The existing PC Cloudflare tunnel must remain online for public access.
+
+The following v5.1.0 evidence is historical.
+
 # Aether 5.1.0 deployment validation
 
 Completed 2026-10-10 UTC, 2026-10-09 Pacific. Built locally on Windows, published as a stable public release, and installed on TrueNAS by the existing restart updater. The NAS was not rebooted.
