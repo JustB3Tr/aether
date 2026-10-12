@@ -1,4 +1,4 @@
-import {shuffle,snakeStep,moveMerge,mergeHasMoves,makeMines,revealMines,ticWinner,ticAI,dropConnect,connectWinner,connectAI,slideMove,slideSolved,makeSlide,toggleLights,makeSudoku,sudokuAllowed,angleDistance,clamp} from './core.js?v=5.5.1&build=551a';
+import {shuffle,snakeStep,moveMerge,mergeHasMoves,makeMines,revealMines,ticWinner,ticAI,dropConnect,connectWinner,connectAI,slideMove,slideSolved,makeSlide,toggleLights,makeSudoku,sudokuAllowed,angleDistance,clamp} from './core.js?v=5.5.2&build=552a';
 
 
 function element(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;}

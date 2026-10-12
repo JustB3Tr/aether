@@ -54,8 +54,8 @@ test('lights switches affect orthogonal neighbors and are reversible',()=>{
 test('sudoku creates unique puzzles with valid full solutions',()=>{
   for(let seed=1;seed<=20;seed++){const {puzzle,solution}=makeSudoku(random(seed));assert.equal(countSudoku(puzzle),1);assert.ok(puzzle.filter(Boolean).length>=38);assert.ok(puzzle.filter(Boolean).length<60);assert.equal(new Set(solution.slice(0,9)).size,9);for(let i=0;i<81;i++)assert.equal(sudokuAllowed(solution,i,solution[i]),true);}
 });
-test('orbit timing distance wraps around and all 23 game definitions have rules',()=>{
-  assert.ok(angleDistance(.1,Math.PI*2-.1)<.21);assert.ok(angleDistance(0,Math.PI)>3.14);assert.equal(Object.keys(gameDefinitions).length,23);for(const game of Object.values(gameDefinitions)){assert.ok(game.name);assert.ok(game.rules.length>100);}
+test('orbit timing distance wraps around and all 26 game definitions have rules',()=>{
+  assert.ok(angleDistance(.1,Math.PI*2-.1)<.21);assert.ok(angleDistance(0,Math.PI)>3.14);assert.equal(Object.keys(gameDefinitions).length,26);for(const game of Object.values(gameDefinitions)){assert.ok(game.name);assert.ok(game.rules.length>100);}
 });
 
 test('Prism Stack rotates, respects the field, locks pieces, and clears full rows',()=>{
@@ -82,7 +82,8 @@ test('every Aether Original is wired to a playable game and matching cover catal
   const sourceCatalog=JSON.parse(readFileSync(new URL('../../../data/games.json',import.meta.url),'utf8')).games;
   const arcadeCatalog=JSON.parse(readFileSync(new URL('../catalog.json',import.meta.url),'utf8'));
   const originals=sourceCatalog.filter(entry=>entry.source==='Aether Originals');
-  assert.equal(originals.length,23);assert.equal(arcadeCatalog.length,originals.length);
+  assert.equal(originals.length,26);assert.equal(arcadeCatalog.length,originals.length);
+  assert.deepEqual(originals.map(entry=>new URL(entry.url,'http://aether.local').searchParams.get('game')).sort(),Object.keys(gameDefinitions).sort());
   for(const entry of originals){
     const gameId=new URL(entry.url,'http://aether.local').searchParams.get('game');
     assert.ok(gameDefinitions[gameId],entry.id+' has a registered game implementation');

@@ -3,7 +3,7 @@ import {
   createDriftCar, stepDriftCar, constrainDriftCar, createLapProgress,
   advanceLapProgress, createDriftCombo, stepDriftCombo, bankDriftCombo,
   driftRunResult, clamp,
-} from './driftline-core.js?v=5.5.1&build=551a';
+} from './driftline-core.js?v=5.5.2&build=552a';
 
 const element = (tag, className, content) => {
   const node = document.createElement(tag);

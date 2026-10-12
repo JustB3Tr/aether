@@ -1,5 +1,5 @@
 FROM node:22-alpine
-ARG AETHER_VERSION=5.5.1
+ARG AETHER_VERSION=5.5.2
 LABEL org.opencontainers.image.version=$AETHER_VERSION
 LABEL org.opencontainers.image.source="https://github.com/JustB3Tr/aether"
 ENV NODE_ENV=production

@@ -1,8 +1,8 @@
-import {extraGameDefinitions} from './extra-definitions.js?v=5.5.1&build=551a';
-import {actionGameDefinitions} from './action-definitions.js?v=5.5.1&build=551a';
-import {driftlineDefinition} from './driftline-definition.js?v=5.5.1&build=551a';
-import {pulseArenaDefinition} from './pulse-arena-definition.js?v=5.5.1&build=551a';
-import {kineticDefinitions} from './kinetic-definitions.js?v=5.5.1&build=551a';
+import {extraGameDefinitions} from './extra-definitions.js?v=5.5.2&build=552a';
+import {actionGameDefinitions} from './action-definitions.js?v=5.5.2&build=552a';
+import {driftlineDefinition} from './driftline-definition.js?v=5.5.2&build=552a';
+import {pulseArenaDefinition} from './pulse-arena-definition.js?v=5.5.2&build=552a';
+import {kineticDefinitions} from './kinetic-definitions.js?v=5.5.2&build=552a';
 
 export const gameDefinitions={
   snake:{name:'Neon Serpent',category:'Arcade',description:'One more bite. One less place to turn.',rules:'Guide the serpent to glowing food. Each bite makes it longer and faster. Avoid the walls and your own trail. Arrow keys or WASD steer; use the direction pad or swipe on touch screens.'},

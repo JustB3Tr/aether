@@ -70,7 +70,7 @@
     if (!api?.Controller) throw new Error('Scramjet could not initialize.');
     const activeWorker = await worker('/scramjet-sw.js', '/service-sj/');
     const version = encodeURIComponent(config.version || 'dev');
-    Object.assign(api.config, { prefix: '/service-sj/', scramjetPath: `/scramjet/scramjet.js?v=5.5.1&build=551a`, injectPath: `/controller/controller.inject.js?v=5.5.1&build=551a`, wasmPath: `/scramjet/scramjet.wasm?v=${version}` });
+    Object.assign(api.config, { prefix: '/service-sj/', scramjetPath: `/scramjet/scramjet.js?v=5.5.2&build=552a`, injectPath: `/controller/controller.inject.js?v=5.5.2&build=552a`, wasmPath: `/scramjet/scramjet.wasm?v=${version}` });
     const transportChoice = query.get('transport') || 'libcurl';
     const wisp = `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/wisp/`;
     let transport;
@@ -91,10 +91,25 @@
     navigating();proxyFrame.go(url);
   }
   async function launchRammerhead(url) {
+    const host=new URL(url).hostname;
+    const reuse=host==='poki.com'||host.endsWith('.poki.com');
+    const cacheKey='aether.rh.poki.session.v1';
+    let cached;
+    if(reuse){try{cached=JSON.parse(sessionStorage.getItem(cacheKey));}catch{}}
+    if(cached&&typeof cached.id==='string'&&/^[a-f0-9]{32}$/i.test(cached.id)&&Number.isFinite(cached.at)&&cached.at<=Date.now()&&Date.now()-cached.at<60*60*1000){
+      try{
+        const check=await timeout(fetch('/sessionexists?id='+cached.id,{credentials:'same-origin'}),5000,'Session check timed out.');
+        if(check.ok&&(await timeout(check.text(),5000,'Session check body timed out.')).trim()==='exists'){
+          navigating();frame.src=`/${cached.id}/${url}`;return;
+        }
+      }catch{ /* A stale session must not prevent a new launch. */ }
+    }
+    if(reuse){try{sessionStorage.removeItem(cacheKey);}catch{}}
     const response = await timeout(fetch('/newsession', { credentials: 'same-origin' }), 15_000, 'Rammerhead session creation timed out.');
     if (!response.ok) throw new Error(`Rammerhead session failed (${response.status}).`);
-    const session = (await response.text()).trim();
+    const session = (await timeout(response.text(),15000,'Rammerhead session response timed out.')).trim();
     if (!/^[a-f0-9]{32}$/i.test(session)) throw new Error('Rammerhead returned an invalid session.');
+    if(reuse){try{sessionStorage.setItem(cacheKey,JSON.stringify({id:session,at:Date.now()}));}catch{}}
     navigating();frame.src = `/${session}/${url}`;
   }
   frame.addEventListener('load', () => {

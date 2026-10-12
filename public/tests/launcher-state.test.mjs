@@ -13,12 +13,12 @@ function fixture() {
   const context={console,URL,URLSearchParams,Set,Map,Object,JSON,Promise,Number,String,Math,Date,Uint8Array,
     location:{origin:'http://localhost',pathname:'/',hash:'#games',search:''},performance:{now:()=>100},setTimeout:()=>1,clearTimeout(){},setInterval(){},
     localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
-    document:{cookie:'',readyState:'loading',activeElement:null,getElementById:node,querySelectorAll:()=>[],querySelector:()=>null,addEventListener(){},createElement:tag=>({...node('new'+Math.random()),tagName:tag.toUpperCase()})},
+    document:{cookie:'',readyState:'loading',activeElement:null,body:{classList:{remove(){}}},getElementById:node,querySelectorAll:()=>[],querySelector:()=>null,addEventListener(){},createElement:tag=>({...node('new'+Math.random()),tagName:tag.toUpperCase()})},
     window:{},navigator:{},matchMedia:()=>({matches:false,addEventListener(){}}),history:{},fetch:async()=>({ok:true,json:async()=>({})})};
   context.window=context;
   vm.runInNewContext(readFileSync(new URL('../launch-health.js',import.meta.url),'utf8'),context);
   let source=readFileSync(new URL('../app.js',import.meta.url),'utf8');
-  source=source.replace(/\}\)\(\);\s*$/,`globalThis.harness={favorite,recordRecent,renderLaunchOptions,frameLoaded,gameMessage,hideLaunchOptions,shellURL,
+  source=source.replace(/\}\)\(\);\s*$/,`globalThis.harness={favorite,recordRecent,renderLaunchOptions,frameLoaded,gameMessage,hideLaunchOptions,shellURL,openStandaloneViewer,
     setSession(value){active=value;},setCatalog(value){byId=new Map(value.map(item=>[item.id,item]));},
     waiting(gate){profileGate=gate;profileHydrated=false;},hydrate(f,r){favorites=new Set(f);recents=r;profileHydrated=true;},
     stats(){return {favorites:[...favorites],recents};}};})();`);
@@ -38,6 +38,19 @@ test('incoming launch stages preserve a pending route selection',()=>{
   f.setSession(session);f.renderLaunchOptions();f.node('launchRoute').value='scramjet-epoxy';
   session.stage='engine-ready';f.renderLaunchOptions();assert.equal(f.node('launchRoute').value,'scramjet-epoxy');
   f.setSession({...session,serial:2,engine:'rammer'});f.renderLaunchOptions();assert.equal(f.node('launchRoute').value,'rammer');
+});
+test('Poki recovery exposes a standalone isolated viewer after page receipt',()=>{
+  const f=fixture();f.setSession({serial:1,item:{id:'moto-x3m',url:'https://poki.com/en/g/moto-x3m'},engine:'uv',transport:'libcurl',openedAt:0,isolatedProxy:true,loaded:true});f.renderLaunchOptions();
+  assert.equal(f.node('proxyAuthTab').hidden,false);assert.equal(f.node('proxyAuthTab').textContent,'Open standalone proxy viewer');assert.match(f.node('launchNotes').textContent,/separate game loader/);
+});
+test('standalone viewer opens the same isolated URL and releases the old player',()=>{
+  const f=fixture(),tab={opener:{}};let opened;
+  f.context.open=(...args)=>{opened=args;return tab;};f.node('overlay').hidden=false;
+  f.setSession({viewerUrl:'https://proxy.example/proxy-viewer?engine=rammer&url=https%3A%2F%2Fpoki.com',item:{local:false}});f.openStandaloneViewer();
+  assert.equal(opened[0],'https://proxy.example/proxy-viewer?engine=rammer&url=https%3A%2F%2Fpoki.com');assert.equal(tab.opener,null);assert.equal(f.node('gameFrame').src,'about:blank');assert.equal(f.node('overlay').hidden,true);
+});
+test('blocked standalone popup keeps the current player available',()=>{
+  const f=fixture();f.context.open=()=>null;f.node('overlay').hidden=false;f.setSession({viewerUrl:'https://proxy.example/proxy-viewer'});f.openStandaloneViewer();assert.equal(f.node('overlay').hidden,false);assert.match(f.node('toast').textContent,/blocked/);
 });
 test('closing launch options restores toolbar focus',()=>{
   const f=fixture();f.context.document.activeElement={parentId:'overlayRecovery'};f.hideLaunchOptions();assert.equal(f.context.document.activeElement,f.node('overlayRoute'));

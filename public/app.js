@@ -1,4 +1,4 @@
-/* Aether 5.4.2: isolated browser routes, visible recovery, and explicit save acknowledgements. */
+/* Aether 5.5.2: isolated routes, blank launch and explicit recovery. */
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
@@ -219,15 +219,25 @@ function renderLaunchOptions() {
   visible('rememberRoute',canRemember); if ($('rememberRoute')) $('rememberRoute').disabled=Boolean(active.confirmed);
   put('rememberRoute',active.confirmed ? 'Route remembered' : 'This works · remember route');
   visible('forgetRoute',Boolean(launchHealth.savedRoute(active.item,routePreferences)));
-  visible('proxyAuthTab',Boolean(AETHER_CONFIG.accessEnabled && active.isolatedProxy && !active.loaded));
-  visible('launchNotes',Boolean(active.item.launchNotes || active.item.frameBlocked));
-  put('launchNotes',active.item.frameBlocked ? 'This creator blocks direct embedding. Its original website is also available from the toolbar.' : active.item.launchNotes || '');
+  visible('proxyAuthTab',Boolean(active.isolatedProxy));
+  put('proxyAuthTab',AETHER_CONFIG.accessEnabled && !active.loaded ? 'Sign in to browser route' : 'Open standalone proxy viewer');
+  let poki=false;try{const host=new URL(active.item.url).hostname;poki=host==='poki.com'||host.endsWith('.poki.com');}catch{}
+  const notes=active.item.frameBlocked ? 'This creator blocks direct embedding. Its original website is also available from the toolbar.' : active.item.launchNotes || '';
+  visible('launchNotes',Boolean(notes||poki));
+  put('launchNotes',poki?'Poki has a separate game loader after its page arrives. If the game stalls, try Open standalone proxy viewer to remove the outer Aether frame, or choose Rammerhead explicitly. A page response is not proof of gameplay.':notes);
 }
 function showLaunchOptions() {
   if (!active || active.item.local) return;
   renderLaunchOptions();visible('overlayRecovery',true);$('overlayRoute')?.setAttribute('aria-expanded','true');$('launchRoute')?.focus();
 }
 function hideLaunchOptions() { const restore=$('overlayRecovery')?.contains(document.activeElement);visible('overlayRecovery',false);$('overlayRoute')?.setAttribute('aria-expanded','false');if(restore)$('overlayRoute')?.focus(); }
+function openStandaloneViewer() {
+  if(!active?.viewerUrl)return;
+  const tab=window.open(active.viewerUrl,'_blank');
+  if(!tab){toast('Your browser blocked the new tab. Allow popups for Aether.');return;}
+  try{tab.opener=null;}catch{}
+  closeOverlay(true);
+}
 function startNavigation(serial) {
   if (active?.serial !== serial) return;
   active.stage='navigating';clearTimeout(frameTimer);
@@ -570,7 +580,8 @@ function bindUI() {
   on('rememberRoute','click',() => {if(!active?.loaded || active.item.local || !byId.has(active.item.id))return;routePreferences=launchHealth.validatePreferences({...routePreferences,[active.item.id]:{route:launchHealth.routeId(active.engine,active.transport),url:active.item.url,at:Date.now()}});if(!writeLocal(routePreferenceKey,routePreferences)){toast('This browser could not remember the route.');return;}active.confirmed=true;active.issue=null;renderLaunchOptions();put('saveStatus','You confirmed working');toast('Working route remembered on this browser.');});
   on('forgetRoute','click',() => {if(!active)return;delete routePreferences[active.item.id];writeLocal(routePreferenceKey,routePreferences);active.confirmed=false;renderLaunchOptions();toast('Saved route forgotten.');});
   on('overlayNewTab','click',() => { if (active) openShell(active.item,active.engine,active.url,active.transport); });
-  on('proxyAuthTab','click',() => { if (!active?.viewerUrl) return; const tab = window.open(active.viewerUrl,'_blank');if(tab){try{tab.opener=null;}catch{}}else toast('Your browser blocked the new tab. Allow popups for Aether.'); });
+  on('proxyAuthTab','click',openStandaloneViewer);
+  on('openAetherBlank','click',() => { const result=window.AetherBlankLaunch?.openAetherBlank();if(!result?.ok)toast(result?.error||'The blank tab launcher did not load. Reload Aether.'); });
   on('overlayFullscreen','click',async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await $('gameFrame').requestFullscreen(); } catch { toast('This browser could not enter fullscreen.'); } });
   on('revealUUID','click',() => { profileRevealed = !profileRevealed; renderProfile(); }); on('copyUUIDBtn','click',() => copy(user.uuid,'Profile key copied. Keep it private.'));
   on('exportProfileBtn','click',exportProfile); on('settingsExport','click',exportProfile); on('importForm','submit',importProfile); on('clearAllBtn','click',clearProfile);
@@ -590,7 +601,7 @@ function bindUI() {
   if (!window.isSecureContext || !navigator.serviceWorker) { visible('proxyContextNotice',true); put('proxyContextNotice','Ultraviolet and Scramjet need HTTPS or localhost. Try your HTTPS Aether address for these engines. Local games and direct play are available here.'); }
 }
 async function loadCatalog() {
-  try { const data = await api('/api/games?v=5.5.1'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
+  try { const data = await api('/api/games?v=5.5.2'); indexCatalog(data); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(data)); } catch {} visible('catalogNotice',false); hydrateProfile(); }
   catch (error) { visible('catalogNotice',true); put('catalogNoticeText',`The library could not refresh. ${error.message}`); }
 }
 async function boot() {
@@ -598,7 +609,7 @@ async function boot() {
   for(const page of ['page-focus','page-profile','page-settings']) {$(page).inert=true;$(page).setAttribute('aria-busy','true');}
   go(location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'),false);
   let settleProfile;profileGate=new Promise(resolve=>{settleProfile=resolve;});
-  const catalogRequest=api('/api/games?v=5.5.1').then(data=>{indexCatalog(data);refreshActivePage();return data;});
+  const catalogRequest=api('/api/games?v=5.5.2').then(data=>{indexCatalog(data);refreshActivePage();return data;});
   const [catalogResult,userResult] = await Promise.allSettled([catalogRequest,api('/api/user')]);
   if (catalogResult.status === 'fulfilled') { indexCatalog(catalogResult.value); try { sessionStorage.setItem('aether_catalog_v5',JSON.stringify(catalogResult.value)); } catch {} }
   else { let cached; try { cached = JSON.parse(sessionStorage.getItem('aether_catalog_v5')); } catch {} if (cached) indexCatalog(cached); visible('catalogNotice',true); put('catalogNoticeText',`${cached ? 'Showing the library from this tab. ' : ''}${catalogResult.reason.message}`); }
@@ -610,7 +621,7 @@ async function boot() {
   const requestedPage = location.hash.slice(1) || (settings.focusDefault ? 'focus' : 'home'); go(requestedPage,false);
   if (requestedGame || requestedEngine || requestedURL) { parameters.delete('aether_game'); parameters.delete('aether_proxy'); parameters.delete('aether_url'); parameters.delete('aether_transport'); history.replaceState(null,'',`${location.pathname}${parameters.size ? `?${parameters}` : ''}${location.hash}`); if (requestedGame) { const item = resolveItem(requestedGame); if (item) launch(item,{same:true,transport:requestedTransport,engine:['direct','uv','scramjet','rammer'].includes(requestedEngine) ? requestedEngine : undefined}); else toast('That game is no longer in the library.'); } else if (requestedURL && ['direct','uv','scramjet','rammer'].includes(requestedEngine)) { try { launch(null,{url:normalizeTarget(requestedURL),engine:requestedEngine,transport:requestedTransport,same:true}); } catch (error) { toast(error.message); } } }
   if ('scrollRestoration' in history) history.scrollRestoration='manual';
-  window.Aether = {version:'5.5.1',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
+  window.Aether = {version:'5.5.2',get favorites(){return [...favorites];},get recents(){return [...recents];},get activeGame(){return active?.item?.id || null;},go,openPalette};
 }
 window.openGame = (url,name) => launch(resolveItem(url) || {name:name || 'Game',url:decode(url),launch:'proxy'});
 window.openApp = window.openGame;
