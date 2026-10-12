@@ -1,4 +1,8 @@
-# Current deployment: Aether 5.5.1
+# Current deployment: Aether 5.5.2
+
+Verified 2026-10-12: the local AMD64 image was published as [v5.5.2](https://github.com/JustB3Tr/aether/releases/tag/v5.5.2) and installed through the existing restart updater at 18:49:35 UTC. Docker reports `aether:5.5.2 healthy`; fresh public health reports 5.5.2. The public HTML has the restored Settings about:blank button, and the deployed app, blank launcher and proxy viewer files match the hotfix source exactly. All five profile files and the signing secret match the stopped-write backup; three managed rollback sets remain. Browser automation was unavailable, so no new rendered-popup or full Poki gameplay verification is claimed. [Release evidence](RELEASE-5.5.2.md).
+
+## Previous deployment: Aether 5.5.1
 
 Verified 2026-10-11: the motion release is installed through the existing restart updater, and Docker reports `aether:5.5.1 healthy`. Public Home displays V5.5.1 with active motion; deployed motion scripts/styles match source. All four profiles survived the update and three rollback sets remain. [v5.5.1 release evidence](RELEASE-5.5.1.md) records checks, archive identity and installation times.
 

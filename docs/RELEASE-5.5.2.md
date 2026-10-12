@@ -55,3 +55,23 @@ The 14-phase connected arcade overhaul remains separate, unshipped work. This
 hotfix is based on the published v5.5.1 source without the unfinished guest,
 cartridge or seeded-round changes. Existing profile data, public access mode,
 origin isolation, destination restrictions and rollback policy are preserved.
+
+## Publication and NAS deployment
+
+Published [v5.5.2](https://github.com/JustB3Tr/aether/releases/tag/v5.5.2) from
+source commit `78f3623c78cf0496da8eb5a43de73a141c088015`. GitHub reports all three
+assets uploaded, and the archive's digest/size match the local values above.
+
+The existing NAS updater downloaded at 2026-10-12 18:49:23 UTC and installed at
+18:49:35 UTC. Docker reports `aether:5.5.2 healthy`; public `/health` reports
+version 5.5.2. Public HTML contains the Settings launcher. The deployed app,
+blank launcher and proxy viewer match source text exactly. All five profile
+files and `.session-secret` match the stopped-write backup byte for byte.
+The original `aether-data` volume is retained, failedVersion is null, and three
+successful managed rollback sets remain. The new rollback container is
+`aether-backup-20261012T184932360012Z`.
+
+The about:blank action is **Settings -> Open Aether in about:blank**. Poki's
+standalone route is **Launch options and loading help -> Open standalone proxy
+viewer**; manually choose Rammerhead in the same panel to use its tab-session
+reuse. These additions have the evidence above, not an all-Poki gameplay pass.
